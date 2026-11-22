@@ -1,0 +1,3381 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>STUDENT PORTAL SMP PGRI SUMBERAGUNG</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+          },
+          colors: {
+            portalBlue: '#3b4cca',
+            portalPurple: '#6d4aff',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+      background-color: #f4f6fb;
+      color: #1e293b;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+
+    /* Background Pemandangan Alam Perbukitan Hijau & Matahari Terbit sesuai Gambar 1 */
+    .login-scenic-bg {
+      background-color: #2f4f2f;
+      background-image:
+        radial-gradient(circle at 25% 18%, rgba(255, 226, 150, 0.55) 0%, rgba(255, 195, 113, 0.15) 35%, transparent 65%),
+        linear-gradient(180deg, #627d98 0%, #9fb3c8 26%, #d9c5a0 42%, #76943c 55%, #4d6b22 78%, #2a3d14 100%),
+        url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1920&q=85');
+      background-size: cover;
+      background-position: center;
+      background-blend-mode: soft-light, normal, normal;
+    }
+
+    /* Glassmorphism Card sesuai Gambar 1 */
+    .glass-login-card {
+      background: linear-gradient(155deg, rgba(255, 255, 255, 0.28) 0%, rgba(255, 255, 255, 0.12) 48%, rgba(20, 30, 15, 0.35) 100%);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1.5px solid rgba(255, 255, 255, 0.45);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.5);
+    }
+
+    .glass-input {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1.2px solid rgba(255, 255, 255, 0.55);
+      color: #ffffff;
+      transition: all 0.25s ease;
+    }
+
+    .glass-input::placeholder {
+      color: rgba(255, 255, 255, 0.82);
+    }
+
+    .glass-input:focus {
+      outline: none;
+      background: rgba(255, 255, 255, 0.22);
+      border-color: #d9f99d;
+      box-shadow: 0 0 0 3px rgba(168, 207, 56, 0.35);
+    }
+
+    /* Tombol Gradasi Kuning-Hijau sesuai Gambar 1 */
+    .btn-gradient-login {
+      background: linear-gradient(90deg, #b8d935 0%, #52b748 52%, #159947 100%);
+      box-shadow: 0 10px 20px -5px rgba(22, 163, 74, 0.45);
+      transition: transform 0.18s ease, filter 0.18s ease;
+    }
+    .btn-gradient-login:hover {
+      filter: brightness(1.06);
+      transform: translateY(-1px);
+    }
+    .btn-gradient-login:active {
+      transform: scale(0.98);
+    }
+
+    /* Header Gradasi Biru-Ungu sesuai Gambar 2 */
+    .dashboard-header-grad {
+      background: linear-gradient(135deg, #3b4cca 0%, #5848e5 50%, #7c4dff 100%);
+    }
+
+    /* Kartu Pastel Quick Access sesuai Gambar 2 */
+    .pastel-purple { background-color: #f2effd; border: 1px solid #e6e0fb; }
+    .pastel-peach  { background-color: #fdf2ea; border: 1px solid #fae4d4; }
+    .pastel-blue   { background-color: #edf5fe; border: 1px solid #dcebfc; }
+    .pastel-mint   { background-color: #eaf8f1; border: 1px solid #d5f1e3; }
+    .pastel-pink   { background-color: #fdf0f5; border: 1px solid #fadce8; }
+    .pastel-yellow { background-color: #fef9e7; border: 1px solid #fcf0c8; }
+
+    .quick-card {
+      transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .quick-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 22px -6px rgba(59, 76, 202, 0.14);
+    }
+    .quick-card:active {
+      transform: scale(0.97);
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 999px;
+    }
+
+    /* Animasi Halus */
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-up {
+      animation: fadeSlideUp 0.28s ease-out forwards;
+    }
+  </style>
+</head>
+<body class="antialiased selection:bg-indigo-500 selection:text-white">
+
+  <!-- TOAST NOTIFICATION CONTAINER (Menggantikan alert()) -->
+  <div id="toastContainer" class="fixed top-4 right-4 z-[9999] flex flex-col gap-2 max-w-sm w-[calc(100%-2rem)] pointer-events-none"></div>
+
+  <!-- ROOT APP CONTAINER -->
+  <div id="appRoot" class="min-h-screen flex flex-col"></div>
+
+  <!-- MODAL CONTAINER -->
+  <div id="modalRoot"></div>
+
+  <!-- FIREBASE SDK MODULE (Dengan dukungan Firestore & Auth + Sinkronisasi Otomatis) -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    window.FirebaseBridge = {
+      enabled: false,
+      db: null,
+      auth: null,
+      appId: typeof __app_id !== 'undefined' ? __app_id : 'smp-pgri-sumberagung-portal',
+      statusText: 'Mode Cloud & Sinkronisasi Real-Time Siap',
+      async init(customConfig = null) {
+        try {
+          let config = customConfig;
+          if (!config && typeof __firebase_config !== 'undefined' && __firebase_config) {
+            config = JSON.parse(__firebase_config);
+          }
+          if (!config || !config.apiKey) {
+            this.enabled = false;
+            this.statusText = 'Database Lokal Aktif (Siap dihubungkan ke Firebase)';
+            return false;
+          }
+          const app = initializeApp(config);
+          this.auth = getAuth(app);
+          this.db = getFirestore(app);
+
+          if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+            await signInWithCustomToken(this.auth, __initial_auth_token);
+          } else {
+            await signInAnonymously(this.auth);
+          }
+
+          if (!this.auth.currentUser) return false;
+          this.enabled = true;
+          this.statusText = 'Terhubung ke Firebase Cloud Firestore';
+
+          // Dengarkan perubahan state bersama di path publik
+          const stateDocRef = doc(this.db, 'artifacts', this.appId, 'public', 'data', 'portal_state', 'main');
+          const snap = await getDoc(stateDocRef);
+          if (snap.exists() && snap.data().payload) {
+            const cloudData = JSON.parse(snap.data().payload);
+            if (window.PortalApp && window.PortalApp.mergeCloudState) {
+              window.PortalApp.mergeCloudState(cloudData);
+            }
+          } else if (window.PortalApp) {
+            await this.pushState(window.PortalApp.getSerializableState());
+          }
+
+          onSnapshot(stateDocRef, (docSnap) => {
+            if (docSnap.exists() && docSnap.data().payload && window.PortalApp) {
+              const incoming = JSON.parse(docSnap.data().payload);
+              window.PortalApp.mergeCloudState(incoming, true);
+            }
+          }, (err) => {
+            console.warn('Firestore snapshot listener info:', err.message);
+          });
+
+          return true;
+        } catch (e) {
+          console.warn('Firebase fallback aktif:', e.message);
+          this.enabled = false;
+          this.statusText = 'Sinkronisasi Lokal Aktif (Offline-Ready)';
+          return false;
+        }
+      },
+      async pushState(stateObj) {
+        if (!this.enabled || !this.db || !this.auth?.currentUser) return;
+        try {
+          const stateDocRef = doc(this.db, 'artifacts', this.appId, 'public', 'data', 'portal_state', 'main');
+          await setDoc(stateDocRef, {
+            payload: JSON.stringify(stateObj),
+            updatedAt: new Date().toISOString()
+          });
+        } catch (err) {
+          console.warn('Gagal menyinkronkan ke cloud:', err.message);
+        }
+      }
+    };
+
+    window.addEventListener('DOMContentLoaded', () => {
+      window.FirebaseBridge.init();
+    });
+  </script>
+
+  <!-- LOGIKA UTAMA APLIKASI STUDENT PORTAL SMP PGRI SUMBERAGUNG -->
+  <script>
+    (function () {
+      'use strict';
+
+      // =========================================================================
+      // 1. UTILITAS TOAST, FORMAT TANGGAL, & FILE HELPER
+      // =========================================================================
+      function showToast(title, message = '', type = 'info') {
+        const container = document.getElementById('toastContainer');
+        if (!container) return;
+
+        const colors = {
+          success: 'bg-emerald-600 text-white border-emerald-400',
+          error: 'bg-rose-600 text-white border-rose-400',
+          warning: 'bg-amber-500 text-white border-amber-300',
+          info: 'bg-indigo-600 text-white border-indigo-400'
+        };
+
+        const icons = {
+          success: 'check-circle-2',
+          error: 'alert-circle',
+          warning: 'alert-triangle',
+          info: 'bell-ring'
+        };
+
+        const el = document.createElement('div');
+        el.className = `pointer-events-auto flex items-start gap-3 p-3.5 rounded-2xl shadow-xl border ${colors[type] || colors.info} animate-fade-up`;
+        el.innerHTML = `
+          <i data-lucide="${icons[type] || 'info'}" class="w-5 h-5 shrink-0 mt-0.5"></i>
+          <div class="flex-1 min-w-0">
+            <p class="font-bold text-sm leading-tight">${escapeHtml(title)}</p>
+            ${message ? `<p class="text-xs opacity-90 mt-1 leading-snug">${escapeHtml(message)}</p>` : ''}
+          </div>
+          <button onclick="this.parentElement.remove()" class="opacity-75 hover:opacity-100 p-0.5">
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        `;
+        container.appendChild(el);
+        if (window.lucide) lucide.createIcons();
+
+        setTimeout(() => {
+          el.style.opacity = '0';
+          el.style.transform = 'translateY(-8px)';
+          el.style.transition = 'all 0.25s ease';
+          setTimeout(() => el.remove(), 260);
+        }, 4200);
+      }
+
+      function escapeHtml(str) {
+        if (str === null || str === undefined) return '';
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#039;');
+      }
+
+      function formatTanggalIndo(dateStr) {
+        if (!dateStr) return '-';
+        try {
+          const d = new Date(dateStr);
+          if (isNaN(d.getTime())) return dateStr;
+          return d.toLocaleDateString('id-ID', {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric'
+          });
+        } catch {
+          return dateStr;
+        }
+      }
+
+      function formatDateTimeIndo(dateStr) {
+        if (!dateStr) return '-';
+        try {
+          const d = new Date(dateStr);
+          if (isNaN(d.getTime())) return dateStr;
+          return d.toLocaleString('id-ID', {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+          }) + ' WIB';
+        } catch {
+          return dateStr;
+        }
+      }
+
+      function formatFileSize(bytes) {
+        if (!bytes) return '124 KB';
+        if (bytes < 1024) return bytes + ' B';
+        if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+        return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+      }
+
+      // Mengunduh file (baik dari DataURL unggahan asli maupun dokumen teks/PDF simulasi)
+      function triggerFileDownload(fileName, dataUrl, fallbackContent) {
+        try {
+          const link = document.createElement('a');
+          if (dataUrl && dataUrl.startsWith('data:')) {
+            link.href = dataUrl;
+          } else {
+            const content = fallbackContent || `DOKUMEN RESMI - STUDENT PORTAL SMP PGRI SUMBERAGUNG\nNama File: ${fileName}\nDiunduh pada: ${new Date().toLocaleString('id-ID')}\nCreated by Danang Wahyudi`;
+            const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+            link.href = URL.createObjectURL(blob);
+          }
+          link.download = fileName || 'dokumen-smp-pgri-sumberagung.txt';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          showToast('Mengunduh File', `File "${fileName}" berhasil diunduh.`, 'success');
+        } catch (err) {
+          showToast('Gagal Mengunduh', 'Terjadi kendala saat memproses unduhan.', 'error');
+        }
+      }
+
+      // =========================================================================
+      // 2. DATA AWAL LENGKAP SMP PGRI SUMBERAGUNG (IN-MEMORY + CLOUD SYNC)
+      // =========================================================================
+      const AVATAR_SISWA = "data:image/svg+xml;utf8," + encodeURIComponent(`
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+          <circle cx="60" cy="60" r="60" fill="#dbeafe"/>
+          <circle cx="60" cy="46" r="22" fill="#fed7aa"/>
+          <path d="M38 42c0-15 10-24 22-24s22 9 22 24c-4-7-12-10-22-10s-18 3-22 10z" fill="#1e293b"/>
+          <path d="M24 114c4-24 18-36 36-36s32 12 36 36" fill="#1e3a8a"/>
+          <path d="M48 78l12 18 12-18" fill="#ffffff"/>
+          <circle cx="53" cy="46" r="2.2" fill="#1e293b"/>
+          <circle cx="67" cy="46" r="2.2" fill="#1e293b"/>
+          <path d="M54 55c3 3 9 3 12 0" stroke="#9a3412" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+        </svg>
+      `);
+
+      const AVATAR_GURU = "data:image/svg+xml;utf8," + encodeURIComponent(`
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+          <circle cx="60" cy="60" r="60" fill="#ede9fe"/>
+          <circle cx="60" cy="46" r="22" fill="#fed7aa"/>
+          <path d="M38 40c2-15 11-22 22-22s20 7 22 22c-6-5-13-7-22-7s-16 2-22 7z" fill="#0f172a"/>
+          <path d="M22 114c5-25 19-36 38-36s33 11 38 36" fill="#4f46e5"/>
+          <rect x="46" y="42" width="11" height="7" rx="2" fill="none" stroke="#1e293b" stroke-width="2"/>
+          <rect x="63" y="42" width="11" height="7" rx="2" fill="none" stroke="#1e293b" stroke-width="2"/>
+          <line x1="57" y1="45" x2="63" y2="45" stroke="#1e293b" stroke-width="2"/>
+        </svg>
+      `);
+
+      const AVATAR_ADMIN = "data:image/svg+xml;utf8," + encodeURIComponent(`
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+          <circle cx="60" cy="60" r="60" fill="#dcfce7"/>
+          <circle cx="60" cy="46" r="22" fill="#fed7aa"/>
+          <path d="M38 42c0-15 10-24 22-24s22 9 22 24" fill="#1e293b"/>
+          <path d="M22 114c5-25 19-36 38-36s33 11 38 36" fill="#047857"/>
+          <polygon points="60,24 64,32 72,33 66,39 67,47 60,43 53,47 54,39 48,33 56,32" fill="#fbbf24" opacity="0.85"/>
+        </svg>
+      `);
+
+      function createInitialDatabase() {
+        return {
+          sekolah: {
+            nama: 'SMP PGRI SUMBERAGUNG',
+            npsn: '20541289',
+            akreditasi: 'A (Unggul)',
+            alamat: 'Jl. Raya Sumberagung No. 45, Kec. Sumberagung, Kab. Bojonegoro, Jawa Timur',
+            kepalaSekolah: 'Drs. H. Sutrisno, M.Pd.',
+            tahunAjaran: '2026/2027 - Semester Ganjil',
+            telepon: '(0353) 881245',
+            email: 'info@smppgrisumberagung.sch.id'
+          },
+          users: [
+            {
+              id: 'u-siswa-1',
+              role: 'siswa',
+              username: 'siswa',
+              password: '123',
+              nama: 'Ahmad Rizky Pratama',
+              nisn: '0098765432',
+              kelas: 'VIII-A',
+              email: 'rizky.pratama@siswa.smppgrisumberagung.sch.id',
+              noHp: '0812-3456-7890',
+              alamat: 'Ds. Sumberagung RT 04 RW 02',
+              avatar: AVATAR_SISWA
+            },
+            {
+              id: 'u-siswa-2',
+              role: 'siswa',
+              username: 'siti',
+              password: '123',
+              nama: 'Siti Nurhaliza Putri',
+              nisn: '0098765433',
+              kelas: 'VIII-A',
+              email: 'siti.putri@siswa.smppgrisumberagung.sch.id',
+              noHp: '0857-2341-9988',
+              alamat: 'Ds. Kayulemah RT 02 RW 01',
+              avatar: AVATAR_SISWA
+            },
+            {
+              id: 'u-siswa-3',
+              role: 'siswa',
+              username: 'bima',
+              password: '123',
+              nama: 'Bima Sakti Nugroho',
+              nisn: '0098765434',
+              kelas: 'IX-A',
+              email: 'bima.nugroho@siswa.smppgrisumberagung.sch.id',
+              noHp: '0813-9988-1122',
+              alamat: 'Ds. Kepohbaru RT 01 RW 03',
+              avatar: AVATAR_SISWA
+            },
+            {
+              id: 'u-guru-1',
+              role: 'guru',
+              username: 'guru',
+              password: '123',
+              nama: 'Budi Santoso, S.Pd.',
+              nip: '198504122010011008',
+              mapel: 'Matematika',
+              waliKelas: 'VIII-A',
+              email: 'budi.santoso@smppgrisumberagung.sch.id',
+              noHp: '0812-5544-3322',
+              avatar: AVATAR_GURU
+            },
+            {
+              id: 'u-guru-2',
+              role: 'guru',
+              username: 'ratna',
+              password: '123',
+              nama: 'Ratna Dewi Sari, S.Pd., M.Pd.',
+              nip: '198809212012122003',
+              mapel: 'Bahasa Indonesia',
+              waliKelas: 'VIII-B',
+              email: 'ratna.dewi@smppgrisumberagung.sch.id',
+              noHp: '0821-7766-5544',
+              avatar: AVATAR_GURU
+            },
+            {
+              id: 'u-guru-3',
+              role: 'guru',
+              username: 'hendra',
+              password: '123',
+              nama: 'Hendra Wijaya, S.Si.',
+              nip: '199002152015031004',
+              mapel: 'Ilmu Pengetahuan Alam (IPA)',
+              waliKelas: 'IX-A',
+              email: 'hendra.wijaya@smppgrisumberagung.sch.id',
+              noHp: '0856-4433-2211',
+              avatar: AVATAR_GURU
+            },
+            {
+              id: 'u-admin-1',
+              role: 'admin',
+              username: 'admin',
+              password: '123',
+              nama: 'Danang Wahyudi',
+              jabatan: 'Administrator Utama & IT Sekolah',
+              email: 'danang.wahyudi@smppgrisumberagung.sch.id',
+              noHp: '0812-3000-9900',
+              avatar: AVATAR_ADMIN
+            }
+          ],
+          kelas: [
+            { id: 'k-1', nama: 'VII-A', waliKelas: 'Siti Aminah, S.Pd.', jumlahSiswa: 32, ruang: 'Ruang 101' },
+            { id: 'k-2', nama: 'VII-B', waliKelas: 'Agus Setiawan, S.Pd.', jumlahSiswa: 30, ruang: 'Ruang 102' },
+            { id: 'k-3', nama: 'VIII-A', waliKelas: 'Budi Santoso, S.Pd.', jumlahSiswa: 31, ruang: 'Ruang 201' },
+            { id: 'k-4', nama: 'VIII-B', waliKelas: 'Ratna Dewi Sari, S.Pd., M.Pd.', jumlahSiswa: 29, ruang: 'Ruang 202' },
+            { id: 'k-5', nama: 'IX-A', waliKelas: 'Hendra Wijaya, S.Si.', jumlahSiswa: 30, ruang: 'Ruang 301' }
+          ],
+          mapel: [
+            { id: 'm-1', kode: 'MTK-08', nama: 'Matematika', guru: 'Budi Santoso, S.Pd.', kkm: 75 },
+            { id: 'm-2', kode: 'IND-08', nama: 'Bahasa Indonesia', guru: 'Ratna Dewi Sari, S.Pd., M.Pd.', kkm: 78 },
+            { id: 'm-3', kode: 'IPA-08', nama: 'Ilmu Pengetahuan Alam (IPA)', guru: 'Hendra Wijaya, S.Si.', kkm: 75 },
+            { id: 'm-4', kode: 'ING-08', nama: 'Bahasa Inggris', guru: 'Nurul Hidayah, S.Pd.', kkm: 75 },
+            { id: 'm-5', kode: 'IPS-08', nama: 'Ilmu Pengetahuan Sosial (IPS)', guru: 'Drs. Bambang Pamungkas', kkm: 76 },
+            { id: 'm-6', kode: 'INF-08', nama: 'Informatika & TIK', guru: 'Danang Wahyudi, S.Kom.', kkm: 80 }
+          ],
+          jadwal: [
+            { id: 'j-1', hari: 'Senin', jam: '07:00 - 07:45', mapel: 'Upacara Bendera', guru: 'Seluruh Dewan Guru', kelas: 'VIII-A', ruang: 'Lapangan Utama' },
+            { id: 'j-2', hari: 'Senin', jam: '07:45 - 09:15', mapel: 'Matematika', guru: 'Budi Santoso, S.Pd.', kelas: 'VIII-A', ruang: 'Ruang 201' },
+            { id: 'j-3', hari: 'Senin', jam: '09:30 - 11:00', mapel: 'Bahasa Indonesia', guru: 'Ratna Dewi Sari, S.Pd., M.Pd.', kelas: 'VIII-A', ruang: 'Ruang 201' },
+            { id: 'j-4', hari: 'Selasa', jam: '07:00 - 08:30', mapel: 'Ilmu Pengetahuan Alam (IPA)', guru: 'Hendra Wijaya, S.Si.', kelas: 'VIII-A', ruang: 'Lab IPA' },
+            { id: 'j-5', hari: 'Selasa', jam: '08:30 - 10:00', mapel: 'Bahasa Inggris', guru: 'Nurul Hidayah, S.Pd.', kelas: 'VIII-A', ruang: 'Ruang 201' },
+            { id: 'j-6', hari: 'Rabu', jam: '07:00 - 08:30', mapel: 'Informatika & TIK', guru: 'Danang Wahyudi, S.Kom.', kelas: 'VIII-A', ruang: 'Lab Komputer' },
+            { id: 'j-7', hari: 'Rabu', jam: '08:30 - 10:00', mapel: 'Ilmu Pengetahuan Sosial (IPS)', guru: 'Drs. Bambang Pamungkas', kelas: 'VIII-A', ruang: 'Ruang 201' },
+            { id: 'j-8', hari: 'Kamis', jam: '07:00 - 08:30', mapel: 'Matematika', guru: 'Budi Santoso, S.Pd.', kelas: 'VIII-A', ruang: 'Ruang 201' },
+            { id: 'j-9', hari: 'Jumat', jam: '07:00 - 08:30', mapel: 'Pendidikan Agama & Budi Pekerti', guru: 'Ust. Ahmad Fauzi, S.Ag.', kelas: 'VIII-A', ruang: 'Musholla Sekolah' },
+            { id: 'j-10', hari: 'Sabtu', jam: '07:30 - 09:30', mapel: 'Ekstrakurikuler Pramuka & Olahraga', guru: 'Tim Pembina', kelas: 'VIII-A', ruang: 'Lapangan Utama' }
+          ],
+          tugas: [
+            {
+              id: 't-1',
+              judul: 'Latihan Soal Sistem Persamaan Linear Dua Variabel (SPLDV)',
+              mapel: 'Matematika',
+              kelas: 'VIII-A',
+              guruId: 'u-guru-1',
+              guruNama: 'Budi Santoso, S.Pd.',
+              deskripsi: 'Selesaikan 5 soal cerita SPLDV menggunakan metode eliminasi dan substitusi secara runtut.',
+              petunjuk: 'Tulis jawaban di kertas folio bergaris, scan/foto dengan jelas menjadi format PDF atau JPG, lalu unggah sebelum batas waktu berakhir.',
+              tanggalPemberian: '2026-11-18',
+              deadline: '2026-11-26T23:59',
+              lampiranNama: 'Soal_SPLDV_Kelas_8A.pdf',
+              lampiranSize: '340 KB',
+              lampiranDataUrl: ''
+            },
+            {
+              id: 't-2',
+              judul: 'Menulis Teks Eksplanasi Fenomena Alam di Sekitar Kita',
+              mapel: 'Bahasa Indonesia',
+              kelas: 'VIII-A',
+              guruId: 'u-guru-2',
+              guruNama: 'Ratna Dewi Sari, S.Pd., M.Pd.',
+              deskripsi: 'Buatlah karangan teks eksplanasi minimal 4 paragraf yang memuat identifikasi fenomena, rangkaian kejadian, dan ulasan.',
+              petunjuk: 'Ketik menggunakan Microsoft Word (DOC/DOCX) atau ekspor ke PDF dengan font Times New Roman ukuran 12.',
+              tanggalPemberian: '2026-11-15',
+              deadline: '2026-11-21T23:59',
+              lampiranNama: 'Panduan_Teks_Eksplanasi.docx',
+              lampiranSize: '215 KB',
+              lampiranDataUrl: ''
+            },
+            {
+              id: 't-3',
+              judul: 'Laporan Praktikum Struktur dan Fungsi Jaringan Tumbuhan',
+              mapel: 'Ilmu Pengetahuan Alam (IPA)',
+              kelas: 'VIII-A',
+              guruId: 'u-guru-3',
+              guruNama: 'Hendra Wijaya, S.Si.',
+              deskripsi: 'Lengkapi tabel hasil pengamatan mikroskop penampang melintang batang dikotil dan monokotil.',
+              petunjuk: 'Unggah laporan kelompok dalam format PDF atau PPTX beserta dokumentasi foto hasil pengamatan.',
+              tanggalPemberian: '2026-11-12',
+              deadline: '2026-11-20T23:59',
+              lampiranNama: 'Lembar_Kerja_Praktikum_IPA.pdf',
+              lampiranSize: '512 KB',
+              lampiranDataUrl: ''
+            },
+            {
+              id: 't-4',
+              judul: 'Presentasi Algoritma & Pemrograman Dasar Scratch',
+              mapel: 'Informatika & TIK',
+              kelas: 'VIII-A',
+              guruId: 'u-guru-1',
+              guruNama: 'Budi Santoso, S.Pd.',
+              deskripsi: 'Buat slide presentasi maksimal 6 halaman yang menjelaskan konsep perulangan (looping) dan percabangan.',
+              petunjuk: 'Simpan file presentasi dalam format PPT, PPTX, atau PDF.',
+              tanggalPemberian: '2026-11-20',
+              deadline: '2026-11-29T23:59',
+              lampiranNama: 'Template_Presentasi_TIK.pptx',
+              lampiranSize: '680 KB',
+              lampiranDataUrl: ''
+            }
+          ],
+          pengumpulan: [
+            {
+              id: 'sub-1',
+              tugasId: 't-3',
+              siswaId: 'u-siswa-1',
+              siswaNama: 'Ahmad Rizky Pratama',
+              kelas: 'VIII-A',
+              fileName: 'Laporan_IPA_Ahmad_Rizky_8A.pdf',
+              fileSize: '428 KB',
+              fileType: 'application/pdf',
+              fileDataUrl: '',
+              catatanSiswa: 'Sudah saya lengkapi dengan gambar penampang batang jagung dan kacang tanah, Pak.',
+              submittedAt: '2026-11-19T15:20:00',
+              nilai: 92,
+              komentarGuru: 'Laporan sangat rapi, analisis jaringan xilem dan floem tepat sekali. Pertahankan!'
+            },
+            {
+              id: 'sub-2',
+              tugasId: 't-2',
+              siswaId: 'u-siswa-1',
+              siswaNama: 'Ahmad Rizky Pratama',
+              kelas: 'VIII-A',
+              fileName: 'Teks_Eksplanasi_Hujan_Asam_Rizky.docx',
+              fileSize: '186 KB',
+              fileType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+              fileDataUrl: '',
+              catatanSiswa: 'Berikut tugas teks eksplanasi saya Bu Ratna.',
+              submittedAt: '2026-11-20T19:45:00',
+              nilai: null,
+              komentarGuru: ''
+            },
+            {
+              id: 'sub-3',
+              tugasId: 't-1',
+              siswaId: 'u-siswa-2',
+              siswaNama: 'Siti Nurhaliza Putri',
+              kelas: 'VIII-A',
+              fileName: 'Jawaban_SPLDV_Siti_Nurhaliza.pdf',
+              fileSize: '310 KB',
+              fileType: 'application/pdf',
+              fileDataUrl: '',
+              catatanSiswa: 'Mohon koreksinya Pak Budi.',
+              submittedAt: '2026-11-21T14:10:00',
+              nilai: 95,
+              komentarGuru: 'Langkah substitusi sangat sistematis dan hasil akhirnya benar semua.'
+            }
+          ],
+          absensi: [
+            { id: 'abs-1', tanggal: '2026-11-21', siswaId: 'u-siswa-1', siswaNama: 'Ahmad Rizky Pratama', kelas: 'VIII-A', status: 'Hadir', keterangan: 'Tepat waktu (06:48 WIB)' },
+            { id: 'abs-2', tanggal: '2026-11-20', siswaId: 'u-siswa-1', siswaNama: 'Ahmad Rizky Pratama', kelas: 'VIII-A', status: 'Hadir', keterangan: 'Tepat waktu (06:51 WIB)' },
+            { id: 'abs-3', tanggal: '2026-11-19', siswaId: 'u-siswa-1', siswaNama: 'Ahmad Rizky Pratama', kelas: 'VIII-A', status: 'Hadir', keterangan: 'Tepat waktu (06:45 WIB)' },
+            { id: 'abs-4', tanggal: '2026-11-18', siswaId: 'u-siswa-1', siswaNama: 'Ahmad Rizky Pratama', kelas: 'VIII-A', status: 'Izin', keterangan: 'Mengikuti Lomba Olimpiade Matematika Kabupaten' },
+            { id: 'abs-5', tanggal: '2026-11-17', siswaId: 'u-siswa-1', siswaNama: 'Ahmad Rizky Pratama', kelas: 'VIII-A', status: 'Hadir', keterangan: 'Tepat waktu (06:50 WIB)' }
+          ],
+          materi: [
+            {
+              id: 'mat-1',
+              judul: 'Modul Bab 4: Sistem Persamaan Linear Dua Variabel (SPLDV)',
+              mapel: 'Matematika',
+              kelas: 'VIII-A',
+              guru: 'Budi Santoso, S.Pd.',
+              tanggal: '2026-11-16',
+              ringkasan: 'Berisi konsep dasar grafik, substitusi, eliminasi, dan contoh penerapan SPLDV dalam kehidupan sehari-hari.',
+              fileName: 'Modul_Matematika_SPLDV_Bab4.pdf',
+              fileSize: '1.2 MB'
+            },
+            {
+              id: 'mat-2',
+              judul: 'Struktur Kebahasaan Teks Eksplanasi & Teks Persuasi',
+              mapel: 'Bahasa Indonesia',
+              kelas: 'VIII-A',
+              guru: 'Ratna Dewi Sari, S.Pd., M.Pd.',
+              tanggal: '2026-11-14',
+              ringkasan: 'Panduan penggunaan konjungsi kausalitas dan kronologis dalam penyusunan teks eksplanasi ilmiah.',
+              fileName: 'Materi_Teks_Eksplanasi_VIII.pptx',
+              fileSize: '890 KB'
+            },
+            {
+              id: 'mat-3',
+              judul: 'Sistem Pencernaan Manusia dan Uji Kandungan Makanan',
+              mapel: 'Ilmu Pengetahuan Alam (IPA)',
+              kelas: 'VIII-A',
+              guru: 'Hendra Wijaya, S.Si.',
+              tanggal: '2026-11-10',
+              ringkasan: 'Penjelasan enzim pencernaan, organ saluran pencernaan, serta tabel reagen uji amilum, glukosa, dan protein.',
+              fileName: 'Handout_IPA_Pencernaan.pdf',
+              fileSize: '1.5 MB'
+            }
+          ],
+          nilaiTambahan: [
+            { id: 'n-1', siswaId: 'u-siswa-1', siswaNama: 'Ahmad Rizky Pratama', kelas: 'VIII-A', mapel: 'Matematika', jenis: 'Ulangan Harian 1', skor: 90, predikat: 'A' },
+            { id: 'n-2', siswaId: 'u-siswa-1', siswaNama: 'Ahmad Rizky Pratama', kelas: 'VIII-A', mapel: 'Bahasa Indonesia', jenis: 'PTS Ganjil', skor: 88, predikat: 'A' },
+            { id: 'n-3', siswaId: 'u-siswa-1', siswaNama: 'Ahmad Rizky Pratama', kelas: 'VIII-A', mapel: 'Ilmu Pengetahuan Alam (IPA)', jenis: 'Praktikum Lab', skor: 92, predikat: 'A' },
+            { id: 'n-4', siswaId: 'u-siswa-1', siswaNama: 'Ahmad Rizky Pratama', kelas: 'VIII-A', mapel: 'Bahasa Inggris', jenis: 'Speaking Test', skor: 86, predikat: 'B+' },
+            { id: 'n-5', siswaId: 'u-siswa-1', siswaNama: 'Ahmad Rizky Pratama', kelas: 'VIII-A', mapel: 'Informatika & TIK', jenis: 'Proyek Web Dasar', skor: 95, predikat: 'A+' }
+          ],
+          pengumuman: [
+            {
+              id: 'p-1',
+              judul: 'Pelaksanaan Penilaian Akhir Semester (PAS) Ganjil 2026/2027',
+              kategori: 'Akademik',
+              tanggal: '2026-11-21',
+              penulis: 'Admin Sekolah - Danang Wahyudi',
+              isi: 'Diberitahukan kepada seluruh siswa kelas VII, VIII, dan IX SMP PGRI Sumberagung bahwa Penilaian Akhir Semester (PAS) Ganjil akan dimulai pada tanggal 1 Desember 2026. Harap melunasi administrasi kartu ujian dan mempersiapkan diri dengan baik.',
+              isNew: true
+            },
+            {
+              id: 'p-2',
+              judul: 'Peringatan Hari Guru Nasional & Lomba Kebersihan Kelas',
+              kategori: 'Kegiatan Sekolah',
+              tanggal: '2026-11-19',
+              penulis: 'Wakasek Kesiswaan',
+              isi: 'Dalam rangka memperingati Hari Guru Nasional pada 25 November 2026, akan diadakan upacara bendera khusus diikuti lomba menghias mading dan kebersihan antar kelas.',
+              isNew: true
+            },
+            {
+              id: 'p-3',
+              judul: 'Jadwal Peminjaman Buku Paket Perpustakaan Digital',
+              kategori: 'Perpustakaan',
+              tanggal: '2026-11-15',
+              penulis: 'Tim Perpustakaan SMP PGRI Sumberagung',
+              isi: 'Siswa dapat mengunduh e-book modul pembelajaran terbaru melalui menu Perpustakaan di Student Portal ini tanpa batas waktu.',
+              isNew: false
+            }
+          ],
+          agenda: [
+            { id: 'ev-1', bulan: 'NOV', tanggal: '25', hari: 'Rabu', judul: 'Upacara Hari Guru Nasional & Apresiasi Siswa', waktu: '07:00 - 10:30 WIB', lokasi: 'Lapangan Utama SMP PGRI Sumberagung', status: 'Mendatang', warna: 'purple' },
+            { id: 'ev-2', bulan: 'NOV', tanggal: '28', hari: 'Sabtu', judul: 'Rapat Koordinasi Wali Murid & Persiapan PAS', waktu: '08:30 - 11:00 WIB', lokasi: 'Aula Serbaguna', status: 'Mendatang', warna: 'peach' },
+            { id: 'ev-3', bulan: 'DES', tanggal: '01', hari: 'Selasa', judul: 'Hari Pertama Penilaian Akhir Semester (PAS)', waktu: '07:00 - 11:30 WIB', lokasi: 'Seluruh Ruang Kelas', status: 'Terjadwal', warna: 'blue' },
+            { id: 'ev-4', bulan: 'DES', tanggal: '19', hari: 'Sabtu', judul: 'Pembagian Rapor Semester Ganjil 2026/2027', waktu: '08:00 - 12:00 WIB', lokasi: 'Ruang Kelas Masing-Masing', status: 'Terjadwal', warna: 'mint' }
+          ],
+          ujian: [
+            { id: 'uj-1', mapel: 'Matematika', tanggal: '2026-12-01', waktu: '07:30 - 09:30 WIB', ruang: 'Ruang 201 (Kursi 08)', status: 'Terjadwal', nilai: null },
+            { id: 'uj-2', mapel: 'Bahasa Indonesia', tanggal: '2026-12-02', waktu: '07:30 - 09:30 WIB', ruang: 'Ruang 201 (Kursi 08)', status: 'Terjadwal', nilai: null },
+            { id: 'uj-3', mapel: 'Ilmu Pengetahuan Alam (IPA)', tanggal: '2026-12-03', waktu: '07:30 - 09:30 WIB', ruang: 'Ruang 201 (Kursi 08)', status: 'Terjadwal', nilai: null },
+            { id: 'uj-4', mapel: 'Penilaian Tengah Semester (PTS) - Matematika', tanggal: '2026-10-12', waktu: 'Selesai', ruang: 'Ruang 201', status: 'Selesai', nilai: 90 }
+          ],
+          perpustakaan: [
+            { id: 'lib-1', judul: 'Matematika SMP/MTs Kelas VIII Kurikulum Merdeka', penulis: 'Kemendikbudristek', kategori: 'Buku Paket', tahun: '2025', fileName: 'Buku_Paket_Matematika_VIII.pdf' },
+            { id: 'lib-2', judul: 'Ensiklopedia Sains & Eksperimen IPA Terpadu', penulis: 'Dr. Hendra Kusuma', kategori: 'Referensi IPA', tahun: '2024', fileName: 'Ensiklopedia_IPA_SMP.pdf' },
+            { id: 'lib-3', judul: 'Antologi Puisi & Cerpen Pelajar Bojonegoro', penulis: 'MGMP Bahasa Indonesia', kategori: 'Sastra', tahun: '2025', fileName: 'Antologi_Sastra_Pelajar.pdf' },
+            { id: 'lib-4', judul: 'Panduan Dasar Coding & Literasi Digital Remaja', penulis: 'Danang Wahyudi, S.Kom.', kategori: 'Teknologi', tahun: '2026', fileName: 'Panduan_Coding_SMP.pdf' }
+          ],
+          galeri: [
+            { id: 'gal-1', judul: 'Peringatan HUT PGRI & Hari Guru Nasional', tanggal: '25 Nov 2025', kategori: 'Seremonial', warna: 'from-indigo-500 to-purple-600', deskripsi: 'Seluruh dewan guru dan siswa SMP PGRI Sumberagung berfoto bersama usai upacara bendera.' },
+            { id: 'gal-2', judul: 'Praktikum Uji Zat Makanan di Laboratorium IPA', tanggal: '14 Okt 2026', kategori: 'Akademik', warna: 'from-emerald-500 to-teal-600', deskripsi: 'Siswa kelas VIII-A antusias melakukan eksperimen biologi bersama Bapak Hendra Wijaya.' },
+            { id: 'gal-3', judul: 'Juara 1 Lomba Pramuka Tingkat Kecamatan', tanggal: '28 Sep 2026', kategori: 'Prestasi', warna: 'from-amber-500 to-orange-600', deskripsi: 'Regu inti Pramuka SMP PGRI Sumberagung berhasil membawa pulang piala bergilir.' },
+            { id: 'gal-4', judul: 'Pelatihan Literasi Digital & Portal Siswa', tanggal: '05 Nov 2026', kategori: 'Teknologi', warna: 'from-blue-500 to-cyan-600', deskripsi: 'Sosialisasi penggunaan Student Portal berbasis cloud untuk pembelajaran modern.' }
+          ],
+          messages: [
+            { id: 'msg-1', senderId: 'u-guru-1', senderName: 'Budi Santoso, S.Pd. (Guru Matematika)', senderRole: 'guru', text: 'Selamat pagi anak-anak VIII-A, jangan lupa tugas SPLDV dikumpulkan paling lambat Kamis pukul 23.59 WIB ya.', time: '08:15 WIB' },
+            { id: 'msg-2', senderId: 'u-siswa-1', senderName: 'Ahmad Rizky Pratama (VIII-A)', senderRole: 'siswa', text: 'Baik Pak Budi, untuk nomor 4 apakah boleh menggunakan cara grafik atau wajib eliminasi-substitusi Pak?', time: '08:22 WIB' },
+            { id: 'msg-3', senderId: 'u-guru-1', senderName: 'Budi Santoso, S.Pd. (Guru Matematika)', senderRole: 'guru', text: 'Gunakan metode gabungan eliminasi dan substitusi ya Rizky agar langkah perhitungannya terlihat jelas.', time: '08:25 WIB' }
+          ],
+          notifications: [
+            { id: 'notif-1', title: 'Tugas Baru: Presentasi Algoritma TIK', desc: 'Budi Santoso, S.Pd. menambahkan tugas baru untuk kelas VIII-A.', time: 'Baru saja', read: false, targetTab: 'tugas' },
+            { id: 'notif-2', title: 'Nilai Tugas Sudah Diberikan (92)', desc: 'Laporan Praktikum IPA Anda telah dinilai oleh Hendra Wijaya, S.Si.', time: '2 jam lalu', read: false, targetTab: 'tugas' },
+            { id: 'notif-3', title: 'Pengumuman PAS Ganjil 2026/2027', desc: 'Penilaian Akhir Semester dimulai tanggal 1 Desember 2026.', time: 'Kemarin', read: false, targetTab: 'pengumuman' }
+          ],
+          logs: [
+            { id: 'log-1', waktu: '2026-11-22 04:45', user: 'Danang Wahyudi (Admin)', aksi: 'Memperbarui jadwal Penilaian Akhir Semester (PAS) Ganjil.' },
+            { id: 'log-2', waktu: '2026-11-21 14:10', user: 'Siti Nurhaliza Putri (Siswa)', aksi: 'Mengumpulkan tugas "Latihan Soal SPLDV".' },
+            { id: 'log-3', waktu: '2026-11-20 19:45', user: 'Ahmad Rizky Pratama (Siswa)', aksi: 'Mengumpulkan tugas "Menulis Teks Eksplanasi".' },
+            { id: 'log-4', waktu: '2026-11-20 10:15', user: 'Budi Santoso, S.Pd. (Guru)', aksi: 'Mempublikasikan tugas baru untuk kelas VIII-A.' }
+          ]
+        };
+      }
+
+      // =========================================================================
+      // 3. STATE APLIKASI & PERSISTENCE
+      // =========================================================================
+      const APP_STATE = {
+        db: createInitialDatabase(),
+        currentUser: null,
+        loginMode: 'login', // 'login' | 'register'
+        selectedLoginRole: 'siswa',
+        showPassword: false,
+        rememberMe: true,
+        activeView: 'home', // 'home' | 'profil' | 'jadwal' | 'absensi' | 'tugas' | 'materi' | 'nilai' | 'kalender' | 'pengumuman' | 'chatbox' | 'perpustakaan' | 'ujian' | 'galeri' | 'guru_kelas' | 'guru_siswa' | 'guru_tambah_tugas' | 'guru_pengumpulan' | 'admin_users' | 'admin_akademik' | 'admin_sekolah' | 'admin_logs' | 'lainnya'
+        searchQuery: '',
+        taskCategory: 'semua', // 'semua' | 'belum' | 'dikumpulkan' | 'terlambat' | 'dinilai'
+        selectedJadwalHari: 'Semua',
+        selectedGuruTugasFilter: 'semua',
+        showNotifDropdown: false,
+        showSidebar: false
+      };
+
+      function saveAndSync(logActionText = null) {
+        if (logActionText && APP_STATE.currentUser) {
+          APP_STATE.db.logs.unshift({
+            id: 'log-' + Date.now(),
+            waktu: new Date().toLocaleString('id-ID', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }),
+            user: `${APP_STATE.currentUser.nama} (${APP_STATE.currentUser.role.toUpperCase()})`,
+            aksi: logActionText
+          });
+        }
+        if (window.FirebaseBridge && window.FirebaseBridge.enabled) {
+          window.FirebaseBridge.pushState(APP_STATE.db);
+        }
+      }
+
+      function addNotification(title, desc, targetTab = 'home') {
+        APP_STATE.db.notifications.unshift({
+          id: 'notif-' + Date.now() + Math.random().toString(36).slice(2, 6),
+          title,
+          desc,
+          time: 'Baru saja',
+          read: false,
+          targetTab
+        });
+      }
+
+      window.PortalApp = {
+        getSerializableState() {
+          return APP_STATE.db;
+        },
+        mergeCloudState(cloudDb, reRender = false) {
+          if (cloudDb && cloudDb.users && cloudDb.tugas) {
+            APP_STATE.db = cloudDb;
+            if (APP_STATE.currentUser) {
+              const updatedUser = APP_STATE.db.users.find(u => u.id === APP_STATE.currentUser.id);
+              if (updatedUser) APP_STATE.currentUser = updatedUser;
+            }
+            if (reRender) renderApp();
+          }
+        }
+      };
+
+      // =========================================================================
+      // 4. LOGIKA AUTENTIKASI (LOGIN, DEMO 1-KLIK, DAFTAR SISWA, LOGOUT)
+      // =========================================================================
+      function handleLoginSubmit(e) {
+        e.preventDefault();
+        const usernameInput = document.getElementById('loginUsername').value.trim().toLowerCase();
+        const passwordInput = document.getElementById('loginPassword').value.trim();
+
+        if (!usernameInput || !passwordInput) {
+          showToast('Data Belum Lengkap', 'Silakan isi Username dan Password terlebih dahulu.', 'warning');
+          return;
+        }
+
+        const foundUser = APP_STATE.db.users.find(u =>
+          (u.username.toLowerCase() === usernameInput || (u.email && u.email.toLowerCase() === usernameInput) || (u.nisn && u.nisn === usernameInput)) &&
+          u.password === passwordInput &&
+          u.role === APP_STATE.selectedLoginRole
+        );
+
+        // Juga izinkan login jika username & password cocok meskipun tab peran berbeda
+        const fallbackUser = foundUser || APP_STATE.db.users.find(u =>
+          (u.username.toLowerCase() === usernameInput || (u.email && u.email.toLowerCase() === usernameInput)) &&
+          u.password === passwordInput
+        );
+
+        if (!fallbackUser) {
+          showToast('Login Gagal', 'Username, Password, atau Peran tidak sesuai. Gunakan akun demo atau daftar akun baru.', 'error');
+          return;
+        }
+
+        APP_STATE.currentUser = fallbackUser;
+        APP_STATE.activeView = 'home';
+        APP_STATE.searchQuery = '';
+        saveAndSync('Berhasil login ke Student Portal.');
+        showToast(`Selamat Datang, ${fallbackUser.nama}!`, `Anda masuk sebagai ${fallbackUser.role.toUpperCase()}.`, 'success');
+        renderApp();
+      }
+
+      function quickDemoLogin(role) {
+        const user = APP_STATE.db.users.find(u => u.role === role);
+        if (!user) return;
+        APP_STATE.currentUser = user;
+        APP_STATE.activeView = 'home';
+        APP_STATE.searchQuery = '';
+        saveAndSync(`Login cepat (Demo) sebagai ${role}.`);
+        showToast(`Berhasil Masuk (${role.toUpperCase()})`, `Halo, ${user.nama}!`, 'success');
+        renderApp();
+      }
+
+      function handleRegisterSiswa(e) {
+        e.preventDefault();
+        const nama = document.getElementById('regNama').value.trim();
+        const nisn = document.getElementById('regNisn').value.trim();
+        const kelas = document.getElementById('regKelas').value;
+        const username = document.getElementById('regUsername').value.trim().toLowerCase();
+        const password = document.getElementById('regPassword').value.trim();
+
+        if (!nama || !nisn || !username || !password) {
+          showToast('Form Belum Lengkap', 'Harap lengkapi semua kolom pendaftaran siswa.', 'warning');
+          return;
+        }
+
+        if (APP_STATE.db.users.some(u => u.username.toLowerCase() === username)) {
+          showToast('Username Sudah Digunakan', 'Silakan pilih username lain.', 'error');
+          return;
+        }
+
+        const newSiswa = {
+          id: 'u-siswa-' + Date.now(),
+          role: 'siswa',
+          username,
+          password,
+          nama,
+          nisn,
+          kelas,
+          email: `${username}@siswa.smppgrisumberagung.sch.id`,
+          noHp: '0812-0000-0000',
+          alamat: 'Sumberagung, Bojonegoro',
+          avatar: AVATAR_SISWA
+        };
+
+        APP_STATE.db.users.push(newSiswa);
+        APP_STATE.currentUser = newSiswa;
+        APP_STATE.loginMode = 'login';
+        APP_STATE.activeView = 'home';
+        addNotification('Akun Siswa Baru Terdaftar', `${nama} (${kelas}) telah bergabung di Student Portal.`, 'home');
+        saveAndSync(`Mendaftarkan akun siswa baru: ${nama} (${kelas}).`);
+        showToast('Pendaftaran Berhasil!', `Selamat datang di SMP PGRI Sumberagung, ${nama}.`, 'success');
+        renderApp();
+      }
+
+      function logoutUser() {
+        saveAndSync('Keluar (Logout) dari Student Portal.');
+        APP_STATE.currentUser = null;
+        APP_STATE.showSidebar = false;
+        APP_STATE.showNotifDropdown = false;
+        showToast('Berhasil Keluar', 'Anda telah keluar dari sesi akun.', 'info');
+        renderApp();
+      }
+
+      // =========================================================================
+      // 5. RENDER HALAMAN LOGIN & REGISTRASI (GLASSMORPHISM SESUAI GAMBAR 1)
+      // =========================================================================
+      function renderLoginPage() {
+        const isReg = APP_STATE.loginMode === 'register';
+        const roleLabels = {
+          siswa: { label: 'Siswa', placeholder: 'Username / NISN (cth: siswa)' },
+          guru:  { label: 'Guru',  placeholder: 'Username / NIP (cth: guru)' },
+          admin: { label: 'Admin', placeholder: 'Username Admin (cth: admin)' }
+        };
+
+        return `
+          <div class="login-scenic-bg min-h-screen w-full flex flex-col items-center justify-center p-4 sm:p-6 relative overflow-y-auto">
+            <!-- Overlay halus untuk kontras teks maksimal -->
+            <div class="absolute inset-0 bg-black/15 pointer-events-none"></div>
+
+            <!-- Kartu Glassmorphism Utama sesuai Referensi Gambar 1 -->
+            <div class="glass-login-card relative z-10 w-full max-w-[420px] rounded-[28px] px-6 py-8 sm:px-9 sm:py-10 text-white animate-fade-up">
+              
+              <!-- Badge Identitas Sekolah -->
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 border border-white/30 text-[11px] font-semibold tracking-wide mb-4">
+                <span class="w-2 h-2 rounded-full bg-lime-400 animate-pulse"></span>
+                <span>SMP PGRI SUMBERAGUNG</span>
+              </div>
+
+              ${!isReg ? `
+                <!-- JUDUL & SUBJUDUL SESUAI PERMINTAAN -->
+                <h1 class="text-3xl sm:text-[34px] font-extrabold tracking-tight leading-tight drop-shadow-sm">Login</h1>
+                <p class="text-white/90 text-xs sm:text-sm mt-1.5 mb-5 leading-relaxed font-medium">
+                  Selamat Datang di Student Portal SMP PGRI Sumberagung
+                </p>
+
+                <!-- Pilihan Peran Pengguna (Siswa / Guru / Admin) -->
+                <div class="grid grid-cols-3 gap-1.5 p-1 rounded-xl bg-black/25 border border-white/25 mb-4">
+                  ${['siswa', 'guru', 'admin'].map(r => `
+                    <button type="button" onclick="window.AppActions.setLoginRole('${r}')"
+                      class="py-2 rounded-lg text-xs font-bold capitalize transition-all ${APP_STATE.selectedLoginRole === r ? 'bg-white text-slate-900 shadow-md' : 'text-white/85 hover:text-white'}">
+                      ${r}
+                    </button>
+                  `).join('')}
+                </div>
+
+                <!-- FORM LOGIN -->
+                <form onsubmit="window.AppActions.submitLogin(event)" class="space-y-4">
+                  <!-- Kolom Username -->
+                  <div class="relative">
+                    <input
+                      id="loginUsername"
+                      type="text"
+                      value="${APP_STATE.rememberMe ? APP_STATE.selectedLoginRole : ''}"
+                      placeholder="${roleLabels[APP_STATE.selectedLoginRole].placeholder}"
+                      class="glass-input w-full rounded-xl py-3.5 pl-4 pr-11 text-sm font-medium"
+                      required
+                    />
+                    <span class="absolute right-3.5 top-1/2 -translate-y-1/2 text-white/85 pointer-events-none">
+                      <i data-lucide="user" class="w-5 h-5"></i>
+                    </span>
+                  </div>
+
+                  <!-- Kolom Password + Tombol Mata -->
+                  <div class="relative">
+                    <input
+                      id="loginPassword"
+                      type="${APP_STATE.showPassword ? 'text' : 'password'}"
+                      value="${APP_STATE.rememberMe ? '123' : ''}"
+                      placeholder="Password (demo: 123)"
+                      class="glass-input w-full rounded-xl py-3.5 pl-4 pr-11 text-sm font-medium"
+                      required
+                    />
+                    <button
+                      type="button"
+                      onclick="window.AppActions.togglePassword()"
+                      aria-label="Tampilkan atau sembunyikan password"
+                      class="absolute right-3.5 top-1/2 -translate-y-1/2 text-white/85 hover:text-white p-1">
+                      <i data-lucide="${APP_STATE.showPassword ? 'eye' : 'eye-off'}" class="w-5 h-5"></i>
+                    </button>
+                  </div>
+
+                  <!-- Checkbox Remember Me & Info Akun -->
+                  <div class="flex items-center justify-between text-xs pt-0.5">
+                    <label class="inline-flex items-center gap-2 cursor-pointer select-none">
+                      <input
+                        type="checkbox"
+                        ${APP_STATE.rememberMe ? 'checked' : ''}
+                        onchange="window.AppActions.toggleRemember(this.checked)"
+                        class="w-4 h-4 rounded accent-green-500 cursor-pointer"
+                      />
+                      <span class="text-white/95 font-medium">Remember Me</span>
+                    </label>
+                    <span class="text-white/80 text-[11px]">Pass demo: <b class="text-lime-200">123</b></span>
+                  </div>
+
+                  <!-- Tombol Login Gradasi Hijau & Kuning -->
+                  <button type="submit" class="btn-gradient-login w-full py-3.5 rounded-xl text-white font-extrabold text-base tracking-wide cursor-pointer">
+                    Login
+                  </button>
+                </form>
+
+                <!-- Akses Cepat 1-Klik untuk Pengujian Langsung -->
+                <div class="mt-4 pt-3.5 border-t border-white/20">
+                  <p class="text-[11px] text-center text-white/80 mb-2">Masuk Cepat Tanpa Ketik (Demo Instan):</p>
+                  <div class="grid grid-cols-3 gap-2">
+                    <button type="button" onclick="window.AppActions.demoLogin('siswa')" class="py-1.5 px-2 rounded-lg bg-white/15 hover:bg-white/25 border border-white/30 text-[11px] font-semibold transition">
+                      Demo Siswa
+                    </button>
+                    <button type="button" onclick="window.AppActions.demoLogin('guru')" class="py-1.5 px-2 rounded-lg bg-white/15 hover:bg-white/25 border border-white/30 text-[11px] font-semibold transition">
+                      Demo Guru
+                    </button>
+                    <button type="button" onclick="window.AppActions.demoLogin('admin')" class="py-1.5 px-2 rounded-lg bg-white/15 hover:bg-white/25 border border-white/30 text-[11px] font-semibold transition">
+                      Demo Admin
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Link Pendaftaran Akun Siswa -->
+                <p class="text-center text-xs text-white/90 mt-5">
+                  Belum punya akun siswa?
+                  <button type="button" onclick="window.AppActions.switchLoginMode('register')" class="font-extrabold text-lime-200 hover:underline ml-1">
+                    Daftar Akun Siswa
+                  </button>
+                </p>
+              ` : `
+                <!-- FORM PENDAFTARAN AKUN SISWA -->
+                <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Daftar Akun Siswa</h1>
+                <p class="text-white/90 text-xs mt-1 mb-5">Buat akun baru untuk mengakses Student Portal SMP PGRI Sumberagung</p>
+
+                <form onsubmit="window.AppActions.submitRegister(event)" class="space-y-3">
+                  <div>
+                    <input id="regNama" type="text" placeholder="Nama Lengkap Siswa" class="glass-input w-full rounded-xl py-3 px-4 text-sm" required />
+                  </div>
+                  <div class="grid grid-cols-2 gap-2.5">
+                    <input id="regNisn" type="text" placeholder="NISN (10 digit)" class="glass-input w-full rounded-xl py-3 px-3.5 text-sm" required />
+                    <select id="regKelas" class="glass-input w-full rounded-xl py-3 px-3 text-sm bg-slate-800/70">
+                      ${APP_STATE.db.kelas.map(k => `<option value="${k.nama}" class="text-slate-900 bg-white">Kelas ${k.nama}</option>`).join('')}
+                    </select>
+                  </div>
+                  <div>
+                    <input id="regUsername" type="text" placeholder="Buat Username Login" class="glass-input w-full rounded-xl py-3 px-4 text-sm" required />
+                  </div>
+                  <div>
+                    <input id="regPassword" type="password" placeholder="Buat Password" class="glass-input w-full rounded-xl py-3 px-4 text-sm" required />
+                  </div>
+                  <button type="submit" class="btn-gradient-login w-full py-3 rounded-xl text-white font-extrabold text-sm mt-1">
+                    Daftar & Masuk Sekarang
+                  </button>
+                </form>
+
+                <p class="text-center text-xs text-white/90 mt-4">
+                  Sudah memiliki akun?
+                  <button type="button" onclick="window.AppActions.switchLoginMode('login')" class="font-extrabold text-lime-200 hover:underline ml-1">
+                    Kembali ke Login
+                  </button>
+                </p>
+              `}
+
+              <!-- Footer Created by Danang Wahyudi sesuai Gambar 1 -->
+              <div class="mt-6 pt-3 text-center">
+                <p class="text-[11px] text-white/85 tracking-wide">
+                  Created by <span class="font-extrabold italic text-white">Danang Wahyudi</span>
+                </p>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      // =========================================================================
+      // 6. KALKULASI STATUS TUGAS SISWA
+      // =========================================================================
+      function getStudentTaskStatus(tugas, siswaId) {
+        const sub = APP_STATE.db.pengumpulan.find(s => s.tugasId === tugas.id && s.siswaId === siswaId);
+        const now = new Date();
+        const deadline = new Date(tugas.deadline);
+
+        if (sub) {
+          if (sub.nilai !== null && sub.nilai !== undefined && sub.nilai !== '') {
+            return { code: 'dinilai', label: 'Sudah Dinilai', badgeClass: 'bg-emerald-100 text-emerald-700 border-emerald-200', submission: sub };
+          }
+          return { code: 'dikumpulkan', label: 'Sudah Dikumpulkan', badgeClass: 'bg-blue-100 text-blue-700 border-blue-200', submission: sub };
+        }
+        if (now > deadline) {
+          return { code: 'terlambat', label: 'Terlambat', badgeClass: 'bg-rose-100 text-rose-700 border-rose-200', submission: null };
+        }
+        return { code: 'belum', label: 'Belum Dikerjakan', badgeClass: 'bg-amber-100 text-amber-700 border-amber-200', submission: null };
+      }
+
+      // =========================================================================
+      // 7. HEADER DASHBOARD & BOTTOM NAVIGATION (SESUAI GAMBAR 2)
+      // =========================================================================
+      function renderDashboardHeader() {
+        const user = APP_STATE.currentUser;
+        const unreadCount = APP_STATE.db.notifications.filter(n => !n.read).length;
+        const roleBadge = {
+          siswa: `Siswa • Kelas ${user.kelas || 'VIII-A'}`,
+          guru: `Guru • ${user.mapel || 'Pengajar'}`,
+          admin: 'Administrator Sekolah'
+        }[user.role];
+
+        return `
+          <header class="dashboard-header-grad text-white rounded-b-[30px] shadow-lg sticky top-0 z-30">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 pt-4 pb-6">
+              <!-- Baris Atas: Menu Hamburger, Judul Portal, Lonceng Notifikasi, Foto Profil -->
+              <div class="flex items-center justify-between gap-3">
+                <div class="flex items-center gap-3 min-w-0">
+                  <button onclick="window.AppActions.toggleSidebar()" aria-label="Buka Menu"
+                    class="w-10 h-10 rounded-xl bg-white/15 hover:bg-white/25 flex items-center justify-center transition shrink-0">
+                    <i data-lucide="menu" class="w-5 h-5 text-white"></i>
+                  </button>
+                  <div class="min-w-0">
+                    <h1 class="text-base sm:text-xl font-extrabold tracking-tight truncate">
+                      Student Portal SMP PGRI Sumberagung
+                    </h1>
+                    <p class="text-[11px] sm:text-xs text-indigo-100 truncate">${escapeHtml(roleBadge)}</p>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-2.5 sm:gap-3 shrink-0 relative">
+                  <!-- Ikon Notifikasi dengan Badge Merah -->
+                  <button onclick="window.AppActions.toggleNotif()" aria-label="Notifikasi"
+                    class="relative w-10 h-10 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center transition">
+                    <i data-lucide="bell" class="w-5 h-5 text-white"></i>
+                    ${unreadCount > 0 ? `
+                      <span class="absolute -top-0.5 -right-0.5 min-w-[19px] h-[19px] px-1 rounded-full bg-rose-500 text-white text-[10px] font-extrabold flex items-center justify-center border-2 border-indigo-700">
+                        ${unreadCount}
+                      </span>
+                    ` : ''}
+                  </button>
+
+                  <!-- Foto Profil Pengguna -->
+                  <button onclick="window.AppActions.navigate('profil')"
+                    class="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white p-0.5 shadow-md overflow-hidden border-2 border-white/80 hover:scale-105 transition">
+                    <img src="${user.avatar || AVATAR_SISWA}" alt="${escapeHtml(user.nama)}" class="w-full h-full object-cover rounded-full" />
+                  </button>
+
+                  <!-- Dropdown Notifikasi Otomatis -->
+                  ${APP_STATE.showNotifDropdown ? renderNotifDropdown() : ''}
+                </div>
+              </div>
+
+              <!-- Sapaan Berdasarkan Nama Pengguna (Seperti "Hello, Alex 👋" di Gambar 2) -->
+              <div class="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
+                <div>
+                  <h2 class="text-lg sm:text-2xl font-bold flex items-center gap-2">
+                    <span>Halo, ${escapeHtml(user.nama.split(',')[0])}</span>
+                    <span class="text-xl sm:text-2xl">👋</span>
+                  </h2>
+                  <p class="text-xs sm:text-sm text-indigo-100/95">Semoga harimu menyenangkan & penuh semangat belajar!</p>
+                </div>
+                <div class="hidden md:flex items-center gap-2 text-xs bg-white/15 px-3 py-1.5 rounded-full border border-white/20">
+                  <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                  <span>${escapeHtml(APP_STATE.db.sekolah.tahunAjaran)}</span>
+                </div>
+              </div>
+
+              <!-- Kolom Pencarian Putih Melengkung sesuai Gambar 2 -->
+              <div class="mt-4 relative">
+                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-indigo-500 pointer-events-none">
+                  <i data-lucide="search" class="w-5 h-5"></i>
+                </span>
+                <input
+                  type="text"
+                  value="${escapeHtml(APP_STATE.searchQuery)}"
+                  oninput="window.AppActions.handleSearch(this.value)"
+                  placeholder="Cari menu, tugas, mata pelajaran, materi, atau pengumuman..."
+                  class="w-full bg-white text-slate-800 placeholder-slate-400 rounded-2xl py-3 pl-12 pr-10 text-sm font-medium shadow-md focus:outline-none focus:ring-4 focus:ring-indigo-300/40"
+                />
+                ${APP_STATE.searchQuery ? `
+                  <button onclick="window.AppActions.handleSearch('')" class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+                    <i data-lucide="x-circle" class="w-4 h-4"></i>
+                  </button>
+                ` : ''}
+              </div>
+            </div>
+          </header>
+        `;
+      }
+
+      function renderNotifDropdown() {
+        const list = APP_STATE.db.notifications;
+        return `
+          <div class="absolute right-0 top-12 w-80 sm:w-96 bg-white text-slate-800 rounded-2xl shadow-2xl border border-slate-100 z-50 overflow-hidden animate-fade-up">
+            <div class="px-4 py-3 bg-indigo-50 border-b border-indigo-100 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <i data-lucide="bell-ring" class="w-4 h-4 text-indigo-600"></i>
+                <span class="font-bold text-sm text-indigo-950">Notifikasi Otomatis</span>
+              </div>
+              <button onclick="window.AppActions.markAllNotifRead()" class="text-xs font-semibold text-indigo-600 hover:underline">
+                Tandai dibaca
+              </button>
+            </div>
+            <div class="max-h-72 overflow-y-auto divide-y divide-slate-100">
+              ${list.length === 0 ? `
+                <p class="p-6 text-center text-xs text-slate-500">Belum ada notifikasi baru.</p>
+              ` : list.map(n => `
+                <button onclick="window.AppActions.openNotifItem('${n.id}', '${n.targetTab}')"
+                  class="w-full text-left px-4 py-3 hover:bg-slate-50 transition flex items-start gap-3 ${!n.read ? 'bg-indigo-50/40' : ''}">
+                  <span class="w-2.5 h-2.5 rounded-full mt-1.5 shrink-0 ${!n.read ? 'bg-rose-500' : 'bg-slate-300'}"></span>
+                  <div class="flex-1 min-w-0">
+                    <p class="text-xs font-bold text-slate-800 leading-snug">${escapeHtml(n.title)}</p>
+                    <p class="text-[11px] text-slate-600 mt-0.5 line-clamp-2">${escapeHtml(n.desc)}</p>
+                    <span class="text-[10px] text-indigo-600 font-medium mt-1 inline-block">${escapeHtml(n.time)}</span>
+                  </div>
+                </button>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      function renderBottomNav() {
+        const navItems = [
+          { id: 'home', icon: 'home', label: 'Home' },
+          { id: 'jadwal', icon: 'calendar', label: 'Jadwal' },
+          { id: 'chatbox', icon: 'message-circle', label: 'Pesan' },
+          { id: 'lainnya', icon: 'layout-grid', label: 'Lainnya' }
+        ];
+
+        return `
+          <nav class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200/80 z-30 shadow-[0_-4px_20px_rgba(0,0,0,0.04)]">
+            <div class="max-w-3xl mx-auto grid grid-cols-4 py-1.5 px-2">
+              ${navItems.map(item => {
+                const isActive = APP_STATE.activeView === item.id;
+                return `
+                  <button onclick="window.AppActions.navigate('${item.id}')"
+                    class="flex flex-col items-center justify-center py-1.5 rounded-xl transition ${isActive ? 'text-indigo-600 font-bold' : 'text-slate-400 hover:text-slate-600 font-medium'}">
+                    <div class="p-1 rounded-lg ${isActive ? 'bg-indigo-50' : ''}">
+                      <i data-lucide="${item.icon}" class="w-5 h-5"></i>
+                    </div>
+                    <span class="text-[11px] mt-0.5">${item.label}</span>
+                  </button>
+                `;
+              }).join('')}
+            </div>
+          </nav>
+        `;
+      }
+
+      function renderSidebarDrawer() {
+        if (!APP_STATE.showSidebar) return '';
+        const user = APP_STATE.currentUser;
+        return `
+          <div class="fixed inset-0 z-50 flex">
+            <div onclick="window.AppActions.toggleSidebar()" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs"></div>
+            <aside class="relative w-72 max-w-[82vw] bg-white h-full shadow-2xl flex flex-col justify-between z-10 animate-fade-up">
+              <div>
+                <div class="dashboard-header-grad p-5 text-white">
+                  <div class="flex items-center justify-between mb-4">
+                    <span class="text-xs font-bold uppercase tracking-wider bg-white/20 px-2.5 py-1 rounded-full">Menu Portal</span>
+                    <button onclick="window.AppActions.toggleSidebar()" class="p-1 rounded-lg hover:bg-white/20">
+                      <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                  </div>
+                  <div class="flex items-center gap-3">
+                    <img src="${user.avatar}" class="w-12 h-12 rounded-full border-2 border-white bg-white" />
+                    <div class="min-w-0">
+                      <p class="font-bold text-sm truncate">${escapeHtml(user.nama)}</p>
+                      <p class="text-xs text-indigo-100 capitalize">Peran: ${user.role}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="p-3 space-y-1 overflow-y-auto max-h-[calc(100vh-220px)]">
+                  <button onclick="window.AppActions.navigate('home')" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-indigo-50 hover:text-indigo-700">
+                    <i data-lucide="home" class="w-4 h-4 text-indigo-600"></i> Dashboard Utama
+                  </button>
+                  <button onclick="window.AppActions.navigate('profil')" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-indigo-50 hover:text-indigo-700">
+                    <i data-lucide="user" class="w-4 h-4 text-purple-600"></i> Profil Pengguna
+                  </button>
+                  <button onclick="window.AppActions.navigate('tugas')" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-indigo-50 hover:text-indigo-700">
+                    <i data-lucide="book-open-check" class="w-4 h-4 text-orange-600"></i> ${user.role === 'guru' ? 'Kelola & Nilai Tugas' : 'Tugas Sekolah'}
+                  </button>
+                  <button onclick="window.AppActions.navigate('jadwal')" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-indigo-50 hover:text-indigo-700">
+                    <i data-lucide="calendar-days" class="w-4 h-4 text-blue-600"></i> Jadwal Pelajaran
+                  </button>
+                  <button onclick="window.AppActions.navigate('pengumuman')" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-indigo-50 hover:text-indigo-700">
+                    <i data-lucide="megaphone" class="w-4 h-4 text-rose-600"></i> Pengumuman Sekolah
+                  </button>
+                  ${user.role === 'admin' ? `
+                    <button onclick="window.AppActions.navigate('admin_users')" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-indigo-50 hover:text-indigo-700">
+                      <i data-lucide="users" class="w-4 h-4 text-emerald-600"></i> Kelola Siswa & Guru
+                    </button>
+                    <button onclick="window.AppActions.navigate('admin_sekolah')" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-indigo-50 hover:text-indigo-700">
+                      <i data-lucide="database" class="w-4 h-4 text-teal-600"></i> Pengaturan Sekolah & Cloud
+                    </button>
+                  ` : ''}
+                </div>
+              </div>
+
+              <div class="p-4 border-t border-slate-100">
+                <button onclick="window.AppActions.logout()" class="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold text-sm transition">
+                  <i data-lucide="log-out" class="w-4 h-4"></i> Keluar (Logout)
+                </button>
+                <p class="text-[10px] text-center text-slate-400 mt-2">Created by Danang Wahyudi</p>
+              </div>
+            </aside>
+          </div>
+        `;
+      }
+
+      // =========================================================================
+      // 8. KONTEN DASHBOARD UTAMA PER PERAN (SISWA / GURU / ADMIN)
+      // =========================================================================
+      function renderHomeContent() {
+        const role = APP_STATE.currentUser.role;
+        const q = APP_STATE.searchQuery.toLowerCase();
+
+        // Definisi 12 Menu Quick Access untuk Siswa (Sesuai Gambar 2 & Instruksi #3)
+        const siswaMenus = [
+          { id: 'profil', title: 'Profil Siswa', sub: 'Lihat & edit profil', icon: 'user', bg: 'pastel-purple', iconBg: 'bg-indigo-600' },
+          { id: 'jadwal', title: 'Jadwal Pelajaran', sub: 'Jadwal sekolah', icon: 'calendar-clock', bg: 'pastel-peach', iconBg: 'bg-orange-500' },
+          { id: 'absensi', title: 'Absensi', sub: 'Riwayat kehadiran', icon: 'calendar-check', bg: 'pastel-mint', iconBg: 'bg-emerald-600' },
+          { id: 'tugas', title: 'Tugas Sekolah', sub: 'Lihat & kumpul tugas', icon: 'book-open', bg: 'pastel-peach', iconBg: 'bg-amber-500', badge: APP_STATE.db.tugas.length },
+          { id: 'materi', title: 'Materi Pelajaran', sub: 'Baca & unduh materi', icon: 'file-text', bg: 'pastel-blue', iconBg: 'bg-blue-600' },
+          { id: 'nilai', title: 'Nilai', sub: 'Lihat hasil belajar', icon: 'bar-chart-3', bg: 'pastel-yellow', iconBg: 'bg-yellow-500' },
+          { id: 'kalender', title: 'Kalender Akademik', sub: 'Agenda sekolah', icon: 'calendar', bg: 'pastel-purple', iconBg: 'bg-purple-600' },
+          { id: 'pengumuman', title: 'Pengumuman', sub: 'Info terbaru sekolah', icon: 'megaphone', bg: 'pastel-purple', iconBg: 'bg-violet-600', isNew: true },
+          { id: 'chatbox', title: 'Chatbox', sub: 'Diskusi siswa & guru', icon: 'message-square', bg: 'pastel-pink', iconBg: 'bg-pink-500' },
+          { id: 'perpustakaan', title: 'Perpustakaan', sub: 'Buku & sumber belajar', icon: 'library', bg: 'pastel-blue', iconBg: 'bg-sky-500' },
+          { id: 'ujian', title: 'Ujian', sub: 'Jadwal & hasil ujian', icon: 'clipboard-check', bg: 'pastel-mint', iconBg: 'bg-green-600' },
+          { id: 'galeri', title: 'Galeri', sub: 'Dokumentasi sekolah', icon: 'image', bg: 'pastel-blue', iconBg: 'bg-blue-500' }
+        ];
+
+        // Menu Quick Access untuk Guru (Sesuai Instruksi #6)
+        const guruMenus = [
+          { id: 'profil', title: 'Profil Guru', sub: 'Biodata & NIP pengajar', icon: 'user-check', bg: 'pastel-purple', iconBg: 'bg-indigo-600' },
+          { id: 'guru_kelas', title: 'Daftar Kelas', sub: 'Kelas yang diampu', icon: 'school', bg: 'pastel-blue', iconBg: 'bg-blue-600' },
+          { id: 'guru_siswa', title: 'Daftar Siswa', sub: 'Data lengkap siswa', icon: 'users', bg: 'pastel-mint', iconBg: 'bg-emerald-600' },
+          { id: 'jadwal', title: 'Jadwal Mengajar', sub: 'Jam mengajar mingguan', icon: 'calendar-clock', bg: 'pastel-peach', iconBg: 'bg-orange-500' },
+          { id: 'absensi', title: 'Absensi Siswa', sub: 'Input kehadiran siswa', icon: 'clipboard-list', bg: 'pastel-mint', iconBg: 'bg-teal-600' },
+          { id: 'guru_tambah_tugas', title: 'Tambah Tugas', sub: 'Buat tugas baru', icon: 'plus-circle', bg: 'pastel-peach', iconBg: 'bg-amber-500', isNew: true },
+          { id: 'tugas', title: 'Pengumpulan Tugas', sub: 'Periksa & beri nilai', icon: 'folder-check', bg: 'pastel-purple', iconBg: 'bg-violet-600', badge: APP_STATE.db.pengumpulan.length },
+          { id: 'materi', title: 'Materi Pembelajaran', sub: 'Upload & kelola modul', icon: 'book-marked', bg: 'pastel-blue', iconBg: 'bg-sky-600' },
+          { id: 'nilai', title: 'Input Nilai', sub: 'Rekap & input nilai', icon: 'award', bg: 'pastel-yellow', iconBg: 'bg-yellow-500' },
+          { id: 'pengumuman', title: 'Pengumuman', sub: 'Buat info sekolah', icon: 'megaphone', bg: 'pastel-pink', iconBg: 'bg-pink-500' },
+          { id: 'kalender', title: 'Kalender Akademik', sub: 'Agenda & ujian', icon: 'calendar', bg: 'pastel-purple', iconBg: 'bg-purple-600' },
+          { id: 'chatbox', title: 'Chatbox Kelas', sub: 'Tanya jawab siswa', icon: 'message-circle', bg: 'pastel-mint', iconBg: 'bg-green-600' }
+        ];
+
+        // Menu Quick Access untuk Admin (Sesuai Instruksi #7)
+        const adminMenus = [
+          { id: 'admin_users', title: 'Akun Siswa', sub: 'Tambah, edit & hapus siswa', icon: 'graduation-cap', bg: 'pastel-blue', iconBg: 'bg-blue-600' },
+          { id: 'admin_users_guru', title: 'Akun Guru', sub: 'Kelola data dewan guru', icon: 'briefcase', bg: 'pastel-purple', iconBg: 'bg-indigo-600' },
+          { id: 'admin_akademik', title: 'Data Kelas', sub: 'Tambah & atur rombel', icon: 'building-2', bg: 'pastel-mint', iconBg: 'bg-emerald-600' },
+          { id: 'admin_mapel', title: 'Mata Pelajaran', sub: 'Kurikulum & KKM mapel', icon: 'book', bg: 'pastel-peach', iconBg: 'bg-orange-500' },
+          { id: 'jadwal', title: 'Jadwal Pelajaran', sub: 'Atur jadwal seluruh kelas', icon: 'calendar-range', bg: 'pastel-yellow', iconBg: 'bg-amber-500' },
+          { id: 'admin_sekolah', title: 'Data Sekolah', sub: 'Profil & Firebase Cloud', icon: 'landmark', bg: 'pastel-purple', iconBg: 'bg-violet-600' },
+          { id: 'pengumuman', title: 'Pengumuman', sub: 'Publikasi berita resmi', icon: 'megaphone', bg: 'pastel-pink', iconBg: 'bg-rose-500', isNew: true },
+          { id: 'admin_logs', title: 'Aktivitas Pengguna', sub: 'Log audit sistem real-time', icon: 'activity', bg: 'pastel-mint', iconBg: 'bg-teal-600' },
+          { id: 'tugas', title: 'Monitoring Tugas', sub: 'Pantau seluruh tugas', icon: 'check-square', bg: 'pastel-blue', iconBg: 'bg-sky-600' }
+        ];
+
+        const activeMenus = (role === 'siswa' ? siswaMenus : role === 'guru' ? guruMenus : adminMenus)
+          .filter(m => !q || m.title.toLowerCase().includes(q) || m.sub.toLowerCase().includes(q));
+
+        // Ringkasan Statistik Cepat sesuai Peran
+        const statsCards = role === 'siswa' ? [
+          { label: 'Tugas Aktif', val: APP_STATE.db.tugas.filter(t => t.kelas === APP_STATE.currentUser.kelas).length, color: 'text-indigo-600', bg: 'bg-indigo-50' },
+          { label: 'Sudah Dikumpul', val: APP_STATE.db.pengumpulan.filter(s => s.siswaId === APP_STATE.currentUser.id).length, color: 'text-emerald-600', bg: 'bg-emerald-50' },
+          { label: 'Kehadiran', val: '96%', color: 'text-blue-600', bg: 'bg-blue-50' }
+        ] : role === 'guru' ? [
+          { label: 'Total Tugas Dibuat', val: APP_STATE.db.tugas.length, color: 'text-indigo-600', bg: 'bg-indigo-50' },
+          { label: 'Jawaban Masuk', val: APP_STATE.db.pengumpulan.length, color: 'text-emerald-600', bg: 'bg-emerald-50' },
+          { label: 'Kelas Diampu', val: APP_STATE.db.kelas.length, color: 'text-amber-600', bg: 'bg-amber-50' }
+        ] : [
+          { label: 'Total Siswa', val: APP_STATE.db.users.filter(u => u.role === 'siswa').length, color: 'text-blue-600', bg: 'bg-blue-50' },
+          { label: 'Total Guru', val: APP_STATE.db.users.filter(u => u.role === 'guru').length, color: 'text-indigo-600', bg: 'bg-indigo-50' },
+          { label: 'Total Kelas', val: APP_STATE.db.kelas.length, color: 'text-emerald-600', bg: 'bg-emerald-50' }
+        ];
+
+        return `
+          <div class="space-y-6 animate-fade-up">
+            <!-- Kartu Ringkasan Singkat -->
+            <div class="grid grid-cols-3 gap-3">
+              ${statsCards.map(st => `
+                <div class="bg-white rounded-2xl p-3.5 shadow-xs border border-slate-100 flex flex-col items-center text-center">
+                  <span class="text-xl sm:text-2xl font-extrabold ${st.color}">${st.val}</span>
+                  <span class="text-[11px] sm:text-xs text-slate-500 font-medium mt-0.5">${st.label}</span>
+                </div>
+              `).join('')}
+            </div>
+
+            <!-- Bagian Quick Access (Kartu Pastel 3 Kolom di HP, 4 Kolom di Desktop sesuai Gambar 2) -->
+            <section>
+              <div class="flex items-center justify-between mb-3.5">
+                <h3 class="text-base sm:text-lg font-extrabold text-slate-800">Quick Access</h3>
+                <button onclick="window.AppActions.navigate('lainnya')" class="text-xs sm:text-sm font-bold text-indigo-600 hover:underline">
+                  Lihat Semua
+                </button>
+              </div>
+
+              ${activeMenus.length === 0 ? `
+                <div class="bg-white rounded-2xl p-8 text-center border border-slate-100">
+                  <p class="text-sm text-slate-500">Tidak ditemukan menu yang cocok dengan kata kunci "<b>${escapeHtml(APP_STATE.searchQuery)}</b>".</p>
+                </div>
+              ` : `
+                <div class="grid grid-cols-3 sm:grid-cols-4 gap-3 sm:gap-4">
+                  ${activeMenus.map(m => `
+                    <button onclick="window.AppActions.navigate('${m.id}')"
+                      class="quick-card ${m.bg} relative rounded-2xl p-3.5 sm:p-4 text-left flex flex-col justify-between min-h-[118px] sm:min-h-[130px] shadow-xs cursor-pointer">
+                      
+                      ${m.isNew ? `
+                        <span class="absolute top-2.5 right-2.5 px-2 py-0.5 rounded-full bg-indigo-600 text-white text-[9px] font-extrabold tracking-wider">
+                          NEW
+                        </span>
+                      ` : ''}
+
+                      ${m.badge ? `
+                        <span class="absolute top-2.5 right-2.5 min-w-[20px] h-5 px-1.5 rounded-full bg-amber-500 text-white text-[10px] font-extrabold flex items-center justify-center">
+                          ${m.badge}
+                        </span>
+                      ` : ''}
+
+                      <!-- Ikon Bulat Berwarna Cerah seperti di Gambar 2 -->
+                      <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-full ${m.iconBg} text-white flex items-center justify-center shadow-sm mb-3">
+                        <i data-lucide="${m.icon}" class="w-5 h-5"></i>
+                      </div>
+
+                      <div>
+                        <div class="flex items-center justify-between gap-1">
+                          <h4 class="font-bold text-xs sm:text-sm text-slate-800 leading-tight line-clamp-1">${escapeHtml(m.title)}</h4>
+                          <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i>
+                        </div>
+                        <p class="text-[10px] sm:text-xs text-slate-500 mt-0.5 line-clamp-1">${escapeHtml(m.sub)}</p>
+                      </div>
+                    </button>
+                  `).join('')}
+                </div>
+              `}
+            </section>
+
+            <!-- Bagian Upcoming Events / Agenda Mendatang (Sesuai Bagian Bawah Gambar 2) -->
+            <section>
+              <div class="flex items-center justify-between mb-3">
+                <h3 class="text-base sm:text-lg font-extrabold text-slate-800">Agenda Mendatang</h3>
+                <button onclick="window.AppActions.navigate('kalender')" class="text-xs sm:text-sm font-bold text-indigo-600 hover:underline">
+                  Lihat Kalender
+                </button>
+              </div>
+
+              <div class="bg-white rounded-2xl p-4 shadow-xs border border-slate-100 divide-y divide-slate-100">
+                ${APP_STATE.db.agenda.slice(0, 3).map(ev => {
+                  const badgeBox = ev.warna === 'peach' ? 'bg-orange-50 text-orange-600' : ev.warna === 'blue' ? 'bg-blue-50 text-blue-600' : 'bg-indigo-50 text-indigo-600';
+                  const pillColor = ev.warna === 'peach' ? 'bg-orange-100 text-orange-700' : 'bg-indigo-100 text-indigo-700';
+                  return `
+                    <div class="py-3 first:pt-0 last:pb-0 flex items-center gap-3.5">
+                      <div class="w-14 h-16 rounded-xl ${badgeBox} flex flex-col items-center justify-center shrink-0">
+                        <span class="text-[10px] font-extrabold uppercase">${escapeHtml(ev.bulan)}</span>
+                        <span class="text-lg font-extrabold leading-none my-0.5">${escapeHtml(ev.tanggal)}</span>
+                        <span class="text-[10px] font-medium opacity-80">${escapeHtml(ev.hari)}</span>
+                      </div>
+                      <div class="flex-1 min-w-0">
+                        <div class="flex items-start justify-between gap-2">
+                          <h4 class="font-bold text-xs sm:text-sm text-slate-800 leading-snug">${escapeHtml(ev.judul)}</h4>
+                          <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold shrink-0 ${pillColor}">
+                            ${escapeHtml(ev.status)}
+                          </span>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-slate-500 mt-1.5">
+                          <span class="inline-flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3"></i> ${escapeHtml(ev.waktu)}</span>
+                          <span class="inline-flex items-center gap-1"><i data-lucide="map-pin" class="w-3 h-3"></i> ${escapeHtml(ev.lokasi)}</span>
+                        </div>
+                      </div>
+                    </div>
+                  `;
+                }).join('')}
+
+                <div class="pt-3 text-center">
+                  <button onclick="window.AppActions.navigate('kalender')" class="text-xs font-bold text-indigo-600 hover:underline">
+                    Lihat Semua Agenda Sekolah
+                  </button>
+                </div>
+              </div>
+            </section>
+          </div>
+        `;
+      }
+
+      // =========================================================================
+      // 9. FITUR MANAJEMEN TUGAS (SISWA) & KELOLA/NILAI TUGAS (GURU)
+      // =========================================================================
+      function renderTugasPage() {
+        const user = APP_STATE.currentUser;
+        if (user.role === 'guru' || user.role === 'admin') {
+          return renderGuruTugasManager();
+        }
+
+        // TAMPILAN TUGAS UNTUK SISWA (Instruksi #4)
+        const allClassTasks = APP_STATE.db.tugas.filter(t => !user.kelas || t.kelas === user.kelas);
+        const enriched = allClassTasks.map(t => ({
+          ...t,
+          statusObj: getStudentTaskStatus(t, user.id)
+        }));
+
+        const categories = [
+          { id: 'semua', label: 'Semua Tugas', count: enriched.length },
+          { id: 'belum', label: 'Belum Dikerjakan', count: enriched.filter(x => x.statusObj.code === 'belum').length },
+          { id: 'dikumpulkan', label: 'Sudah Dikumpulkan', count: enriched.filter(x => x.statusObj.code === 'dikumpulkan').length },
+          { id: 'terlambat', label: 'Terlambat', count: enriched.filter(x => x.statusObj.code === 'terlambat').length },
+          { id: 'dinilai', label: 'Sudah Dinilai', count: enriched.filter(x => x.statusObj.code === 'dinilai').length }
+        ];
+
+        const filteredTasks = enriched.filter(t => {
+          const matchCat = APP_STATE.taskCategory === 'semua' || t.statusObj.code === APP_STATE.taskCategory;
+          const q = APP_STATE.searchQuery.toLowerCase();
+          const matchSearch = !q || t.judul.toLowerCase().includes(q) || t.mapel.toLowerCase().includes(q) || t.guruNama.toLowerCase().includes(q);
+          return matchCat && matchSearch;
+        });
+
+        return `
+          <div class="space-y-4 animate-fade-up">
+            <!-- Header & Tombol Kembali -->
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2.5">
+                <button onclick="window.AppActions.navigate('home')" class="p-2 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50">
+                  <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                </button>
+                <div>
+                  <h2 class="text-lg font-extrabold text-slate-800">Tugas Sekolah (${escapeHtml(user.kelas)})</h2>
+                  <p class="text-xs text-slate-500">Kerjakan dan unggah file tugas sebelum deadline</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tab Kategori Tugas (Semua, Belum Dikerjakan, Sudah Dikumpulkan, Terlambat, Sudah Dinilai) -->
+            <div class="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
+              ${categories.map(c => `
+                <button onclick="window.AppActions.setTaskCategory('${c.id}')"
+                  class="px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition flex items-center gap-1.5 border ${APP_STATE.taskCategory === c.id ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm' : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'}">
+                  <span>${c.label}</span>
+                  <span class="px-1.5 py-0.5 rounded-full text-[10px] ${APP_STATE.taskCategory === c.id ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600'}">
+                    ${c.count}
+                  </span>
+                </button>
+              `).join('')}
+            </div>
+
+            <!-- Daftar Kartu Tugas -->
+            ${filteredTasks.length === 0 ? `
+              <div class="bg-white rounded-2xl p-8 text-center border border-slate-100">
+                <i data-lucide="folder-open" class="w-10 h-10 text-slate-300 mx-auto mb-2"></i>
+                <p class="font-bold text-sm text-slate-700">Tidak ada tugas pada kategori ini</p>
+                <p class="text-xs text-slate-500 mt-1">Pilih tab kategori lain di atas untuk melihat daftar tugas.</p>
+              </div>
+            ` : `
+              <div class="space-y-3.5">
+                ${filteredTasks.map(t => {
+                  const st = t.statusObj;
+                  const sub = st.submission;
+                  return `
+                    <div class="bg-white rounded-2xl p-4 sm:p-5 shadow-xs border border-slate-100 space-y-3">
+                      <!-- Baris Atas: Mapel & Status -->
+                      <div class="flex flex-wrap items-center justify-between gap-2">
+                        <span class="px-3 py-1 rounded-lg bg-indigo-50 text-indigo-700 text-xs font-bold">
+                          ${escapeHtml(t.mapel)}
+                        </span>
+                        <span class="px-3 py-1 rounded-full text-xs font-bold border ${st.badgeClass}">
+                          ${st.label}
+                        </span>
+                      </div>
+
+                      <!-- Judul & Nama Guru -->
+                      <div>
+                        <h3 class="font-extrabold text-base text-slate-800 leading-snug">${escapeHtml(t.judul)}</h3>
+                        <p class="text-xs text-slate-500 mt-1 flex items-center gap-1.5">
+                          <i data-lucide="user-check" class="w-3.5 h-3.5 text-indigo-500"></i>
+                          <span>Guru: <b class="text-slate-700">${escapeHtml(t.guruNama)}</b></span>
+                        </p>
+                      </div>
+
+                      <!-- Deskripsi & Petunjuk Pengerjaan -->
+                      <div class="bg-slate-50 rounded-xl p-3 text-xs text-slate-700 space-y-1.5 border border-slate-100">
+                        <p><b>Deskripsi:</b> ${escapeHtml(t.deskripsi)}</p>
+                        <p class="text-slate-600"><b>Petunjuk:</b> ${escapeHtml(t.petunjuk)}</p>
+                      </div>
+
+                      <!-- Tanggal Pemberian, Deadline, & Lampiran Guru -->
+                      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                        <div class="flex items-center gap-2 text-slate-600 bg-slate-50 px-3 py-2 rounded-xl">
+                          <i data-lucide="calendar" class="w-4 h-4 text-blue-500 shrink-0"></i>
+                          <span>Diberikan: <b>${formatTanggalIndo(t.tanggalPemberian)}</b></span>
+                        </div>
+                        <div class="flex items-center gap-2 text-slate-600 bg-rose-50/60 px-3 py-2 rounded-xl">
+                          <i data-lucide="alarm-clock" class="w-4 h-4 text-rose-500 shrink-0"></i>
+                          <span>Deadline: <b class="text-rose-700">${formatDateTimeIndo(t.deadline)}</b></span>
+                        </div>
+                      </div>
+
+                      ${t.lampiranNama ? `
+                        <div class="flex items-center justify-between gap-2 p-2.5 rounded-xl bg-blue-50/70 border border-blue-100">
+                          <div class="flex items-center gap-2 min-w-0">
+                            <i data-lucide="paperclip" class="w-4 h-4 text-blue-600 shrink-0"></i>
+                            <span class="text-xs font-semibold text-blue-900 truncate">${escapeHtml(t.lampiranNama)}</span>
+                          </div>
+                          <button onclick="window.AppActions.downloadTeacherAttachment('${t.id}')"
+                            class="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shrink-0 flex items-center gap-1">
+                            <i data-lucide="download" class="w-3.5 h-3.5"></i> Unduh Soal
+                          </button>
+                        </div>
+                      ` : ''}
+
+                      <!-- Bagian Hasil Pengumpulan / Nilai Guru / Tombol Unggah Jawaban -->
+                      ${sub ? `
+                        <div class="p-3.5 rounded-xl bg-emerald-50/70 border border-emerald-200 space-y-2.5">
+                          <div class="flex flex-wrap items-center justify-between gap-2">
+                            <div>
+                              <p class="text-xs font-bold text-emerald-900">File Jawaban Terkumpul:</p>
+                              <p class="text-xs text-emerald-700 font-medium break-all">${escapeHtml(sub.fileName)} (${escapeHtml(sub.fileSize)})</p>
+                              <p class="text-[11px] text-slate-500 mt-0.5">Dikumpulkan: ${formatDateTimeIndo(sub.submittedAt)}</p>
+                            </div>
+                            <button onclick="window.AppActions.downloadStudentSubmission('${sub.id}')"
+                              class="px-3 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center gap-1.5 shrink-0">
+                              <i data-lucide="download" class="w-3.5 h-3.5"></i> Unduh Kembali
+                            </button>
+                          </div>
+
+                          ${sub.nilai !== null && sub.nilai !== undefined && sub.nilai !== '' ? `
+                            <div class="pt-2.5 border-t border-emerald-200 flex items-start gap-3">
+                              <div class="w-12 h-12 rounded-xl bg-emerald-600 text-white flex flex-col items-center justify-center shrink-0">
+                                <span class="text-[9px] uppercase font-bold">Nilai</span>
+                                <span class="text-lg font-extrabold leading-none">${sub.nilai}</span>
+                              </div>
+                              <div class="text-xs">
+                                <p class="font-bold text-slate-800">Komentar & Catatan Guru:</p>
+                                <p class="text-slate-600 mt-0.5 italic">"${escapeHtml(sub.komentarGuru || 'Bagus, pertahankan prestasi belajarmu!')}"</p>
+                              </div>
+                            </div>
+                          ` : `
+                            <div class="pt-2 border-t border-emerald-200 flex items-center justify-between">
+                              <span class="text-[11px] text-emerald-800 font-medium">Menunggu penilaian dari guru...</span>
+                              <button onclick="window.AppActions.openUploadTaskModal('${t.id}')" class="text-xs font-bold text-indigo-600 hover:underline">
+                                Ganti File Jawaban
+                              </button>
+                            </div>
+                          `}
+                        </div>
+                      ` : `
+                        <button onclick="window.AppActions.openUploadTaskModal('${t.id}')"
+                          class="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-sm transition">
+                          <i data-lucide="upload-cloud" class="w-4 h-4"></i>
+                          <span>Unggah Jawaban Tugas (PDF, DOC, DOCX, PPT, PPTX, JPG)</span>
+                        </button>
+                      `}
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+            `}
+          </div>
+        `;
+      }
+
+      // Modal Upload Jawaban Tugas Siswa (Mendukung file asli dari HP/Komputer)
+      function openUploadTaskModal(tugasId) {
+        const tugas = APP_STATE.db.tugas.find(t => t.id === tugasId);
+        if (!tugas) return;
+
+        const modal = document.getElementById('modalRoot');
+        modal.innerHTML = `
+          <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
+            <div class="bg-white rounded-3xl max-w-md w-full p-5 sm:p-6 shadow-2xl animate-fade-up">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="font-extrabold text-base sm:text-lg text-slate-800">Kumpulkan Jawaban Tugas</h3>
+                <button onclick="window.AppActions.closeModal()" class="p-1.5 rounded-xl hover:bg-slate-100 text-slate-500">
+                  <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+              </div>
+
+              <div class="p-3 rounded-xl bg-indigo-50 border border-indigo-100 mb-4">
+                <p class="text-[11px] font-bold text-indigo-600">${escapeHtml(tugas.mapel)}</p>
+                <p class="text-sm font-extrabold text-slate-800 mt-0.5">${escapeHtml(tugas.judul)}</p>
+              </div>
+
+              <form onsubmit="window.AppActions.submitStudentTaskFile(event, '${tugas.id}')" class="space-y-4">
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 mb-1.5">
+                    Pilih File Jawaban (PDF, DOC, DOCX, PPT, PPTX, JPG)
+                  </label>
+                  <label class="flex flex-col items-center justify-center border-2 border-dashed border-indigo-300 hover:border-indigo-500 rounded-2xl p-5 bg-indigo-50/30 cursor-pointer transition text-center">
+                    <i data-lucide="file-up" class="w-8 h-8 text-indigo-600 mb-2"></i>
+                    <span class="text-xs font-bold text-indigo-700">Klik untuk memilih file dari HP / Komputer</span>
+                    <span class="text-[11px] text-slate-500 mt-1">Format didukung: .pdf, .doc, .docx, .ppt, .pptx, .jpg, .jpeg</span>
+                    <input
+                      id="studentTaskFileInput"
+                      type="file"
+                      accept=".pdf,.doc,.docx,.ppt,.pptx,.jpg,.jpeg,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,image/jpeg"
+                      onchange="window.AppActions.previewSelectedFileName(this)"
+                      class="hidden"
+                      required
+                    />
+                  </label>
+                  <div id="selectedFilePreviewBox" class="hidden mt-2.5 p-2.5 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center gap-2 text-xs text-emerald-800 font-semibold">
+                    <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600 shrink-0"></i>
+                    <span id="selectedFileNameText" class="truncate"></span>
+                  </div>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 mb-1">Catatan untuk Guru (Opsional)</label>
+                  <textarea id="studentTaskNote" rows="2" placeholder="Tulis pesan singkat untuk guru pengampu..." class="w-full rounded-xl border border-slate-200 p-3 text-xs focus:outline-none focus:border-indigo-500"></textarea>
+                </div>
+
+                <div class="flex gap-2.5 pt-2">
+                  <button type="button" onclick="window.AppActions.closeModal()" class="flex-1 py-3 rounded-xl border border-slate-200 text-slate-600 font-bold text-xs">
+                    Batal
+                  </button>
+                  <button type="submit" class="flex-1 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-md">
+                    Kirim Tugas Sekarang
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        `;
+        if (window.lucide) lucide.createIcons();
+      }
+
+      // =========================================================================
+      // 10. FITUR TAMBAH, EDIT, HAPUS & PENILAIAN TUGAS UNTUK GURU (Instruksi #5)
+      // =========================================================================
+      function renderGuruTambahTugasForm(editTaskId = null) {
+        const editing = editTaskId ? APP_STATE.db.tugas.find(t => t.id === editTaskId) : null;
+        const user = APP_STATE.currentUser;
+
+        return `
+          <div class="space-y-4 animate-fade-up">
+            <div class="flex items-center gap-2.5">
+              <button onclick="window.AppActions.navigate('tugas')" class="p-2 rounded-xl bg-white border border-slate-200 text-slate-700">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i>
+              </button>
+              <div>
+                <h2 class="text-lg font-extrabold text-slate-800">${editing ? 'Edit Tugas Sekolah' : 'Buat & Publikasikan Tugas Baru'}</h2>
+                <p class="text-xs text-slate-500">Tugas akan otomatis terkirim ke dashboard & notifikasi siswa</p>
+              </div>
+            </div>
+
+            <form onsubmit="window.AppActions.saveTeacherTask(event, '${editing ? editing.id : ''}')" class="bg-white rounded-2xl p-5 shadow-xs border border-slate-100 space-y-4">
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Judul Tugas *</label>
+                <input id="gtJudul" type="text" value="${editing ? escapeHtml(editing.judul) : ''}" placeholder="Contoh: Latihan Soal Bangun Ruang Sisi Datar" class="w-full rounded-xl border border-slate-200 p-3 text-sm focus:outline-none focus:border-indigo-500" required />
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 mb-1">Mata Pelajaran *</label>
+                  <select id="gtMapel" class="w-full rounded-xl border border-slate-200 p-3 text-sm bg-white">
+                    ${APP_STATE.db.mapel.map(m => `
+                      <option value="${escapeHtml(m.nama)}" ${(editing ? editing.mapel === m.nama : user.mapel === m.nama) ? 'selected' : ''}>
+                        ${escapeHtml(m.nama)}
+                      </option>
+                    `).join('')}
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 mb-1">Kelas Tujuan *</label>
+                  <select id="gtKelas" class="w-full rounded-xl border border-slate-200 p-3 text-sm bg-white">
+                    ${APP_STATE.db.kelas.map(k => `
+                      <option value="${escapeHtml(k.nama)}" ${(editing ? editing.kelas === k.nama : k.nama === 'VIII-A') ? 'selected' : ''}>
+                        Kelas ${escapeHtml(k.nama)}
+                      </option>
+                    `).join('')}
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Deskripsi Tugas *</label>
+                <textarea id="gtDeskripsi" rows="3" placeholder="Jelaskan ringkasan materi dan tujuan tugas..." class="w-full rounded-xl border border-slate-200 p-3 text-sm focus:outline-none focus:border-indigo-500" required>${editing ? escapeHtml(editing.deskripsi) : ''}</textarea>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Petunjuk Pengerjaan *</label>
+                <textarea id="gtPetunjuk" rows="2" placeholder="Contoh: Kerjakan di buku tugas, scan PDF, dan unggah sebelum deadline..." class="w-full rounded-xl border border-slate-200 p-3 text-sm focus:outline-none focus:border-indigo-500" required>${editing ? escapeHtml(editing.petunjuk) : ''}</textarea>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 mb-1">Tanggal Pemberian *</label>
+                  <input id="gtTglBeri" type="date" value="${editing ? editing.tanggalPemberian : '2026-11-22'}" class="w-full rounded-xl border border-slate-200 p-3 text-sm" required />
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 mb-1">Deadline Pengumpulan *</label>
+                  <input id="gtDeadline" type="datetime-local" value="${editing ? editing.deadline : '2026-11-28T23:59'}" class="w-full rounded-xl border border-slate-200 p-3 text-sm" required />
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Lampiran File Soal / Modul (Opsional)</label>
+                <input id="gtFile" type="file" accept=".pdf,.doc,.docx,.ppt,.pptx,.jpg,.jpeg" class="w-full text-xs text-slate-600 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 border border-slate-200 rounded-xl p-2" />
+                ${editing && editing.lampiranNama ? `<p class="text-[11px] text-slate-500 mt-1">Lampiran saat ini: <b>${escapeHtml(editing.lampiranNama)}</b></p>` : ''}
+              </div>
+
+              <div class="flex gap-3 pt-2">
+                <button type="button" onclick="window.AppActions.navigate('tugas')" class="px-5 py-3 rounded-xl border border-slate-200 text-slate-600 font-bold text-sm">
+                  Batal
+                </button>
+                <button type="submit" class="flex-1 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-sm shadow-md flex items-center justify-center gap-2">
+                  <i data-lucide="send" class="w-4 h-4"></i>
+                  <span>${editing ? 'Simpan Perubahan Tugas' : 'Publikasikan Tugas'}</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        `;
+      }
+
+      function renderGuruTugasManager() {
+        const allTasks = APP_STATE.db.tugas;
+        return `
+          <div class="space-y-4 animate-fade-up">
+            <div class="flex flex-wrap items-center justify-between gap-3">
+              <div class="flex items-center gap-2.5">
+                <button onclick="window.AppActions.navigate('home')" class="p-2 rounded-xl bg-white border border-slate-200 text-slate-700">
+                  <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                </button>
+                <div>
+                  <h2 class="text-lg font-extrabold text-slate-800">Manajemen & Penilaian Tugas</h2>
+                  <p class="text-xs text-slate-500">Kelola tugas, unduh jawaban siswa, dan berikan nilai</p>
+                </div>
+              </div>
+              <button onclick="window.AppActions.navigate('guru_tambah_tugas')"
+                class="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold flex items-center gap-1.5 shadow-sm">
+                <i data-lucide="plus" class="w-4 h-4"></i> Tambah Tugas Baru
+              </button>
+            </div>
+
+            <!-- Daftar Tugas & Daftar Siswa yang Mengumpulkan -->
+            <div class="space-y-4">
+              ${allTasks.map(t => {
+                const subs = APP_STATE.db.pengumpulan.filter(s => s.tugasId === t.id);
+                return `
+                  <div class="bg-white rounded-2xl p-4 sm:p-5 shadow-xs border border-slate-100 space-y-4">
+                    <div class="flex flex-wrap items-start justify-between gap-2">
+                      <div>
+                        <div class="flex items-center gap-2 mb-1">
+                          <span class="px-2.5 py-0.5 rounded-lg bg-indigo-50 text-indigo-700 text-xs font-bold">${escapeHtml(t.mapel)}</span>
+                          <span class="px-2.5 py-0.5 rounded-lg bg-purple-50 text-purple-700 text-xs font-bold">Kelas ${escapeHtml(t.kelas)}</span>
+                        </div>
+                        <h3 class="font-extrabold text-base text-slate-800">${escapeHtml(t.judul)}</h3>
+                        <p class="text-xs text-slate-500 mt-0.5">Deadline: <b>${formatDateTimeIndo(t.deadline)}</b> • Oleh: ${escapeHtml(t.guruNama)}</p>
+                      </div>
+                      <div class="flex items-center gap-1.5">
+                        <button onclick="window.AppActions.editTeacherTask('${t.id}')" class="p-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-700" title="Edit Tugas">
+                          <i data-lucide="edit-3" class="w-4 h-4"></i>
+                        </button>
+                        <button onclick="window.AppActions.deleteTeacherTask('${t.id}')" class="p-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600" title="Hapus Tugas">
+                          <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
+                      </div>
+                    </div>
+
+                    <!-- Daftar Pengumpulan Siswa -->
+                    <div class="bg-slate-50 rounded-xl p-3.5 border border-slate-100">
+                      <div class="flex items-center justify-between mb-2.5">
+                        <h4 class="text-xs font-extrabold text-slate-700 uppercase tracking-wide">
+                          Siswa yang Mengumpulkan (${subs.length})
+                        </h4>
+                      </div>
+
+                      ${subs.length === 0 ? `
+                        <p class="text-xs text-slate-500 italic py-2">Belum ada siswa yang mengumpulkan jawaban untuk tugas ini.</p>
+                      ` : `
+                        <div class="space-y-2.5">
+                          ${subs.map(s => `
+                            <div class="bg-white rounded-xl p-3 border border-slate-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                              <div class="min-w-0">
+                                <p class="font-bold text-xs sm:text-sm text-slate-800">${escapeHtml(s.siswaNama)} <span class="text-slate-400 font-normal">(${escapeHtml(s.kelas)})</span></p>
+                                <p class="text-xs text-indigo-600 font-medium truncate mt-0.5">${escapeHtml(s.fileName)}</p>
+                                <p class="text-[11px] text-slate-400">Dikirim: ${formatDateTimeIndo(s.submittedAt)}</p>
+                                ${s.nilai !== null && s.nilai !== undefined && s.nilai !== '' ? `
+                                  <p class="text-xs text-emerald-700 font-bold mt-1">Nilai: ${s.nilai}/100 — <span class="font-normal italic">"${escapeHtml(s.komentarGuru)}"</span></p>
+                                ` : ''}
+                              </div>
+                              <div class="flex items-center gap-2 shrink-0">
+                                <button onclick="window.AppActions.downloadStudentSubmission('${s.id}')"
+                                  class="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold flex items-center gap-1">
+                                  <i data-lucide="download" class="w-3.5 h-3.5"></i> Unduh
+                                </button>
+                                <button onclick="window.AppActions.openGradeModal('${s.id}')"
+                                  class="px-3 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center gap-1">
+                                  <i data-lucide="check-square" class="w-3.5 h-3.5"></i> ${s.nilai ? 'Edit Nilai' : 'Beri Nilai'}
+                                </button>
+                              </div>
+                            </div>
+                          `).join('')}
+                        </div>
+                      `}
+                    </div>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      function openGradeModal(submissionId) {
+        const sub = APP_STATE.db.pengumpulan.find(s => s.id === submissionId);
+        if (!sub) return;
+        const modal = document.getElementById('modalRoot');
+        modal.innerHTML = `
+          <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
+            <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl animate-fade-up">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="font-extrabold text-base text-slate-800">Penilaian Tugas Siswa</h3>
+                <button onclick="window.AppActions.closeModal()" class="p-1.5 rounded-xl hover:bg-slate-100">
+                  <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+              </div>
+              <p class="text-xs text-slate-600 mb-3">Siswa: <b>${escapeHtml(sub.siswaNama)}</b> (${escapeHtml(sub.kelas)})</p>
+              <form onsubmit="window.AppActions.submitGradeForm(event, '${sub.id}')" class="space-y-4">
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 mb-1">Nilai Angka (0 - 100) *</label>
+                  <input id="gradeScoreInput" type="number" min="0" max="100" value="${sub.nilai ?? 90}" class="w-full rounded-xl border border-slate-200 p-3 text-base font-extrabold text-indigo-700" required />
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 mb-1">Komentar / Catatan Perbaikan *</label>
+                  <textarea id="gradeCommentInput" rows="3" placeholder="Berikan apresiasi atau catatan perbaikan untuk siswa..." class="w-full rounded-xl border border-slate-200 p-3 text-xs" required>${escapeHtml(sub.komentarGuru || '')}</textarea>
+                </div>
+                <div class="flex gap-2">
+                  <button type="button" onclick="window.AppActions.closeModal()" class="flex-1 py-2.5 rounded-xl border border-slate-200 text-xs font-bold">Batal</button>
+                  <button type="submit" class="flex-1 py-2.5 rounded-xl bg-emerald-600 text-white text-xs font-bold">Simpan Nilai</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        `;
+        if (window.lucide) lucide.createIcons();
+      }
+
+      // =========================================================================
+      // 11. HALAMAN FITUR SEKOLAH LAINNYA (JADWAL, ABSENSI, MATERI, NILAI, CHAT, DLL)
+      // =========================================================================
+      function renderProfilPage() {
+        const u = APP_STATE.currentUser;
+        return `
+          <div class="space-y-4 animate-fade-up">
+            <div class="flex items-center gap-2.5">
+              <button onclick="window.AppActions.navigate('home')" class="p-2 rounded-xl bg-white border border-slate-200">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i>
+              </button>
+              <h2 class="text-lg font-extrabold text-slate-800">Profil Pengguna</h2>
+            </div>
+
+            <div class="bg-white rounded-2xl p-5 shadow-xs border border-slate-100">
+              <div class="flex flex-col sm:flex-row items-center gap-4 pb-5 border-b border-slate-100">
+                <img src="${u.avatar}" class="w-20 h-20 rounded-full border-4 border-indigo-100 shadow-sm" />
+                <div class="text-center sm:text-left">
+                  <span class="px-3 py-0.5 rounded-full bg-indigo-100 text-indigo-700 text-xs font-extrabold uppercase">${u.role}</span>
+                  <h3 class="text-lg font-extrabold text-slate-800 mt-1">${escapeHtml(u.nama)}</h3>
+                  <p class="text-xs text-slate-500">${escapeHtml(u.email || '')}</p>
+                </div>
+              </div>
+
+              <form onsubmit="window.AppActions.updateUserProfile(event)" class="mt-4 space-y-3.5">
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 mb-1">Nama Lengkap</label>
+                  <input id="profNama" type="text" value="${escapeHtml(u.nama)}" class="w-full rounded-xl border border-slate-200 p-3 text-sm" required />
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">${u.role === 'siswa' ? 'NISN' : u.role === 'guru' ? 'NIP' : 'Jabatan'}</label>
+                    <input id="profIdNum" type="text" value="${escapeHtml(u.nisn || u.nip || u.jabatan || '-')}" class="w-full rounded-xl border border-slate-200 p-3 text-sm bg-slate-50" readonly />
+                  </div>
+                  <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">${u.role === 'siswa' ? 'Kelas' : 'Mata Pelajaran / Unit'}</label>
+                    <input type="text" value="${escapeHtml(u.kelas || u.mapel || 'Admin IT')}" class="w-full rounded-xl border border-slate-200 p-3 text-sm bg-slate-50" readonly />
+                  </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Nomor HP / WhatsApp</label>
+                    <input id="profHp" type="text" value="${escapeHtml(u.noHp || '')}" class="w-full rounded-xl border border-slate-200 p-3 text-sm" />
+                  </div>
+                  <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Email</label>
+                    <input id="profEmail" type="email" value="${escapeHtml(u.email || '')}" class="w-full rounded-xl border border-slate-200 p-3 text-sm" />
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 mb-1">Alamat Rumah</label>
+                  <input id="profAlamat" type="text" value="${escapeHtml(u.alamat || 'Sumberagung, Bojonegoro')}" class="w-full rounded-xl border border-slate-200 p-3 text-sm" />
+                </div>
+                <button type="submit" class="w-full sm:w-auto px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs sm:text-sm">
+                  Simpan Perubahan Profil
+                </button>
+              </form>
+            </div>
+          </div>
+        `;
+      }
+
+      function renderJadwalPage() {
+        const hariList = ['Semua', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+        const role = APP_STATE.currentUser.role;
+        const filtered = APP_STATE.db.jadwal.filter(j => APP_STATE.selectedJadwalHari === 'Semua' || j.hari === APP_STATE.selectedJadwalHari);
+
+        return `
+          <div class="space-y-4 animate-fade-up">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div class="flex items-center gap-2.5">
+                <button onclick="window.AppActions.navigate('home')" class="p-2 rounded-xl bg-white border border-slate-200">
+                  <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                </button>
+                <div>
+                  <h2 class="text-lg font-extrabold text-slate-800">Jadwal Pelajaran Sekolah</h2>
+                  <p class="text-xs text-slate-500">SMP PGRI Sumberagung • Kelas VIII-A & Umum</p>
+                </div>
+              </div>
+              ${role === 'admin' ? `
+                <button onclick="window.AppActions.openAddJadwalModal()" class="px-3.5 py-2 rounded-xl bg-indigo-600 text-white text-xs font-bold flex items-center gap-1">
+                  <i data-lucide="plus" class="w-4 h-4"></i> Tambah Jadwal
+                </button>
+              ` : ''}
+            </div>
+
+            <div class="flex gap-2 overflow-x-auto pb-1">
+              ${hariList.map(h => `
+                <button onclick="window.AppActions.setJadwalHari('${h}')"
+                  class="px-3.5 py-2 rounded-xl text-xs font-bold border transition ${APP_STATE.selectedJadwalHari === h ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-slate-600 border-slate-200'}">
+                  ${h}
+                </button>
+              `).join('')}
+            </div>
+
+            <div class="space-y-2.5">
+              ${filtered.map(j => `
+                <div class="bg-white rounded-2xl p-4 shadow-xs border border-slate-100 flex items-center justify-between gap-3">
+                  <div class="flex items-center gap-3.5 min-w-0">
+                    <div class="px-3 py-2 rounded-xl bg-indigo-50 text-indigo-700 text-center shrink-0 min-w-[76px]">
+                      <p class="text-xs font-extrabold">${escapeHtml(j.hari)}</p>
+                      <p class="text-[10px] font-semibold mt-0.5">${escapeHtml(j.kelas)}</p>
+                    </div>
+                    <div class="min-w-0">
+                      <h4 class="font-extrabold text-sm text-slate-800 truncate">${escapeHtml(j.mapel)}</h4>
+                      <p class="text-xs text-slate-500 truncate mt-0.5">${escapeHtml(j.guru)}</p>
+                      <div class="flex items-center gap-3 text-[11px] text-indigo-600 font-semibold mt-1">
+                        <span>⏰ ${escapeHtml(j.jam)}</span>
+                        <span>📍 ${escapeHtml(j.ruang)}</span>
+                      </div>
+                    </div>
+                  </div>
+                  ${role === 'admin' ? `
+                    <button onclick="window.AppActions.deleteJadwal('${j.id}')" class="p-2 rounded-xl bg-rose-50 text-rose-600 hover:bg-rose-100 shrink-0">
+                      <i data-lucide="trash-2" class="w-4 h-4"></i>
+                    </button>
+                  ` : ''}
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      function renderAbsensiPage() {
+        const user = APP_STATE.currentUser;
+        const isTeacherOrAdmin = user.role === 'guru' || user.role === 'admin';
+        const siswaList = APP_STATE.db.users.filter(u => u.role === 'siswa');
+
+        return `
+          <div class="space-y-4 animate-fade-up">
+            <div class="flex items-center gap-2.5">
+              <button onclick="window.AppActions.navigate('home')" class="p-2 rounded-xl bg-white border border-slate-200">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i>
+              </button>
+              <div>
+                <h2 class="text-lg font-extrabold text-slate-800">${isTeacherOrAdmin ? 'Input & Rekap Absensi Siswa' : 'Riwayat Kehadiran Siswa'}</h2>
+                <p class="text-xs text-slate-500">Pemantauan kedisiplinan siswa SMP PGRI Sumberagung</p>
+              </div>
+            </div>
+
+            ${isTeacherOrAdmin ? `
+              <!-- Form Input Absensi oleh Guru/Admin -->
+              <form onsubmit="window.AppActions.submitAbsensiGuru(event)" class="bg-white rounded-2xl p-4 shadow-xs border border-slate-100 space-y-3">
+                <h3 class="text-sm font-extrabold text-slate-800">Catat Kehadiran Hari Ini</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <select id="absSiswaId" class="rounded-xl border border-slate-200 p-2.5 text-xs bg-white">
+                    ${siswaList.map(s => `<option value="${s.id}">${escapeHtml(s.nama)} (${escapeHtml(s.kelas)})</option>`).join('')}
+                  </select>
+                  <select id="absStatus" class="rounded-xl border border-slate-200 p-2.5 text-xs bg-white">
+                    <option value="Hadir">Hadir</option>
+                    <option value="Izin">Izin</option>
+                    <option value="Sakit">Sakit</option>
+                    <option value="Alpha">Alpha</option>
+                  </select>
+                  <input id="absKet" type="text" placeholder="Keterangan (opsional)" class="rounded-xl border border-slate-200 p-2.5 text-xs" />
+                </div>
+                <button type="submit" class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold">
+                  Simpan Absensi Siswa
+                </button>
+              </form>
+            ` : ''}
+
+            <div class="bg-white rounded-2xl p-4 shadow-xs border border-slate-100 divide-y divide-slate-100">
+              ${APP_STATE.db.absensi.map(a => {
+                const badge = a.status === 'Hadir' ? 'bg-emerald-100 text-emerald-700' : a.status === 'Izin' ? 'bg-amber-100 text-amber-700' : 'bg-rose-100 text-rose-700';
+                return `
+                  <div class="py-3 first:pt-0 last:pb-0 flex items-center justify-between gap-3">
+                    <div>
+                      <p class="font-bold text-xs sm:text-sm text-slate-800">${escapeHtml(a.siswaNama)} <span class="text-slate-400 font-normal">(${escapeHtml(a.kelas)})</span></p>
+                      <p class="text-xs text-slate-500 mt-0.5">${formatTanggalIndo(a.tanggal)} • ${escapeHtml(a.keterangan || '-')}</p>
+                    </div>
+                    <span class="px-3 py-1 rounded-full text-xs font-extrabold ${badge}">${escapeHtml(a.status)}</span>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      function renderMateriPage() {
+        const isGuru = APP_STATE.currentUser.role === 'guru' || APP_STATE.currentUser.role === 'admin';
+        return `
+          <div class="space-y-4 animate-fade-up">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2.5">
+                <button onclick="window.AppActions.navigate('home')" class="p-2 rounded-xl bg-white border border-slate-200">
+                  <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                </button>
+                <div>
+                  <h2 class="text-lg font-extrabold text-slate-800">Materi Pembelajaran</h2>
+                  <p class="text-xs text-slate-500">Baca dan unduh modul belajar dari guru</p>
+                </div>
+              </div>
+              ${isGuru ? `
+                <button onclick="window.AppActions.openAddMateriModal()" class="px-3.5 py-2 rounded-xl bg-indigo-600 text-white text-xs font-bold flex items-center gap-1">
+                  <i data-lucide="plus" class="w-4 h-4"></i> Upload Materi
+                </button>
+              ` : ''}
+            </div>
+
+            <div class="space-y-3">
+              ${APP_STATE.db.materi.map(m => `
+                <div class="bg-white rounded-2xl p-4 shadow-xs border border-slate-100 space-y-2.5">
+                  <div class="flex items-center justify-between">
+                    <span class="px-2.5 py-0.5 rounded-lg bg-blue-50 text-blue-700 text-xs font-bold">${escapeHtml(m.mapel)}</span>
+                    <span class="text-[11px] text-slate-400">${formatTanggalIndo(m.tanggal)}</span>
+                  </div>
+                  <h3 class="font-extrabold text-sm sm:text-base text-slate-800">${escapeHtml(m.judul)}</h3>
+                  <p class="text-xs text-slate-600 leading-relaxed">${escapeHtml(m.ringkasan)}</p>
+                  <div class="pt-2 border-t border-slate-100 flex items-center justify-between gap-2">
+                    <span class="text-[11px] text-slate-500">Guru: <b>${escapeHtml(m.guru)}</b></span>
+                    <button onclick="window.AppActions.downloadGenericDoc('${escapeHtml(m.fileName)}', '${escapeHtml(m.judul + ' - ' + m.ringkasan)}')"
+                      class="px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold flex items-center gap-1.5">
+                      <i data-lucide="download" class="w-3.5 h-3.5"></i> Unduh (${escapeHtml(m.fileSize)})
+                    </button>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      function renderNilaiPage() {
+        const user = APP_STATE.currentUser;
+        const isGuru = user.role === 'guru' || user.role === 'admin';
+        // Gabungkan nilai ulangan + nilai tugas yang sudah dinilai guru
+        const gradedTasks = APP_STATE.db.pengumpulan.filter(s => s.nilai !== null && s.nilai !== undefined && s.nilai !== '');
+
+        return `
+          <div class="space-y-4 animate-fade-up">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2.5">
+                <button onclick="window.AppActions.navigate('home')" class="p-2 rounded-xl bg-white border border-slate-200">
+                  <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                </button>
+                <div>
+                  <h2 class="text-lg font-extrabold text-slate-800">${isGuru ? 'Rekap & Input Nilai Siswa' : 'Transkrip & Hasil Belajar'}</h2>
+                  <p class="text-xs text-slate-500">Semester Ganjil Tahun Ajaran 2026/2027</p>
+                </div>
+              </div>
+              ${isGuru ? `
+                <button onclick="window.AppActions.openAddNilaiModal()" class="px-3.5 py-2 rounded-xl bg-indigo-600 text-white text-xs font-bold flex items-center gap-1">
+                  <i data-lucide="plus" class="w-4 h-4"></i> Input Nilai
+                </button>
+              ` : ''}
+            </div>
+
+            <div class="bg-white rounded-2xl p-4 shadow-xs border border-slate-100 space-y-3">
+              <h3 class="text-xs font-extrabold uppercase tracking-wider text-indigo-600">Daftar Nilai Mata Pelajaran</h3>
+              <div class="divide-y divide-slate-100">
+                ${APP_STATE.db.nilaiTambahan.map(n => `
+                  <div class="py-3 first:pt-0 last:pb-0 flex items-center justify-between gap-3">
+                    <div>
+                      <p class="font-bold text-sm text-slate-800">${escapeHtml(n.mapel)}</p>
+                      <p class="text-xs text-slate-500">${escapeHtml(n.jenis)} • ${escapeHtml(n.siswaNama)}</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <span class="px-2.5 py-1 rounded-lg bg-amber-50 text-amber-700 text-xs font-extrabold">${escapeHtml(n.predikat)}</span>
+                      <span class="w-11 h-10 rounded-xl bg-indigo-600 text-white font-extrabold text-sm flex items-center justify-center">${n.skor}</span>
+                    </div>
+                  </div>
+                `).join('')}
+
+                ${gradedTasks.map(sub => {
+                  const t = APP_STATE.db.tugas.find(x => x.id === sub.tugasId);
+                  return `
+                    <div class="py-3 flex items-center justify-between gap-3">
+                      <div>
+                        <p class="font-bold text-sm text-slate-800">${t ? escapeHtml(t.mapel) : 'Tugas Sekolah'}</p>
+                        <p class="text-xs text-slate-500">Tugas: ${t ? escapeHtml(t.judul) : ''} • ${escapeHtml(sub.siswaNama)}</p>
+                      </div>
+                      <span class="w-11 h-10 rounded-xl bg-emerald-600 text-white font-extrabold text-sm flex items-center justify-center">${sub.nilai}</span>
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      function renderPengumumanPage() {
+        const canPost = APP_STATE.currentUser.role === 'guru' || APP_STATE.currentUser.role === 'admin';
+        return `
+          <div class="space-y-4 animate-fade-up">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2.5">
+                <button onclick="window.AppActions.navigate('home')" class="p-2 rounded-xl bg-white border border-slate-200">
+                  <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                </button>
+                <div>
+                  <h2 class="text-lg font-extrabold text-slate-800">Pengumuman Sekolah</h2>
+                  <p class="text-xs text-slate-500">Informasi resmi SMP PGRI Sumberagung</p>
+                </div>
+              </div>
+              ${canPost ? `
+                <button onclick="window.AppActions.openAddPengumumanModal()" class="px-3.5 py-2 rounded-xl bg-indigo-600 text-white text-xs font-bold flex items-center gap-1">
+                  <i data-lucide="plus" class="w-4 h-4"></i> Buat Pengumuman
+                </button>
+              ` : ''}
+            </div>
+
+            <div class="space-y-3">
+              ${APP_STATE.db.pengumuman.map(p => `
+                <div class="bg-white rounded-2xl p-4 sm:p-5 shadow-xs border border-slate-100 space-y-2">
+                  <div class="flex items-center justify-between gap-2">
+                    <span class="px-2.5 py-0.5 rounded-lg bg-violet-50 text-violet-700 text-xs font-bold">${escapeHtml(p.kategori)}</span>
+                    <div class="flex items-center gap-2">
+                      ${p.isNew ? `<span class="px-2 py-0.5 rounded-full bg-rose-500 text-white text-[10px] font-extrabold">BARU</span>` : ''}
+                      <span class="text-[11px] text-slate-400">${formatTanggalIndo(p.tanggal)}</span>
+                    </div>
+                  </div>
+                  <h3 class="font-extrabold text-base text-slate-800">${escapeHtml(p.judul)}</h3>
+                  <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">${escapeHtml(p.isi)}</p>
+                  <p class="text-[11px] text-slate-400 pt-1">Diterbitkan oleh: <b class="text-slate-600">${escapeHtml(p.penulis)}</b></p>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      function renderChatboxPage() {
+        const user = APP_STATE.currentUser;
+        return `
+          <div class="space-y-3 animate-fade-up">
+            <div class="flex items-center gap-2.5">
+              <button onclick="window.AppActions.navigate('home')" class="p-2 rounded-xl bg-white border border-slate-200">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i>
+              </button>
+              <div>
+                <h2 class="text-lg font-extrabold text-slate-800">Chatbox Siswa & Guru</h2>
+                <p class="text-xs text-slate-500">Forum diskusi pembelajaran real-time</p>
+              </div>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-slate-100 shadow-xs overflow-hidden flex flex-col h-[62vh]">
+              <div id="chatMessagesBox" class="flex-1 p-4 space-y-3 overflow-y-auto bg-slate-50/60">
+                ${APP_STATE.db.messages.map(m => {
+                  const isMe = m.senderId === user.id;
+                  return `
+                    <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'}">
+                      <span class="text-[10px] text-slate-500 font-semibold mb-1 px-1">${escapeHtml(m.senderName)}</span>
+                      <div class="max-w-[82%] rounded-2xl px-4 py-2.5 text-xs sm:text-sm shadow-2xs ${isMe ? 'bg-indigo-600 text-white rounded-br-xs' : 'bg-white text-slate-800 border border-slate-200/80 rounded-bl-xs'}">
+                        <p class="leading-relaxed">${escapeHtml(m.text)}</p>
+                        <p class="text-[10px] mt-1 text-right ${isMe ? 'text-indigo-200' : 'text-slate-400'}">${escapeHtml(m.time)}</p>
+                      </div>
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+
+              <form onsubmit="window.AppActions.sendChatMessage(event)" class="p-3 bg-white border-t border-slate-100 flex items-center gap-2">
+                <input id="chatInputText" type="text" placeholder="Tulis pertanyaan atau pesan ke guru/siswa..." class="flex-1 rounded-xl border border-slate-200 px-3.5 py-2.5 text-xs sm:text-sm focus:outline-none focus:border-indigo-500" required />
+                <button type="submit" class="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs flex items-center gap-1.5 shrink-0">
+                  <i data-lucide="send" class="w-4 h-4"></i> Kirim
+                </button>
+              </form>
+            </div>
+          </div>
+        `;
+      }
+
+      function renderKalenderPage() {
+        return `
+          <div class="space-y-4 animate-fade-up">
+            <div class="flex items-center gap-2.5">
+              <button onclick="window.AppActions.navigate('home')" class="p-2 rounded-xl bg-white border border-slate-200">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i>
+              </button>
+              <div>
+                <h2 class="text-lg font-extrabold text-slate-800">Kalender Akademik</h2>
+                <p class="text-xs text-slate-500">Agenda kegiatan & ujian SMP PGRI Sumberagung</p>
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              ${APP_STATE.db.agenda.map(ev => `
+                <div class="bg-white rounded-2xl p-4 shadow-xs border border-slate-100 flex items-center gap-4">
+                  <div class="w-16 h-16 rounded-2xl bg-indigo-50 text-indigo-700 flex flex-col items-center justify-center shrink-0">
+                    <span class="text-[10px] font-extrabold">${escapeHtml(ev.bulan)}</span>
+                    <span class="text-xl font-extrabold leading-none my-0.5">${escapeHtml(ev.tanggal)}</span>
+                    <span class="text-[10px]">${escapeHtml(ev.hari)}</span>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <span class="px-2.5 py-0.5 rounded-full bg-indigo-100 text-indigo-700 text-[10px] font-bold">${escapeHtml(ev.status)}</span>
+                    <h4 class="font-extrabold text-sm text-slate-800 mt-1">${escapeHtml(ev.judul)}</h4>
+                    <p class="text-xs text-slate-500 mt-1">⏰ ${escapeHtml(ev.waktu)} • 📍 ${escapeHtml(ev.lokasi)}</p>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      function renderPerpustakaanPage() {
+        return `
+          <div class="space-y-4 animate-fade-up">
+            <div class="flex items-center gap-2.5">
+              <button onclick="window.AppActions.navigate('home')" class="p-2 rounded-xl bg-white border border-slate-200">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i>
+              </button>
+              <div>
+                <h2 class="text-lg font-extrabold text-slate-800">Perpustakaan Digital</h2>
+                <p class="text-xs text-slate-500">E-Book & sumber belajar resmi SMP PGRI Sumberagung</p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+              ${APP_STATE.db.perpustakaan.map(b => `
+                <div class="bg-white rounded-2xl p-4 shadow-xs border border-slate-100 flex flex-col justify-between gap-3">
+                  <div>
+                    <span class="px-2.5 py-0.5 rounded-lg bg-sky-50 text-sky-700 text-[11px] font-bold">${escapeHtml(b.kategori)} • ${escapeHtml(b.tahun)}</span>
+                    <h3 class="font-extrabold text-sm text-slate-800 mt-2">${escapeHtml(b.judul)}</h3>
+                    <p class="text-xs text-slate-500 mt-1">Penulis: ${escapeHtml(b.penulis)}</p>
+                  </div>
+                  <button onclick="window.AppActions.downloadGenericDoc('${escapeHtml(b.fileName)}', 'E-BOOK PERPUSTAKAAN SMP PGRI SUMBERAGUNG\\nJudul: ${escapeHtml(b.judul)}\\nPenulis: ${escapeHtml(b.penulis)}')"
+                    class="w-full py-2.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white text-xs font-bold flex items-center justify-center gap-1.5">
+                    <i data-lucide="book-open" class="w-3.5 h-3.5"></i> Baca & Unduh E-Book
+                  </button>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      function renderUjianPage() {
+        return `
+          <div class="space-y-4 animate-fade-up">
+            <div class="flex items-center gap-2.5">
+              <button onclick="window.AppActions.navigate('home')" class="p-2 rounded-xl bg-white border border-slate-200">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i>
+              </button>
+              <div>
+                <h2 class="text-lg font-extrabold text-slate-800">Jadwal & Hasil Ujian</h2>
+                <p class="text-xs text-slate-500">Kartu peserta & jadwal PAS / PTS</p>
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              ${APP_STATE.db.ujian.map(u => `
+                <div class="bg-white rounded-2xl p-4 shadow-xs border border-slate-100 flex items-center justify-between gap-3">
+                  <div>
+                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold ${u.status === 'Selesai' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}">
+                      ${escapeHtml(u.status)}
+                    </span>
+                    <h4 class="font-extrabold text-sm text-slate-800 mt-1">${escapeHtml(u.mapel)}</h4>
+                    <p class="text-xs text-slate-500 mt-0.5">📅 ${formatTanggalIndo(u.tanggal)} • ⏰ ${escapeHtml(u.waktu)}</p>
+                    <p class="text-[11px] text-indigo-600 font-semibold mt-0.5">📍 ${escapeHtml(u.ruang)}</p>
+                  </div>
+                  ${u.nilai !== null ? `
+                    <div class="px-3.5 py-2 rounded-xl bg-emerald-600 text-white text-center">
+                      <span class="text-[9px] block uppercase font-bold">Nilai</span>
+                      <span class="text-lg font-extrabold">${u.nilai}</span>
+                    </div>
+                  ` : ''}
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      function renderGaleriPage() {
+        return `
+          <div class="space-y-4 animate-fade-up">
+            <div class="flex items-center gap-2.5">
+              <button onclick="window.AppActions.navigate('home')" class="p-2 rounded-xl bg-white border border-slate-200">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i>
+              </button>
+              <div>
+                <h2 class="text-lg font-extrabold text-slate-800">Galeri Kegiatan Sekolah</h2>
+                <p class="text-xs text-slate-500">Dokumentasi prestasi & aktivitas siswa</p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              ${APP_STATE.db.galeri.map(g => `
+                <div class="bg-white rounded-2xl overflow-hidden shadow-xs border border-slate-100">
+                  <div class="h-36 bg-gradient-to-br ${g.warna} p-4 flex flex-col justify-between text-white">
+                    <span class="self-start px-2.5 py-0.5 rounded-full bg-white/20 text-[10px] font-bold">${escapeHtml(g.kategori)}</span>
+                    <div class="flex items-center gap-2">
+                      <i data-lucide="camera" class="w-5 h-5 opacity-90"></i>
+                      <span class="text-xs font-semibold">${escapeHtml(g.tanggal)}</span>
+                    </div>
+                  </div>
+                  <div class="p-4">
+                    <h4 class="font-extrabold text-sm text-slate-800">${escapeHtml(g.judul)}</h4>
+                    <p class="text-xs text-slate-500 mt-1 leading-relaxed">${escapeHtml(g.deskripsi)}</p>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      // =========================================================================
+      // 12. HALAMAN KHUSUS GURU & ADMIN (KELAS, SISWA, KELOLA USER, DATA SEKOLAH)
+      // =========================================================================
+      function renderGuruKelasSiswa(mode = 'kelas') {
+        const siswaList = APP_STATE.db.users.filter(u => u.role === 'siswa');
+        return `
+          <div class="space-y-4 animate-fade-up">
+            <div class="flex items-center gap-2.5">
+              <button onclick="window.AppActions.navigate('home')" class="p-2 rounded-xl bg-white border border-slate-200">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i>
+              </button>
+              <h2 class="text-lg font-extrabold text-slate-800">${mode === 'kelas' ? 'Daftar Kelas & Wali Kelas' : 'Daftar Siswa Aktif'}</h2>
+            </div>
+
+            ${mode === 'kelas' ? `
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                ${APP_STATE.db.kelas.map(k => `
+                  <div class="bg-white rounded-2xl p-4 shadow-xs border border-slate-100">
+                    <div class="flex items-center justify-between">
+                      <span class="px-3 py-1 rounded-xl bg-indigo-600 text-white font-extrabold text-sm">Kelas ${escapeHtml(k.nama)}</span>
+                      <span class="text-xs font-bold text-slate-500">${escapeHtml(k.ruang)}</span>
+                    </div>
+                    <p class="text-xs text-slate-600 mt-3">Wali Kelas: <b>${escapeHtml(k.waliKelas)}</b></p>
+                    <p class="text-xs text-emerald-600 font-bold mt-1">Jumlah Siswa: ${k.jumlahSiswa} Siswa</p>
+                  </div>
+                `).join('')}
+              </div>
+            ` : `
+              <div class="bg-white rounded-2xl p-4 shadow-xs border border-slate-100 divide-y divide-slate-100">
+                ${siswaList.map(s => `
+                  <div class="py-3 first:pt-0 last:pb-0 flex items-center justify-between gap-3">
+                    <div class="flex items-center gap-3">
+                      <img src="${s.avatar}" class="w-10 h-10 rounded-full border border-slate-200" />
+                      <div>
+                        <p class="font-bold text-sm text-slate-800">${escapeHtml(s.nama)}</p>
+                        <p class="text-xs text-slate-500">NISN: ${escapeHtml(s.nisn || '-')} • Kelas ${escapeHtml(s.kelas)}</p>
+                      </div>
+                    </div>
+                    <span class="px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 text-xs font-bold">${escapeHtml(s.kelas)}</span>
+                  </div>
+                `).join('')}
+              </div>
+            `}
+          </div>
+        `;
+      }
+
+      function renderAdminUsersPage(filterRole = 'all') {
+        const users = APP_STATE.db.users.filter(u => filterRole === 'all' || u.role === filterRole);
+        return `
+          <div class="space-y-4 animate-fade-up">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div class="flex items-center gap-2.5">
+                <button onclick="window.AppActions.navigate('home')" class="p-2 rounded-xl bg-white border border-slate-200">
+                  <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                </button>
+                <div>
+                  <h2 class="text-lg font-extrabold text-slate-800">Kelola Akun Siswa & Guru</h2>
+                  <p class="text-xs text-slate-500">Tambah, perbarui, atau hapus akun pengguna portal</p>
+                </div>
+              </div>
+              <button onclick="window.AppActions.openAddUserAdminModal()" class="px-3.5 py-2 rounded-xl bg-indigo-600 text-white text-xs font-bold flex items-center gap-1">
+                <i data-lucide="user-plus" class="w-4 h-4"></i> Tambah Akun
+              </button>
+            </div>
+
+            <div class="bg-white rounded-2xl p-4 shadow-xs border border-slate-100 divide-y divide-slate-100">
+              ${users.map(u => `
+                <div class="py-3 first:pt-0 last:pb-0 flex items-center justify-between gap-3">
+                  <div class="min-w-0">
+                    <div class="flex items-center gap-2">
+                      <span class="px-2 py-0.5 rounded-md text-[10px] font-extrabold uppercase ${u.role === 'admin' ? 'bg-emerald-100 text-emerald-700' : u.role === 'guru' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'}">
+                        ${u.role}
+                      </span>
+                      <p class="font-bold text-sm text-slate-800 truncate">${escapeHtml(u.nama)}</p>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-0.5">User: <b>${escapeHtml(u.username)}</b> • ${escapeHtml(u.kelas || u.mapel || u.jabatan || '')}</p>
+                  </div>
+                  ${u.id !== APP_STATE.currentUser.id ? `
+                    <button onclick="window.AppActions.deleteUserAccount('${u.id}')" class="p-2 rounded-xl bg-rose-50 text-rose-600 hover:bg-rose-100 shrink-0" title="Hapus Akun">
+                      <i data-lucide="trash-2" class="w-4 h-4"></i>
+                    </button>
+                  ` : `<span class="text-[11px] font-bold text-emerald-600">Aktif</span>`}
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      function renderAdminAkademikPage() {
+        return `
+          <div class="space-y-4 animate-fade-up">
+            <div class="flex items-center gap-2.5">
+              <button onclick="window.AppActions.navigate('home')" class="p-2 rounded-xl bg-white border border-slate-200">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i>
+              </button>
+              <h2 class="text-lg font-extrabold text-slate-800">Kelola Kelas & Mata Pelajaran</h2>
+            </div>
+
+            <!-- Tambah Kelas Baru -->
+            <form onsubmit="window.AppActions.addNewClass(event)" class="bg-white rounded-2xl p-4 shadow-xs border border-slate-100 space-y-3">
+              <h3 class="text-xs font-extrabold uppercase text-indigo-600">Tambah Kelas / Rombel Baru</h3>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                <input id="newKelasNama" type="text" placeholder="Nama Kelas (cth: IX-B)" class="rounded-xl border border-slate-200 p-2.5 text-xs" required />
+                <input id="newKelasWali" type="text" placeholder="Nama Wali Kelas" class="rounded-xl border border-slate-200 p-2.5 text-xs" required />
+                <input id="newKelasRuang" type="text" placeholder="Ruang (cth: Ruang 302)" class="rounded-xl border border-slate-200 p-2.5 text-xs" required />
+              </div>
+              <button type="submit" class="px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs font-bold">Simpan Kelas</button>
+            </form>
+
+            <!-- Daftar Kelas -->
+            <div class="bg-white rounded-2xl p-4 shadow-xs border border-slate-100 space-y-2">
+              <h3 class="text-xs font-extrabold uppercase text-slate-500">Daftar Kelas Terdaftar</h3>
+              <div class="divide-y divide-slate-100">
+                ${APP_STATE.db.kelas.map(k => `
+                  <div class="py-2.5 flex items-center justify-between text-xs">
+                    <div>
+                      <b class="text-slate-800">Kelas ${escapeHtml(k.nama)}</b> (${escapeHtml(k.ruang)}) — Wali: ${escapeHtml(k.waliKelas)}
+                    </div>
+                    <button onclick="window.AppActions.deleteClass('${k.id}')" class="text-rose-600 font-bold hover:underline">Hapus</button>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+
+            <!-- Tambah Mata Pelajaran -->
+            <form onsubmit="window.AppActions.addNewMapel(event)" class="bg-white rounded-2xl p-4 shadow-xs border border-slate-100 space-y-3">
+              <h3 class="text-xs font-extrabold uppercase text-emerald-600">Tambah Mata Pelajaran</h3>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                <input id="newMapelKode" type="text" placeholder="Kode (cth: PKN-08)" class="rounded-xl border border-slate-200 p-2.5 text-xs" required />
+                <input id="newMapelNama" type="text" placeholder="Nama Mata Pelajaran" class="rounded-xl border border-slate-200 p-2.5 text-xs" required />
+                <input id="newMapelGuru" type="text" placeholder="Guru Pengampu" class="rounded-xl border border-slate-200 p-2.5 text-xs" required />
+              </div>
+              <button type="submit" class="px-4 py-2 rounded-xl bg-emerald-600 text-white text-xs font-bold">Tambah Mapel</button>
+            </form>
+          </div>
+        `;
+      }
+
+      function renderAdminSekolahPage() {
+        const s = APP_STATE.db.sekolah;
+        return `
+          <div class="space-y-4 animate-fade-up">
+            <div class="flex items-center gap-2.5">
+              <button onclick="window.AppActions.navigate('home')" class="p-2 rounded-xl bg-white border border-slate-200">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i>
+              </button>
+              <h2 class="text-lg font-extrabold text-slate-800">Data Sekolah & Koneksi Database</h2>
+            </div>
+
+            <form onsubmit="window.AppActions.saveSchoolProfile(event)" class="bg-white rounded-2xl p-4 sm:p-5 shadow-xs border border-slate-100 space-y-3">
+              <h3 class="text-xs font-extrabold uppercase text-indigo-600">Identitas Resmi Sekolah</h3>
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Nama Sekolah</label>
+                <input id="schNama" type="text" value="${escapeHtml(s.nama)}" class="w-full rounded-xl border border-slate-200 p-2.5 text-sm" required />
+              </div>
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 mb-1">NPSN</label>
+                  <input id="schNpsn" type="text" value="${escapeHtml(s.npsn)}" class="w-full rounded-xl border border-slate-200 p-2.5 text-sm" />
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 mb-1">Kepala Sekolah</label>
+                  <input id="schKepsek" type="text" value="${escapeHtml(s.kepalaSekolah)}" class="w-full rounded-xl border border-slate-200 p-2.5 text-sm" />
+                </div>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Alamat Sekolah</label>
+                <input id="schAlamat" type="text" value="${escapeHtml(s.alamat)}" class="w-full rounded-xl border border-slate-200 p-2.5 text-sm" />
+              </div>
+              <button type="submit" class="px-5 py-2.5 rounded-xl bg-indigo-600 text-white text-xs font-bold">Simpan Data Sekolah</button>
+            </form>
+
+            <!-- Status & Konfigurasi Firebase Cloud -->
+            <div class="bg-white rounded-2xl p-4 sm:p-5 shadow-xs border border-slate-100 space-y-3">
+              <div class="flex items-center justify-between">
+                <h3 class="text-xs font-extrabold uppercase text-emerald-700">Status Backend & Firebase Cloud</h3>
+                <span class="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 text-[11px] font-bold">
+                  ${window.FirebaseBridge ? window.FirebaseBridge.statusText : 'Aktif'}
+                </span>
+              </div>
+              <p class="text-xs text-slate-600 leading-relaxed">
+                Sistem mendukung autentikasi peran, penyimpanan tugas, dan sinkronisasi real-time. Jika Anda ingin menghubungkan project Firebase pribadi saat deploy ke hosting publik, tempelkan objek JSON konfigurasi Firebase di bawah ini:
+              </p>
+              <textarea id="firebaseCustomConfigInput" rows="3" placeholder='{"apiKey":"...","authDomain":"...","projectId":"..."}' class="w-full rounded-xl border border-slate-200 p-2.5 text-xs font-mono"></textarea>
+              <button type="button" onclick="window.AppActions.connectCustomFirebase()" class="px-4 py-2 rounded-xl bg-emerald-600 text-white text-xs font-bold">
+                Hubungkan Firebase Config
+              </button>
+            </div>
+          </div>
+        `;
+      }
+
+      function renderAdminLogsPage() {
+        return `
+          <div class="space-y-4 animate-fade-up">
+            <div class="flex items-center gap-2.5">
+              <button onclick="window.AppActions.navigate('home')" class="p-2 rounded-xl bg-white border border-slate-200">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i>
+              </button>
+              <h2 class="text-lg font-extrabold text-slate-800">Log Aktivitas Pengguna</h2>
+            </div>
+
+            <div class="bg-white rounded-2xl p-4 shadow-xs border border-slate-100 divide-y divide-slate-100">
+              ${APP_STATE.db.logs.map(l => `
+                <div class="py-3 first:pt-0 last:pb-0">
+                  <div class="flex items-center justify-between text-[11px] text-slate-400">
+                    <span class="font-bold text-indigo-600">${escapeHtml(l.user)}</span>
+                    <span>${escapeHtml(l.waktu)}</span>
+                  </div>
+                  <p class="text-xs text-slate-700 mt-1">${escapeHtml(l.aksi)}</p>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      function renderLainnyaPage() {
+        const user = APP_STATE.currentUser;
+        return `
+          <div class="space-y-4 animate-fade-up">
+            <h2 class="text-lg font-extrabold text-slate-800">Menu & Pengaturan Akun</h2>
+
+            <div class="bg-white rounded-2xl p-4 shadow-xs border border-slate-100 flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <img src="${user.avatar}" class="w-12 h-12 rounded-full border border-indigo-200" />
+                <div>
+                  <p class="font-extrabold text-sm text-slate-800">${escapeHtml(user.nama)}</p>
+                  <p class="text-xs text-slate-500 capitalize">Peran: ${user.role} • SMP PGRI Sumberagung</p>
+                </div>
+              </div>
+              <button onclick="window.AppActions.navigate('profil')" class="px-3 py-1.5 rounded-xl bg-indigo-50 text-indigo-700 text-xs font-bold">
+                Edit Profil
+              </button>
+            </div>
+
+            <div class="bg-white rounded-2xl p-4 shadow-xs border border-slate-100 space-y-2">
+              <h3 class="text-xs font-extrabold uppercase text-slate-400 mb-2">Informasi Sekolah</h3>
+              <p class="text-xs text-slate-700"><b>${escapeHtml(APP_STATE.db.sekolah.nama)}</b> (NPSN: ${escapeHtml(APP_STATE.db.sekolah.npsn)})</p>
+              <p class="text-xs text-slate-500">${escapeHtml(APP_STATE.db.sekolah.alamat)}</p>
+              <p class="text-xs text-slate-500">Kepala Sekolah: ${escapeHtml(APP_STATE.db.sekolah.kepalaSekolah)}</p>
+            </div>
+
+            <button onclick="window.AppActions.logout()" class="w-full py-3.5 rounded-2xl bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-sm flex items-center justify-center gap-2 shadow-sm">
+              <i data-lucide="log-out" class="w-4 h-4"></i> Keluar dari Aplikasi (Logout)
+            </button>
+
+            <p class="text-center text-xs text-slate-400 pt-2">
+              STUDENT PORTAL SMP PGRI SUMBERAGUNG<br/>
+              Created by <b class="text-slate-600">Danang Wahyudi</b>
+            </p>
+          </div>
+        `;
+      }
+
+      // =========================================================================
+      // 13. RENDER UTAMA DASHBOARD
+      // =========================================================================
+      function renderDashboardShell() {
+        let contentHtml = '';
+        switch (APP_STATE.activeView) {
+          case 'home':              contentHtml = renderHomeContent(); break;
+          case 'profil':            contentHtml = renderProfilPage(); break;
+          case 'jadwal':            contentHtml = renderJadwalPage(); break;
+          case 'absensi':           contentHtml = renderAbsensiPage(); break;
+          case 'tugas':             contentHtml = renderTugasPage(); break;
+          case 'materi':            contentHtml = renderMateriPage(); break;
+          case 'nilai':             contentHtml = renderNilaiPage(); break;
+          case 'kalender':          contentHtml = renderKalenderPage(); break;
+          case 'pengumuman':        contentHtml = renderPengumumanPage(); break;
+          case 'chatbox':           contentHtml = renderChatboxPage(); break;
+          case 'perpustakaan':      contentHtml = renderPerpustakaanPage(); break;
+          case 'ujian':             contentHtml = renderUjianPage(); break;
+          case 'galeri':            contentHtml = renderGaleriPage(); break;
+          case 'guru_kelas':        contentHtml = renderGuruKelasSiswa('kelas'); break;
+          case 'guru_siswa':        contentHtml = renderGuruKelasSiswa('siswa'); break;
+          case 'guru_tambah_tugas': contentHtml = renderGuruTambahTugasForm(APP_STATE.editingTaskId || null); break;
+          case 'admin_users':       contentHtml = renderAdminUsersPage('siswa'); break;
+          case 'admin_users_guru':  contentHtml = renderAdminUsersPage('guru'); break;
+          case 'admin_akademik':
+          case 'admin_mapel':       contentHtml = renderAdminAkademikPage(); break;
+          case 'admin_sekolah':     contentHtml = renderAdminSekolahPage(); break;
+          case 'admin_logs':        contentHtml = renderAdminLogsPage(); break;
+          case 'lainnya':           contentHtml = renderLainnyaPage(); break;
+          default:                  contentHtml = renderHomeContent();
+        }
+
+        return `
+          <div class="min-h-screen flex flex-col bg-[#f4f6fb] pb-24">
+            ${renderDashboardHeader()}
+            ${renderSidebarDrawer()}
+            <main class="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 pt-5">
+              ${contentHtml}
+            </main>
+            ${renderBottomNav()}
+          </div>
+        `;
+      }
+
+      function renderApp() {
+        const root = document.getElementById('appRoot');
+        if (!root) return;
+        if (!APP_STATE.currentUser) {
+          root.innerHTML = renderLoginPage();
+        } else {
+          root.innerHTML = renderDashboardShell();
+        }
+        if (window.lucide) lucide.createIcons();
+      }
+
+      // =========================================================================
+      // 14. AKSI INTERAKTIF GLOBAL (WINDOW.APPACTIONS)
+      // =========================================================================
+      window.AppActions = {
+        setLoginRole(role) {
+          APP_STATE.selectedLoginRole = role;
+          renderApp();
+        },
+        togglePassword() {
+          APP_STATE.showPassword = !APP_STATE.showPassword;
+          renderApp();
+        },
+        toggleRemember(val) {
+          APP_STATE.rememberMe = val;
+        },
+        switchLoginMode(mode) {
+          APP_STATE.loginMode = mode;
+          renderApp();
+        },
+        submitLogin: handleLoginSubmit,
+        demoLogin: quickDemoLogin,
+        submitRegister: handleRegisterSiswa,
+        logout: logoutUser,
+
+        navigate(viewId) {
+          APP_STATE.activeView = viewId;
+          if (viewId !== 'guru_tambah_tugas') APP_STATE.editingTaskId = null;
+          APP_STATE.showSidebar = false;
+          APP_STATE.showNotifDropdown = false;
+          renderApp();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        },
+        toggleSidebar() {
+          APP_STATE.showSidebar = !APP_STATE.showSidebar;
+          renderApp();
+        },
+        toggleNotif() {
+          APP_STATE.showNotifDropdown = !APP_STATE.showNotifDropdown;
+          renderApp();
+        },
+        markAllNotifRead() {
+          APP_STATE.db.notifications.forEach(n => n.read = true);
+          saveAndSync();
+          renderApp();
+        },
+        openNotifItem(notifId, targetTab) {
+          const n = APP_STATE.db.notifications.find(x => x.id === notifId);
+          if (n) n.read = true;
+          APP_STATE.showNotifDropdown = false;
+          APP_STATE.activeView = targetTab || 'home';
+          renderApp();
+        },
+        handleSearch(val) {
+          APP_STATE.searchQuery = val;
+          renderApp();
+        },
+        setTaskCategory(cat) {
+          APP_STATE.taskCategory = cat;
+          renderApp();
+        },
+        setJadwalHari(hari) {
+          APP_STATE.selectedJadwalHari = hari;
+          renderApp();
+        },
+        closeModal() {
+          const modal = document.getElementById('modalRoot');
+          if (modal) modal.innerHTML = '';
+        },
+
+        // Upload & Download File Tugas Siswa
+        openUploadTaskModal,
+        previewSelectedFileName(input) {
+          const file = input.files && input.files[0];
+          const box = document.getElementById('selectedFilePreviewBox');
+          const txt = document.getElementById('selectedFileNameText');
+          if (file && box && txt) {
+            box.classList.remove('hidden');
+            txt.textContent = `${file.name} (${formatFileSize(file.size)})`;
+          }
+        },
+        submitStudentTaskFile(e, tugasId) {
+          e.preventDefault();
+          const input = document.getElementById('studentTaskFileInput');
+          const note = document.getElementById('studentTaskNote')?.value.trim() || '';
+          const file = input?.files?.[0];
+          if (!file) {
+            showToast('Pilih File Terlebih Dahulu', 'Silakan pilih file PDF, DOC, DOCX, PPT, PPTX, atau JPG.', 'warning');
+            return;
+          }
+
+          const reader = new FileReader();
+          reader.onload = function (evt) {
+            const dataUrl = evt.target.result;
+            const user = APP_STATE.currentUser;
+            const tugas = APP_STATE.db.tugas.find(t => t.id === tugasId);
+
+            // Hapus pengumpulan lama jika mengganti file
+            APP_STATE.db.pengumpulan = APP_STATE.db.pengumpulan.filter(s => !(s.tugasId === tugasId && s.siswaId === user.id));
+
+            APP_STATE.db.pengumpulan.unshift({
+              id: 'sub-' + Date.now(),
+              tugasId,
+              siswaId: user.id,
+              siswaNama: user.nama,
+              kelas: user.kelas || 'VIII-A',
+              fileName: file.name,
+              fileSize: formatFileSize(file.size),
+              fileType: file.type,
+              fileDataUrl: dataUrl,
+              catatanSiswa: note,
+              submittedAt: new Date().toISOString(),
+              nilai: null,
+              komentarGuru: ''
+            });
+
+            addNotification(
+              'Tugas Berhasil Dikumpulkan',
+              `${user.nama} mengumpulkan jawaban untuk "${tugas ? tugas.judul : 'Tugas Sekolah'}".`,
+              'tugas'
+            );
+            saveAndSync(`Mengumpulkan tugas "${tugas ? tugas.judul : tugasId}" (${file.name}).`);
+            window.AppActions.closeModal();
+            showToast('Tugas Berhasil Dikirim!', `File "${file.name}" telah tersimpan.`, 'success');
+            renderApp();
+          };
+          reader.readAsDataURL(file);
+        },
+
+        downloadTeacherAttachment(tugasId) {
+          const t = APP_STATE.db.tugas.find(x => x.id === tugasId);
+          if (!t) return;
+          triggerFileDownload(
+            t.lampiranNama || 'Lampiran_Tugas.txt',
+            t.lampiranDataUrl,
+            `LAMPIRAN TUGAS - SMP PGRI SUMBERAGUNG\nJudul: ${t.judul}\nMata Pelajaran: ${t.mapel}\nGuru: ${t.guruNama}\n\nDeskripsi:\n${t.deskripsi}\n\nPetunjuk:\n${t.petunjuk}`
+          );
+        },
+
+        downloadStudentSubmission(subId) {
+          const s = APP_STATE.db.pengumpulan.find(x => x.id === subId);
+          if (!s) return;
+          triggerFileDownload(
+            s.fileName,
+            s.fileDataUrl,
+            `JAWABAN TUGAS SISWA - SMP PGRI SUMBERAGUNG\nNama Siswa: ${s.siswaNama} (${s.kelas})\nFile: ${s.fileName}\nWaktu Kirim: ${s.submittedAt}\nCatatan: ${s.catatanSiswa || '-'}`
+          );
+        },
+
+        downloadGenericDoc(fileName, textContent) {
+          triggerFileDownload(fileName, '', textContent);
+        },
+
+        // Manajemen Tugas & Penilaian oleh Guru
+        saveTeacherTask(e, editId) {
+          e.preventDefault();
+          const judul = document.getElementById('gtJudul').value.trim();
+          const mapel = document.getElementById('gtMapel').value;
+          const kelas = document.getElementById('gtKelas').value;
+          const deskripsi = document.getElementById('gtDeskripsi').value.trim();
+          const petunjuk = document.getElementById('gtPetunjuk').value.trim();
+          const tanggalPemberian = document.getElementById('gtTglBeri').value;
+          const deadline = document.getElementById('gtDeadline').value;
+          const fileInput = document.getElementById('gtFile');
+          const file = fileInput?.files?.[0];
+
+          const finalizeSave = (lampiranNama, lampiranSize, lampiranDataUrl) => {
+            if (editId) {
+              const idx = APP_STATE.db.tugas.findIndex(t => t.id === editId);
+              if (idx !== -1) {
+                APP_STATE.db.tugas[idx] = {
+                  ...APP_STATE.db.tugas[idx],
+                  judul, mapel, kelas, deskripsi, petunjuk, tanggalPemberian, deadline,
+                  lampiranNama: lampiranNama || APP_STATE.db.tugas[idx].lampiranNama,
+                  lampiranSize: lampiranSize || APP_STATE.db.tugas[idx].lampiranSize,
+                  lampiranDataUrl: lampiranDataUrl || APP_STATE.db.tugas[idx].lampiranDataUrl
+                };
+              }
+              saveAndSync(`Memperbarui tugas "${judul}".`);
+              showToast('Tugas Diperbarui', 'Perubahan tugas berhasil disimpan.', 'success');
+            } else {
+              APP_STATE.db.tugas.unshift({
+                id: 't-' + Date.now(),
+                judul,
+                mapel,
+                kelas,
+                guruId: APP_STATE.currentUser.id,
+                guruNama: APP_STATE.currentUser.nama,
+                deskripsi,
+                petunjuk,
+                tanggalPemberian,
+                deadline,
+                lampiranNama: lampiranNama || '',
+                lampiranSize: lampiranSize || '',
+                lampiranDataUrl: lampiranDataUrl || ''
+              });
+              addNotification(
+                `Tugas Baru (${mapel})`,
+                `${APP_STATE.currentUser.nama} mempublikasikan "${judul}" untuk kelas ${kelas}.`,
+                'tugas'
+              );
+              saveAndSync(`Mempublikasikan tugas baru "${judul}" untuk kelas ${kelas}.`);
+              showToast('Tugas Dipublikasikan!', 'Notifikasi otomatis telah dikirim ke siswa.', 'success');
+            }
+            APP_STATE.editingTaskId = null;
+            APP_STATE.activeView = 'tugas';
+            renderApp();
+          };
+
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = (ev) => finalizeSave(file.name, formatFileSize(file.size), ev.target.result);
+            reader.readAsDataURL(file);
+          } else {
+            finalizeSave('', '', '');
+          }
+        },
+
+        editTeacherTask(tugasId) {
+          APP_STATE.editingTaskId = tugasId;
+          APP_STATE.activeView = 'guru_tambah_tugas';
+          renderApp();
+        },
+
+        deleteTeacherTask(tugasId) {
+          APP_STATE.db.tugas = APP_STATE.db.tugas.filter(t => t.id !== tugasId);
+          saveAndSync(`Menghapus tugas ID ${tugasId}.`);
+          showToast('Tugas Dihapus', 'Tugas telah dihapus dari daftar.', 'info');
+          renderApp();
+        },
+
+        openGradeModal,
+        submitGradeForm(e, subId) {
+          e.preventDefault();
+          const score = Number(document.getElementById('gradeScoreInput').value);
+          const comment = document.getElementById('gradeCommentInput').value.trim();
+          const sub = APP_STATE.db.pengumpulan.find(s => s.id === subId);
+          if (sub) {
+            sub.nilai = score;
+            sub.komentarGuru = comment;
+            addNotification(
+              `Nilai Tugas Diberikan (${score}/100)`,
+              `Tugas milik ${sub.siswaNama} telah dinilai oleh ${APP_STATE.currentUser.nama}.`,
+              'tugas'
+            );
+            saveAndSync(`Memberi nilai ${score} kepada ${sub.siswaNama}.`);
+            showToast('Nilai Tersimpan', `Nilai ${score} untuk ${sub.siswaNama} berhasil dikirim.`, 'success');
+          }
+          window.AppActions.closeModal();
+          renderApp();
+        },
+
+        // Update Profil
+        updateUserProfile(e) {
+          e.preventDefault();
+          const u = APP_STATE.currentUser;
+          u.nama = document.getElementById('profNama').value.trim();
+          u.noHp = document.getElementById('profHp').value.trim();
+          u.email = document.getElementById('profEmail').value.trim();
+          u.alamat = document.getElementById('profAlamat').value.trim();
+          const idx = APP_STATE.db.users.findIndex(x => x.id === u.id);
+          if (idx !== -1) APP_STATE.db.users[idx] = { ...u };
+          saveAndSync('Memperbarui data profil pribadi.');
+          showToast('Profil Diperbarui', 'Perubahan biodata berhasil disimpan.', 'success');
+          renderApp();
+        },
+
+        // Absensi Guru
+        submitAbsensiGuru(e) {
+          e.preventDefault();
+          const siswaId = document.getElementById('absSiswaId').value;
+          const status = document.getElementById('absStatus').value;
+          const ket = document.getElementById('absKet').value.trim() || 'Dicatat oleh guru';
+          const siswa = APP_STATE.db.users.find(u => u.id === siswaId);
+          if (!siswa) return;
+          APP_STATE.db.absensi.unshift({
+            id: 'abs-' + Date.now(),
+            tanggal: new Date().toISOString().slice(0, 10),
+            siswaId: siswa.id,
+            siswaNama: siswa.nama,
+            kelas: siswa.kelas,
+            status,
+            keterangan: ket
+          });
+          saveAndSync(`Mencatat absensi ${siswa.nama}: ${status}.`);
+          showToast('Absensi Tersimpan', `${siswa.nama} tercatat ${status}.`, 'success');
+          renderApp();
+        },
+
+        // Chatbox
+        sendChatMessage(e) {
+          e.preventDefault();
+          const input = document.getElementById('chatInputText');
+          const text = input?.value.trim();
+          if (!text) return;
+          const u = APP_STATE.currentUser;
+          APP_STATE.db.messages.push({
+            id: 'msg-' + Date.now(),
+            senderId: u.id,
+            senderName: `${u.nama} (${u.kelas || u.role.toUpperCase()})`,
+            senderRole: u.role,
+            text,
+            time: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' WIB'
+          });
+          saveAndSync('Mengirim pesan di Chatbox.');
+          renderApp();
+          const box = document.getElementById('chatMessagesBox');
+          if (box) box.scrollTop = box.scrollHeight;
+        },
+
+        // Modal Tambah Materi / Nilai / Pengumuman / Jadwal / User Admin
+        openAddMateriModal() {
+          const modal = document.getElementById('modalRoot');
+          modal.innerHTML = `
+            <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
+              <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl animate-fade-up">
+                <h3 class="font-extrabold text-base text-slate-800 mb-4">Upload Materi Pembelajaran</h3>
+                <form onsubmit="window.AppActions.submitNewMateri(event)" class="space-y-3">
+                  <input id="matJudul" type="text" placeholder="Judul Materi / Bab" class="w-full rounded-xl border border-slate-200 p-3 text-xs" required />
+                  <select id="matMapel" class="w-full rounded-xl border border-slate-200 p-3 text-xs bg-white">
+                    ${APP_STATE.db.mapel.map(m => `<option value="${escapeHtml(m.nama)}">${escapeHtml(m.nama)}</option>`).join('')}
+                  </select>
+                  <textarea id="matRingkasan" rows="3" placeholder="Ringkasan isi materi..." class="w-full rounded-xl border border-slate-200 p-3 text-xs" required></textarea>
+                  <input id="matFileName" type="text" value="Modul_Pembelajaran_Baru.pdf" class="w-full rounded-xl border border-slate-200 p-3 text-xs" required />
+                  <div class="flex gap-2 pt-2">
+                    <button type="button" onclick="window.AppActions.closeModal()" class="flex-1 py-2.5 rounded-xl border text-xs font-bold">Batal</button>
+                    <button type="submit" class="flex-1 py-2.5 rounded-xl bg-indigo-600 text-white text-xs font-bold">Publikasikan</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          `;
+        },
+        submitNewMateri(e) {
+          e.preventDefault();
+          APP_STATE.db.materi.unshift({
+            id: 'mat-' + Date.now(),
+            judul: document.getElementById('matJudul').value.trim(),
+            mapel: document.getElementById('matMapel').value,
+            kelas: 'VIII-A',
+            guru: APP_STATE.currentUser.nama,
+            tanggal: new Date().toISOString().slice(0, 10),
+            ringkasan: document.getElementById('matRingkasan').value.trim(),
+            fileName: document.getElementById('matFileName').value.trim(),
+            fileSize: '950 KB'
+          });
+          saveAndSync('Menambahkan materi pembelajaran baru.');
+          window.AppActions.closeModal();
+          showToast('Materi Ditambahkan', 'Materi pembelajaran tersedia untuk siswa.', 'success');
+          renderApp();
+        },
+
+        openAddNilaiModal() {
+          const siswaList = APP_STATE.db.users.filter(u => u.role === 'siswa');
+          const modal = document.getElementById('modalRoot');
+          modal.innerHTML = `
+            <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
+              <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl animate-fade-up">
+                <h3 class="font-extrabold text-base text-slate-800 mb-4">Input Nilai Ulangan / Rapor</h3>
+                <form onsubmit="window.AppActions.submitNewNilai(event)" class="space-y-3">
+                  <select id="nilSiswa" class="w-full rounded-xl border border-slate-200 p-3 text-xs bg-white">
+                    ${siswaList.map(s => `<option value="${s.id}">${escapeHtml(s.nama)} (${escapeHtml(s.kelas)})</option>`).join('')}
+                  </select>
+                  <select id="nilMapel" class="w-full rounded-xl border border-slate-200 p-3 text-xs bg-white">
+                    ${APP_STATE.db.mapel.map(m => `<option value="${escapeHtml(m.nama)}">${escapeHtml(m.nama)}</option>`).join('')}
+                  </select>
+                  <input id="nilJenis" type="text" placeholder="Jenis Penilaian (cth: Ulangan Harian 2)" class="w-full rounded-xl border border-slate-200 p-3 text-xs" required />
+                  <input id="nilSkor" type="number" min="0" max="100" value="88" class="w-full rounded-xl border border-slate-200 p-3 text-sm font-bold" required />
+                  <div class="flex gap-2 pt-2">
+                    <button type="button" onclick="window.AppActions.closeModal()" class="flex-1 py-2.5 rounded-xl border text-xs font-bold">Batal</button>
+                    <button type="submit" class="flex-1 py-2.5 rounded-xl bg-indigo-600 text-white text-xs font-bold">Simpan Nilai</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          `;
+        },
+        submitNewNilai(e) {
+          e.preventDefault();
+          const siswa = APP_STATE.db.users.find(u => u.id === document.getElementById('nilSiswa').value);
+          const skor = Number(document.getElementById('nilSkor').value);
+          const predikat = skor >= 90 ? 'A' : skor >= 80 ? 'B+' : skor >= 75 ? 'B' : 'C';
+          APP_STATE.db.nilaiTambahan.unshift({
+            id: 'n-' + Date.now(),
+            siswaId: siswa.id,
+            siswaNama: siswa.nama,
+            kelas: siswa.kelas,
+            mapel: document.getElementById('nilMapel').value,
+            jenis: document.getElementById('nilJenis').value.trim(),
+            skor,
+            predikat
+          });
+          saveAndSync(`Menginput nilai ${skor} untuk ${siswa.nama}.`);
+          window.AppActions.closeModal();
+          showToast('Nilai Berhasil Diinput', 'Data nilai telah diperbarui.', 'success');
+          renderApp();
+        },
+
+        openAddPengumumanModal() {
+          const modal = document.getElementById('modalRoot');
+          modal.innerHTML = `
+            <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
+              <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl animate-fade-up">
+                <h3 class="font-extrabold text-base text-slate-800 mb-4">Buat Pengumuman Sekolah</h3>
+                <form onsubmit="window.AppActions.submitNewPengumuman(event)" class="space-y-3">
+                  <input id="pengJudul" type="text" placeholder="Judul Pengumuman" class="w-full rounded-xl border border-slate-200 p-3 text-xs" required />
+                  <select id="pengKategori" class="w-full rounded-xl border border-slate-200 p-3 text-xs bg-white">
+                    <option value="Akademik">Akademik</option>
+                    <option value="Kegiatan Sekolah">Kegiatan Sekolah</option>
+                    <option value="Kesiswaan">Kesiswaan</option>
+                  </select>
+                  <textarea id="pengIsi" rows="4" placeholder="Isi lengkap pengumuman..." class="w-full rounded-xl border border-slate-200 p-3 text-xs" required></textarea>
+                  <div class="flex gap-2 pt-2">
+                    <button type="button" onclick="window.AppActions.closeModal()" class="flex-1 py-2.5 rounded-xl border text-xs font-bold">Batal</button>
+                    <button type="submit" class="flex-1 py-2.5 rounded-xl bg-indigo-600 text-white text-xs font-bold">Terbitkan</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          `;
+        },
+        submitNewPengumuman(e) {
+          e.preventDefault();
+          const judul = document.getElementById('pengJudul').value.trim();
+          APP_STATE.db.pengumuman.unshift({
+            id: 'p-' + Date.now(),
+            judul,
+            kategori: document.getElementById('pengKategori').value,
+            tanggal: new Date().toISOString().slice(0, 10),
+            penulis: APP_STATE.currentUser.nama,
+            isi: document.getElementById('pengIsi').value.trim(),
+            isNew: true
+          });
+          addNotification('Pengumuman Baru Sekolah', judul, 'pengumuman');
+          saveAndSync(`Menerbitkan pengumuman "${judul}".`);
+          window.AppActions.closeModal();
+          showToast('Pengumuman Diterbitkan', 'Notifikasi otomatis terkirim ke seluruh pengguna.', 'success');
+          renderApp();
+        },
+
+        openAddJadwalModal() {
+          const modal = document.getElementById('modalRoot');
+          modal.innerHTML = `
+            <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
+              <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl animate-fade-up">
+                <h3 class="font-extrabold text-base text-slate-800 mb-4">Tambah Jadwal Pelajaran</h3>
+                <form onsubmit="window.AppActions.submitNewJadwal(event)" class="space-y-3">
+                  <select id="jadHari" class="w-full rounded-xl border border-slate-200 p-3 text-xs bg-white">
+                    <option>Senin</option><option>Selasa</option><option>Rabu</option><option>Kamis</option><option>Jumat</option><option>Sabtu</option>
+                  </select>
+                  <input id="jadJam" type="text" placeholder="Jam (cth: 10:00 - 11:30)" class="w-full rounded-xl border border-slate-200 p-3 text-xs" required />
+                  <select id="jadMapel" class="w-full rounded-xl border border-slate-200 p-3 text-xs bg-white">
+                    ${APP_STATE.db.mapel.map(m => `<option value="${escapeHtml(m.nama)}">${escapeHtml(m.nama)}</option>`).join('')}
+                  </select>
+                  <input id="jadGuru" type="text" placeholder="Nama Guru Pengampu" class="w-full rounded-xl border border-slate-200 p-3 text-xs" required />
+                  <input id="jadRuang" type="text" value="Ruang 201" class="w-full rounded-xl border border-slate-200 p-3 text-xs" required />
+                  <div class="flex gap-2 pt-2">
+                    <button type="button" onclick="window.AppActions.closeModal()" class="flex-1 py-2.5 rounded-xl border text-xs font-bold">Batal</button>
+                    <button type="submit" class="flex-1 py-2.5 rounded-xl bg-indigo-600 text-white text-xs font-bold">Simpan Jadwal</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          `;
+        },
+        submitNewJadwal(e) {
+          e.preventDefault();
+          const mapel = document.getElementById('jadMapel').value;
+          const hari = document.getElementById('jadHari').value;
+          APP_STATE.db.jadwal.push({
+            id: 'j-' + Date.now(),
+            hari,
+            jam: document.getElementById('jadJam').value.trim(),
+            mapel,
+            guru: document.getElementById('jadGuru').value.trim(),
+            kelas: 'VIII-A',
+            ruang: document.getElementById('jadRuang').value.trim()
+          });
+          addNotification('Perubahan Jadwal Pelajaran', `Jadwal baru ${mapel} pada hari ${hari} telah ditambahkan.`, 'jadwal');
+          saveAndSync(`Menambahkan jadwal pelajaran ${mapel} (${hari}).`);
+          window.AppActions.closeModal();
+          showToast('Jadwal Ditambahkan', 'Notifikasi perubahan jadwal telah dikirim.', 'success');
+          renderApp();
+        },
+        deleteJadwal(id) {
+          APP_STATE.db.jadwal = APP_STATE.db.jadwal.filter(j => j.id !== id);
+          saveAndSync('Menghapus item jadwal pelajaran.');
+          showToast('Jadwal Dihapus', 'Item jadwal telah dihapus.', 'info');
+          renderApp();
+        },
+
+        // Admin Akun & Akademik
+        openAddUserAdminModal() {
+          const modal = document.getElementById('modalRoot');
+          modal.innerHTML = `
+            <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
+              <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl animate-fade-up">
+                <h3 class="font-extrabold text-base text-slate-800 mb-4">Tambah Akun Siswa / Guru</h3>
+                <form onsubmit="window.AppActions.submitAdminNewUser(event)" class="space-y-3">
+                  <select id="admRole" class="w-full rounded-xl border border-slate-200 p-3 text-xs bg-white">
+                    <option value="siswa">Siswa</option>
+                    <option value="guru">Guru</option>
+                  </select>
+                  <input id="admNama" type="text" placeholder="Nama Lengkap" class="w-full rounded-xl border border-slate-200 p-3 text-xs" required />
+                  <input id="admUsername" type="text" placeholder="Username Login" class="w-full rounded-xl border border-slate-200 p-3 text-xs" required />
+                  <input id="admPassword" type="text" value="123" placeholder="Password" class="w-full rounded-xl border border-slate-200 p-3 text-xs" required />
+                  <input id="admExtra" type="text" placeholder="Kelas (cth: VIII-A) atau Mapel Guru" class="w-full rounded-xl border border-slate-200 p-3 text-xs" required />
+                  <div class="flex gap-2 pt-2">
+                    <button type="button" onclick="window.AppActions.closeModal()" class="flex-1 py-2.5 rounded-xl border text-xs font-bold">Batal</button>
+                    <button type="submit" class="flex-1 py-2.5 rounded-xl bg-indigo-600 text-white text-xs font-bold">Simpan Akun</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          `;
+        },
+        submitAdminNewUser(e) {
+          e.preventDefault();
+          const role = document.getElementById('admRole').value;
+          const nama = document.getElementById('admNama').value.trim();
+          const username = document.getElementById('admUsername').value.trim().toLowerCase();
+          const password = document.getElementById('admPassword').value.trim();
+          const extra = document.getElementById('admExtra').value.trim();
+
+          APP_STATE.db.users.push({
+            id: 'u-' + Date.now(),
+            role,
+            username,
+            password,
+            nama,
+            kelas: role === 'siswa' ? extra : undefined,
+            mapel: role === 'guru' ? extra : undefined,
+            nisn: role === 'siswa' ? '0099' + Math.floor(100000 + Math.random() * 900000) : undefined,
+            nip: role === 'guru' ? '1989' + Math.floor(100000 + Math.random() * 900000) : undefined,
+            email: `${username}@smppgrisumberagung.sch.id`,
+            avatar: role === 'guru' ? AVATAR_GURU : AVATAR_SISWA
+          });
+          saveAndSync(`Menambahkan akun ${role} baru: ${nama}.`);
+          window.AppActions.closeModal();
+          showToast('Akun Berhasil Dibuat', `${nama} (${role.toUpperCase()}) siap digunakan login.`, 'success');
+          renderApp();
+        },
+        deleteUserAccount(userId) {
+          APP_STATE.db.users = APP_STATE.db.users.filter(u => u.id !== userId);
+          saveAndSync(`Menghapus akun pengguna ID ${userId}.`);
+          showToast('Akun Dihapus', 'Pengguna berhasil dihapus dari sistem.', 'info');
+          renderApp();
+        },
+        addNewClass(e) {
+          e.preventDefault();
+          const nama = document.getElementById('newKelasNama').value.trim();
+          APP_STATE.db.kelas.push({
+            id: 'k-' + Date.now(),
+            nama,
+            waliKelas: document.getElementById('newKelasWali').value.trim(),
+            jumlahSiswa: 30,
+            ruang: document.getElementById('newKelasRuang').value.trim()
+          });
+          saveAndSync(`Menambahkan kelas baru: ${nama}.`);
+          showToast('Kelas Ditambahkan', `Kelas ${nama} berhasil disimpan.`, 'success');
+          renderApp();
+        },
+        deleteClass(id) {
+          APP_STATE.db.kelas = APP_STATE.db.kelas.filter(k => k.id !== id);
+          saveAndSync('Menghapus kelas.');
+          renderApp();
+        },
+        addNewMapel(e) {
+          e.preventDefault();
+          const nama = document.getElementById('newMapelNama').value.trim();
+          APP_STATE.db.mapel.push({
+            id: 'm-' + Date.now(),
+            kode: document.getElementById('newMapelKode').value.trim(),
+            nama,
+            guru: document.getElementById('newMapelGuru').value.trim(),
+            kkm: 75
+          });
+          saveAndSync(`Menambahkan mata pelajaran: ${nama}.`);
+          showToast('Mata Pelajaran Ditambahkan', `${nama} berhasil ditambahkan.`, 'success');
+          renderApp();
+        },
+        saveSchoolProfile(e) {
+          e.preventDefault();
+          APP_STATE.db.sekolah.nama = document.getElementById('schNama').value.trim();
+          APP_STATE.db.sekolah.npsn = document.getElementById('schNpsn').value.trim();
+          APP_STATE.db.sekolah.kepalaSekolah = document.getElementById('schKepsek').value.trim();
+          APP_STATE.db.sekolah.alamat = document.getElementById('schAlamat').value.trim();
+          saveAndSync('Memperbarui identitas profil sekolah.');
+          showToast('Data Sekolah Tersimpan', 'Profil SMP PGRI Sumberagung berhasil diperbarui.', 'success');
+          renderApp();
+        },
+        async connectCustomFirebase() {
+          const raw = document.getElementById('firebaseCustomConfigInput')?.value.trim();
+          if (!raw) {
+            showToast('Config Kosong', 'Tempelkan JSON konfigurasi Firebase terlebih dahulu.', 'warning');
+            return;
+          }
+          try {
+            const parsed = JSON.parse(raw);
+            if (window.FirebaseBridge) {
+              const ok = await window.FirebaseBridge.init(parsed);
+              if (ok) {
+                showToast('Firebase Terhubung!', 'Sinkronisasi real-time cloud aktif.', 'success');
+                renderApp();
+              } else {
+                showToast('Gagal Terhubung', 'Periksa kembali API Key & Project ID Firebase.', 'error');
+              }
+            }
+          } catch {
+            showToast('Format JSON Tidak Valid', 'Pastikan format objek JSON Firebase benar.', 'error');
+          }
+        }
+      };
+
+      // Inisialisasi Tampilan Awal
+      renderApp();
+    })();
+  </script>
+</body>
+</html>
