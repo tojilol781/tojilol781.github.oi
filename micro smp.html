@@ -787,8 +787,8 @@
 
             <form onsubmit="window.MicroApp.finishModuleWithReflection(event)" class="space-y-4">
               <div>
-                <label class="block text-xs font-bold text-slate-700 mb-1.5">Nama Siswa (Opsional)</label>
-                <input id="refNamaSiswa" type="text" value="${escapeHtml(savedRef.nama || '')}" placeholder="Contoh: Ahmad Rizky (VIII-A)" class="w-full rounded-xl border border-slate-200 p-3 text-xs sm:text-sm" />
+                <label class="block text-xs font-bold text-slate-700 mb-1.5">Nama Siswa *</label>
+                <input id="refNamaSiswa" type="text" value="${escapeHtml(savedRef.nama || '')}" placeholder="Contoh: Ahmad Rizky (VIII-A)" class="w-full rounded-xl border border-slate-200 p-3 text-xs sm:text-sm" required />
               </div>
 
               <div>
@@ -1124,6 +1124,10 @@
 
           const nama = document.getElementById('refNamaSiswa')?.value.trim() || '';
           const teks = document.getElementById('refJawabanSiswa')?.value.trim() || '';
+          if (!nama) {
+            alert('Nama siswa wajib diisi.');
+            return;
+          }
 
           const totalQ = (mod.quiz || []).length;
           const score = totalQ > 0 ? Math.round((STATE.quizCorrect / totalQ) * 100) : 100;
