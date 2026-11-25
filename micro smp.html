@@ -69,12 +69,21 @@
       from { opacity: 0; transform: scale(0.96); }
       to   { opacity: 1; transform: scale(1); }
     }
+    @keyframes floatyMove {
+      0%, 100% { translate: 0 0; }
+      50%      { translate: 0 -6px; }
+    }
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+    .animate-marquee { animation: marquee 18s linear infinite; }
     @keyframes floaty {
       0%, 100% { transform: translateY(0); }
       50%      { transform: translateY(-6px); }
     }
     header.header-grad { animation: fadeSlideDown 0.6s ease-out backwards; }
-    .module-card { animation: popIn 0.45s ease-out backwards; }
+    .module-card { animation: popIn 0.45s ease-out backwards, floatyMove 4s ease-in-out 0.5s infinite; }
     .module-card:nth-child(1) { animation-delay: 0.05s; }
     .module-card:nth-child(2) { animation-delay: 0.12s; }
     .module-card:nth-child(3) { animation-delay: 0.19s; }
@@ -108,7 +117,7 @@
       const ADMIN_PIN = '1234'; // PIN untuk membuka halaman Kelola Materi Admin/Guru
 
       // =========================================================================
-      // 2. DATA AWAL MODUL MICROLEARNING LENGKAP (VIDEO, INFOGRAFIS, KASUS, KUIS, REFLEKSI)
+      // 2. DATA AWAL MODUL MICROLEARNING LENGKAP (VIDEO, KUIS, REFLEKSI)
       // =========================================================================
       const DEFAULT_MODULES = [
         {
@@ -120,7 +129,7 @@
           iconBg: 'bg-orange-500',
           icon: 'calculator',
           judul: 'Sistem Persamaan Linear Dua Variabel (SPLDV)',
-          ringkasan: 'Belajar SPLDV melalui video singkat, infografis langkah penyelesaian, studi kasus belanja, dan refleksi.',
+          ringkasan: 'Belajar SPLDV melalui video singkat, kuis, dan refleksi.',
           video: {
             judul: 'Video Pengantar: Memahami Konsep SPLDV dalam 2 Menit',
             url: 'https://www.youtube.com/embed/52tpYl2tTqk',
@@ -135,10 +144,58 @@
               pembahasan: '2 buku = 2x dan 1 pulpen = y, sehingga total harganya ditulis 2x + y = 7.000.'
             },
             {
-              pertanyaan: 'Berdasarkan contoh kasus koperasi sekolah di atas, harga 1 buku tulis adalah...',
+              pertanyaan: 'Jika 3 buku tulis harganya Rp9.000, harga 1 buku tulis adalah...',
               opsi: ['Rp1.000', 'Rp2.000', 'Rp3.000', 'Rp4.000'],
               jawaban: 2,
               pembahasan: 'Dari 3x = 9.000 diperoleh x = Rp3.000 untuk harga 1 buku tulis.'
+            },
+            {
+              pertanyaan: 'Himpunan penyelesaian x + y = 10 dan x - y = 4 adalah...',
+              opsi: ['x = 7, y = 3', 'x = 6, y = 4', 'x = 8, y = 2', 'x = 5, y = 5'],
+              jawaban: 0,
+              pembahasan: 'Jumlahkan kedua persamaan: 2x = 14, sehingga x = 7. Lalu y = 10 - 7 = 3.'
+            },
+            {
+              pertanyaan: 'Nilai x dari 2x + y = 8 dan 2x - y = 4 adalah...',
+              opsi: ['1', '2', '3', '4'],
+              jawaban: 2,
+              pembahasan: 'Jumlahkan kedua persamaan: 4x = 12, sehingga x = 3.'
+            },
+            {
+              pertanyaan: 'Jika y = 2x dan x + y = 9, nilai y adalah...',
+              opsi: ['3', '4', '6', '9'],
+              jawaban: 2,
+              pembahasan: 'Substitusi y = 2x ke x + y = 9: 3x = 9, x = 3, sehingga y = 6.'
+            },
+            {
+              pertanyaan: 'Bentuk umum persamaan linear dua variabel adalah...',
+              opsi: ['ax + by = c', 'ax² + by = c', 'ax + by + cz = d', 'x/y = c'],
+              jawaban: 0,
+              pembahasan: 'Persamaan linear dua variabel ditulis ax + by = c dengan a, b, c bilangan real.'
+            },
+            {
+              pertanyaan: 'Pada persamaan 3x + 2y = 12, koefisien dari y adalah...',
+              opsi: ['2', '3', '12', '1'],
+              jawaban: 0,
+              pembahasan: 'Koefisien adalah angka di depan variabel, sehingga koefisien y adalah 2.'
+            },
+            {
+              pertanyaan: 'Harga 3 pensil dan 2 penghapus Rp11.000, sedangkan 1 pensil dan 2 penghapus Rp5.000. Harga 1 pensil adalah...',
+              opsi: ['Rp1.000', 'Rp2.000', 'Rp3.000', 'Rp4.000'],
+              jawaban: 2,
+              pembahasan: 'Kurangkan persamaan kedua dari yang pertama: 2p = 6.000, sehingga p = Rp3.000.'
+            },
+            {
+              pertanyaan: 'Penyelesaian SPLDV secara grafis berada pada...',
+              opsi: ['Titik potong dua garis', 'Sumbu x saja', 'Sumbu y saja', 'Titik asal saja'],
+              jawaban: 0,
+              pembahasan: 'Jika kedua garis berpotongan, titik potongnya adalah penyelesaian sistem tersebut.'
+            },
+            {
+              pertanyaan: 'Jika dua garis pada SPLDV sejajar, maka sistem tersebut...',
+              opsi: ['Tidak punya penyelesaian', 'Punya tepat satu penyelesaian', 'Punya tak hingga penyelesaian', 'Penyelesaiannya nol'],
+              jawaban: 0,
+              pembahasan: 'Garis sejajar tidak pernah berpotongan, sehingga tidak ada pasangan x dan y yang memenuhi keduanya.'
             }
           ],
           refleksiPertanyaan: 'Tuliskan satu contoh situasi jual-beli di sekitar rumah atau kantin sekolah yang bisa kamu selesaikan dengan konsep SPLDV!'
@@ -152,7 +209,7 @@
           iconBg: 'bg-emerald-600',
           icon: 'microscope',
           judul: 'Sistem Pencernaan & Enzim Pencernaan Manusia',
-          ringkasan: 'Pahami perjalanan makanan dari mulut hingga usus halus lewat video, infografis enzim, dan studi kasus.',
+          ringkasan: 'Pahami perjalanan makanan dari mulut hingga usus halus lewat video dan kuis singkat.',
           video: {
             judul: 'Video Pengantar: Perjalanan Makanan di Tubuh Manusia',
             url: 'https://www.youtube.com/embed/Og5xAdC8EUI',
@@ -165,6 +222,60 @@
               opsi: ['Pepsin', 'Lipase', 'Ptialin (Amilase)', 'Renin'],
               jawaban: 2,
               pembahasan: 'Enzim ptialin mengubah amilum pada nasi menjadi maltosa (gula).'
+            },
+            {
+              pertanyaan: 'Enzim di lambung yang memecah protein adalah...',
+              opsi: ['Pepsin', 'Lipase', 'Maltase', 'Ptialin'],
+              jawaban: 0,
+              pembahasan: 'Pepsin bekerja di lambung dan memecah protein menjadi rantai peptida yang lebih pendek.'
+            },
+            {
+              pertanyaan: 'Enzim yang memecah lemak menjadi asam lemak dan gliserol adalah...',
+              opsi: ['Lipase', 'Pepsin', 'Maltase', 'Ptialin'],
+              jawaban: 0,
+              pembahasan: 'Lipase memecah lemak menjadi asam lemak dan gliserol.'
+            },
+            {
+              pertanyaan: 'Organ tempat penyerapan sari makanan terbesar adalah...',
+              opsi: ['Lambung', 'Usus halus', 'Usus besar', 'Kerongkongan'],
+              jawaban: 1,
+              pembahasan: 'Sebagian besar sari makanan diserap di usus halus karena permukaannya luas dan bervili.'
+            },
+            {
+              pertanyaan: 'Fungsi kerongkongan (esofagus) adalah...',
+              opsi: ['Menyerap air', 'Menghantarkan makanan dari mulut ke lambung', 'Menghasilkan empedu', 'Menyimpan feses'],
+              jawaban: 1,
+              pembahasan: 'Kerongkongan menghantarkan makanan dari mulut menuju lambung melalui gerak peristaltik.'
+            },
+            {
+              pertanyaan: 'Organ yang menghasilkan empedu untuk membantu pencernaan lemak adalah...',
+              opsi: ['Pankreas', 'Hati', 'Limpa', 'Ginjal'],
+              jawaban: 1,
+              pembahasan: 'Hati menghasilkan empedu yang disimpan di kantong empedu dan membantu mengemulsi lemak.'
+            },
+            {
+              pertanyaan: 'Pencernaan mekanik dilakukan oleh...',
+              opsi: ['Enzim', 'Gigi dan otot lambung', 'Asam klorida saja', 'Empedu'],
+              jawaban: 1,
+              pembahasan: 'Pencernaan mekanik memecah makanan secara fisik, misalnya dikunyah gigi dan diaduk otot lambung.'
+            },
+            {
+              pertanyaan: 'Fungsi utama usus besar adalah...',
+              opsi: ['Menyerap air dan membentuk feses', 'Memproduksi insulin', 'Memecah protein', 'Menghasilkan ptialin'],
+              jawaban: 0,
+              pembahasan: 'Usus besar menyerap air dari sisa makanan sehingga terbentuk feses.'
+            },
+            {
+              pertanyaan: 'Organ yang menghasilkan enzim pencernaan dan insulin adalah...',
+              opsi: ['Pankreas', 'Lambung', 'Paru-paru', 'Empedu'],
+              jawaban: 0,
+              pembahasan: 'Pankreas menghasilkan enzim pencernaan dan hormon insulin.'
+            },
+            {
+              pertanyaan: 'Cairan yang membantu memecah makanan di lambung dan membunuh kuman adalah...',
+              opsi: ['Asam klorida (HCl)', 'Air liur', 'Empedu', 'Lendir usus'],
+              jawaban: 0,
+              pembahasan: 'Asam klorida di lambung membantu mengaktifkan pepsin dan membunuh sebagian kuman.'
             }
           ],
           refleksiPertanyaan: 'Kebiasaan makan apa yang perlu kamu perbaiki agar organ pencernaanmu tetap sehat setiap hari?'
@@ -178,7 +289,7 @@
           iconBg: 'bg-indigo-600',
           icon: 'book-open',
           judul: 'Teks Eksplanasi Fenomena Alam & Sosial',
-          ringkasan: 'Menguasai struktur teks eksplanasi dengan video edukasi, infografis struktur, dan analisis teks hujan.',
+          ringkasan: 'Menguasai struktur teks eksplanasi dengan video edukasi dan kuis singkat.',
           video: {
             judul: 'Video Pengantar: Bagaimana Hujan Terjadi? (Contoh Eksplanasi)',
             url: 'https://www.youtube.com/embed/zBnD2fbwr1A',
@@ -191,6 +302,60 @@
               opsi: ['Tetapi, melainkan', 'Karena, sehingga, akibatnya', 'Dan, atau, serta', 'Walaupun, meskipun'],
               jawaban: 1,
               pembahasan: 'Teks eksplanasi menjelaskan proses sebab-akibat sehingga banyak memakai konjungsi kausalitas seperti karena dan sehingga.'
+            },
+            {
+              pertanyaan: 'Bagian teks eksplanasi yang berisi pernyataan umum tentang fenomena disebut...',
+              opsi: ['Identifikasi fenomena', 'Interpretasi', 'Penutup', 'Orientasi'],
+              jawaban: 0,
+              pembahasan: 'Identifikasi fenomena berisi pernyataan umum yang memperkenalkan fenomena yang akan dijelaskan.'
+            },
+            {
+              pertanyaan: 'Bagian deretan penjelasan pada teks eksplanasi berisi...',
+              opsi: ['Penjelasan proses sebab-akibat', 'Daftar pustaka', 'Biodata penulis', 'Dialog tokoh'],
+              jawaban: 0,
+              pembahasan: 'Deretan penjelasan memuat urutan proses dan hubungan sebab-akibat dari fenomena.'
+            },
+            {
+              pertanyaan: 'Bagian interpretasi pada teks eksplanasi berisi...',
+              opsi: ['Simpulan atau penilaian terhadap fenomena', 'Daftar nama tokoh', 'Angka statistik saja', 'Dialog langsung'],
+              jawaban: 0,
+              pembahasan: 'Interpretasi berisi simpulan atau penilaian penulis terhadap fenomena yang dijelaskan.'
+            },
+            {
+              pertanyaan: 'Teks eksplanasi bertujuan untuk...',
+              opsi: ['Menjelaskan proses terjadinya sesuatu', 'Membujuk pembaca membeli produk', 'Menceritakan pengalaman pribadi', 'Menyajikan puisi'],
+              jawaban: 0,
+              pembahasan: 'Teks eksplanasi menjelaskan bagaimana atau mengapa suatu fenomena terjadi.'
+            },
+            {
+              pertanyaan: 'Ciri kebahasaan teks eksplanasi yang paling menonjol adalah...',
+              opsi: ['Kata kerja material dan konjungsi kausal', 'Kata seru dan kalimat perintah', 'Pantun dan rima', 'Dialog langsung'],
+              jawaban: 0,
+              pembahasan: 'Teks eksplanasi banyak memakai kata kerja yang menunjukkan proses serta konjungsi sebab-akibat.'
+            },
+            {
+              pertanyaan: 'Kata penghubung yang menunjukkan akibat adalah...',
+              opsi: ['Karena', 'Sehingga', 'Namun', 'Meskipun'],
+              jawaban: 1,
+              pembahasan: 'Sehingga menunjukkan akibat, sedangkan karena menunjukkan sebab.'
+            },
+            {
+              pertanyaan: 'Contoh fenomena alam yang bisa dijelaskan dengan teks eksplanasi adalah...',
+              opsi: ['Terjadinya gempa bumi', 'Resep masakan', 'Jadwal pelajaran', 'Iklan sepatu'],
+              jawaban: 0,
+              pembahasan: 'Gempa bumi adalah fenomena alam yang bisa dijelaskan proses terjadinya secara runtut.'
+            },
+            {
+              pertanyaan: 'Dalam teks eksplanasi, urutan kejadian biasanya disusun secara...',
+              opsi: ['Kronologis (sebab-akibat)', 'Acak', 'Menurut abjad', 'Dari kesimpulan ke pengantar'],
+              jawaban: 0,
+              pembahasan: 'Urutan kronologis membantu pembaca memahami proses dari awal hingga akhir.'
+            },
+            {
+              pertanyaan: 'Fungsi kalimat kausalitas dalam teks eksplanasi adalah...',
+              opsi: ['Menunjukkan hubungan sebab dan akibat', 'Menambah humor', 'Memberi perintah kepada pembaca', 'Menggantikan judul'],
+              jawaban: 0,
+              pembahasan: 'Kalimat kausalitas menjelaskan mengapa sesuatu terjadi dan apa akibatnya.'
             }
           ],
           refleksiPertanyaan: 'Fenomena alam atau sosial apa di Kabupaten Bojonegoro yang ingin kamu tulis menjadi sebuah teks eksplanasi?'
@@ -238,7 +403,7 @@
         selectedMapel: 'Semua',
         searchQuery: '',
         activeModuleId: null,
-        // Tahapan belajar siswa: 'video' -> 'infografis' -> 'kasus' -> 'quiz' -> 'refleksi' -> 'selesai'
+        // Tahapan belajar siswa: 'video' -> 'quiz' -> 'refleksi' -> 'selesai'
         learnStep: 'video',
         quizIndex: 0,
         selectedOption: null,
@@ -322,7 +487,7 @@
                     Portal Belajar Microlearning Siswa
                   </h1>
                   <p class="text-xs sm:text-sm text-indigo-100 mt-0.5">
-                    Video Pengantar • Infografis • Contoh Kasus • Kuis • Refleksi Pembelajaran
+                    Video Pengantar • Kuis • Refleksi Pembelajaran
                   </p>
                 </div>
 
@@ -367,19 +532,16 @@
           <main class="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-6 space-y-5">
             <!-- Filter Mata Pelajaran -->
             <div class="flex items-center justify-between gap-2 flex-wrap">
-              <div class="flex gap-2 overflow-x-auto pb-1">
-                ${mapels.map(mp => `
+              <div class="w-full overflow-hidden">
+              <div class="flex gap-2 w-max pb-1 animate-marquee">
+                ${[...mapels, ...mapels].map(mp => `
                   <button onclick="window.MicroApp.setMapel('${escapeHtml(mp)}')"
                     class="px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap border transition ${STATE.selectedMapel === mp ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'}">
                     ${escapeHtml(mp)}
                   </button>
                 `).join('')}
               </div>
-              ${done > 0 ? `
-                <button onclick="window.MicroApp.resetStudentProgress()" class="text-xs font-semibold text-slate-400 hover:text-rose-600">
-                  Reset Progres Siswa
-                </button>
-              ` : ''}
+              </div>
             </div>
 
             <!-- Daftar Kartu Modul -->
@@ -422,7 +584,7 @@
 
                     <div class="mt-4 pt-3 border-t border-black/5 flex items-center justify-between text-xs">
                       <span class="font-semibold text-slate-500">
-                        ${score !== undefined ? `Skor Kuis: ${score}%` : '4 Tahap Belajar'}
+                        ${score !== undefined ? `Skor Kuis: ${score}%` : '2 Tahap Belajar'}
                       </span>
                       <span class="font-extrabold text-indigo-700 inline-flex items-center gap-1">
                         Mulai <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
@@ -441,14 +603,12 @@
       }
 
       // =========================================================================
-      // 6. PEMUTAR ALUR MICROLEARNING (VIDEO -> INFOGRAFIS -> KASUS -> KUIS -> REFLEKSI)
+      // 6. PEMUTAR ALUR MICROLEARNING (VIDEO -> KUIS -> REFLEKSI)
       // =========================================================================
       const LEARN_STEPS = [
         { id: 'video', label: '1. Video Pengantar', icon: 'play-circle' },
-        { id: 'infografis', label: '2. Infografis', icon: 'layout-list' },
-        { id: 'kasus', label: '3. Contoh Kasus', icon: 'lightbulb' },
-        { id: 'quiz', label: '4. Kuis Cepat', icon: 'help-circle' },
-        { id: 'refleksi', label: '5. Refleksi', icon: 'pen-tool' }
+        { id: 'quiz', label: '2. Kuis', icon: 'help-circle' },
+        { id: 'refleksi', label: '3. Refleksi', icon: 'pen-tool' }
       ];
 
       function renderPlayerView() {
@@ -517,7 +677,6 @@
               <span class="px-3 py-1 rounded-full bg-rose-50 text-rose-700 text-xs font-extrabold inline-flex items-center gap-1.5">
                 <i data-lucide="play-circle" class="w-4 h-4"></i> Tahap 1 • Menonton Video Pengantar
               </span>
-              <span class="text-xs font-bold text-slate-400">Durasi: ${escapeHtml(mod.video?.durasiVideo || '2 Menit')}</span>
             </div>
 
             <h2 class="text-lg sm:text-xl font-extrabold text-slate-800">${escapeHtml(mod.video?.judul || mod.judul)}</h2>
@@ -544,9 +703,9 @@
               <p>${escapeHtml(mod.video?.catatanVideo || mod.ringkasan)}</p>
             </div>
 
-            <button onclick="window.MicroApp.jumpStep('infografis')"
+            <button onclick="window.MicroApp.startQuizStep()"
               class="w-full py-3.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs sm:text-sm shadow-md">
-              Selesai Menonton → Lanjut Membaca Infografis
+              Selesai Menonton → Lanjut ke Kuis
             </button>
           </div>
         `;
@@ -659,7 +818,7 @@
             <div>
               <span class="px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-extrabold">Seluruh Tahap Selesai</span>
               <h2 class="text-xl font-extrabold text-slate-800 mt-2">${escapeHtml(mod.judul)}</h2>
-              <p class="text-xs text-slate-500 mt-1">Video Pengantar • Infografis • Contoh Kasus • Kuis • Refleksi</p>
+              <p class="text-xs text-slate-500 mt-1">Video Pengantar • Kuis • Refleksi</p>
             </div>
 
             <div class="inline-block px-7 py-3.5 rounded-2xl bg-indigo-50 border border-indigo-100">
@@ -675,9 +834,6 @@
             ` : ''}
 
             <div class="flex flex-col sm:flex-row gap-3 pt-2">
-              <button onclick="window.MicroApp.startModule('${mod.id}')" class="flex-1 py-3 rounded-xl border border-slate-200 text-slate-700 font-bold text-xs">
-                Ulangi Materi
-              </button>
               <button onclick="window.MicroApp.backToCatalog()" class="flex-1 py-3 rounded-xl bg-indigo-600 text-white font-extrabold text-xs shadow-md">
                 Kembali ke Daftar Modul
               </button>
@@ -706,12 +862,17 @@
                   </button>
                   <div>
                     <h1 class="text-lg sm:text-xl font-extrabold">Panel Admin — Kelola Materi Microlearning</h1>
-                    <p class="text-xs text-indigo-100">Tambah, edit, atau hapus video pengantar, infografis, contoh kasus, kuis, dan refleksi</p>
+                    <p class="text-xs text-indigo-100">Tambah, edit, atau hapus video pengantar, kuis, dan refleksi</p>
                   </div>
                 </div>
-                <button onclick="window.MicroApp.restoreDefaultModules()" class="px-3.5 py-2 rounded-xl bg-white/15 hover:bg-white/25 text-xs font-bold">
-                  Pulihkan Materi Bawaan
-                </button>
+                <div class="flex flex-wrap gap-2">
+                  <button onclick="window.MicroApp.resetStudentProgress()" class="px-3.5 py-2 rounded-xl bg-white/15 hover:bg-white/25 text-xs font-bold">
+                    Reset Progres Siswa
+                  </button>
+                  <button onclick="window.MicroApp.restoreDefaultModules()" class="px-3.5 py-2 rounded-xl bg-white/15 hover:bg-white/25 text-xs font-bold">
+                    Pulihkan Materi Bawaan
+                  </button>
+                </div>
               </div>
             </header>
 
