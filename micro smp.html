@@ -877,6 +877,29 @@
             </header>
 
             <main class="max-w-5xl mx-auto px-4 sm:px-6 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+              <!-- NILAI SISWA (data progres di browser ini) -->
+              <section class="lg:col-span-12 bg-white rounded-2xl p-4 border border-slate-100 space-y-3">
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                  <h2 class="font-extrabold text-sm text-slate-800">Nilai Siswa</h2>
+                  <span class="text-[11px] text-slate-400">Data progres yang tersimpan di browser ini</span>
+                </div>
+                ${STATE.modules.map(m => {
+                  const done = STATE.progress.completedIds.includes(m.id);
+                  const score = STATE.progress.scores[m.id];
+                  const ref = STATE.progress.reflections[m.id];
+                  return `
+                    <div class="flex flex-wrap items-start justify-between gap-2 text-xs border-t border-slate-100 pt-2">
+                      <div class="min-w-0">
+                        <p class="font-bold text-slate-800">${escapeHtml(m.judul)}</p>
+                        <p class="text-[11px] text-slate-400">${done ? 'Selesai' : 'Belum selesai'}${ref?.nama ? ' • ' + escapeHtml(ref.nama) : ''}</p>
+                        ${ref?.teks ? `<p class="text-[11px] text-slate-500 italic mt-0.5">"${escapeHtml(ref.teks)}"</p>` : ''}
+                      </div>
+                      <span class="font-extrabold text-indigo-700">${score !== undefined ? score + '%' : '-'}</span>
+                    </div>
+                  `;
+                }).join('')}
+              </section>
+
               <!-- KOLOM KIRI: DAFTAR MODUL YANG ADA -->
               <div class="lg:col-span-5 space-y-3">
                 <div class="flex items-center justify-between">
