@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Microlearning - SMP PGRI Sumberagung</title>
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="icon" href="/icon-192-v2.png" type="image/png" />
+  <link rel="apple-touch-icon" href="/icon-192-v2.png" />
+  <meta name="theme-color" content="#2563eb" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="Microlearning" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f4f6fb;
+      color: #1e293b;
+      margin: 0;
+      padding: 0;
+    }
+    .header-grad {
+      background: linear-gradient(135deg, #3b4cca 0%, #5848e5 52%, #7c4dff 100%);
+    }
+    .pastel-purple { background-color: #f2effd; border: 1px solid #e6e0fb; }
+    .pastel-peach  { background-color: #fdf2ea; border: 1px solid #fae4d4; }
+    .pastel-blue   { background-color: #edf5fe; border: 1px solid #dcebfc; }
+    .pastel-mint   { background-color: #eaf8f1; border: 1px solid #d5f1e3; }
+    .pastel-pink   { background-color: #fdf0f5; border: 1px solid #fadce8; }
+    .pastel-yellow { background-color: #fef9e7; border: 1px solid #fcf0c8; }
+
+    .module-card {
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .module-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 24px -8px rgba(59, 76, 202, 0.16);
+    }
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-up {
+      animation: fadeSlideUp 0.25s ease-out forwards;
+    }
+    @keyframes fadeSlideDown {
+      from { opacity: 0; transform: translateY(-14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.96); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+    @keyframes floaty {
+      0%, 100% { transform: translateY(0); }
+      50%      { transform: translateY(-6px); }
+    }
+    header.header-grad { animation: fadeSlideDown 0.6s ease-out backwards; }
+    .module-card { animation: popIn 0.45s ease-out backwards; }
+    .module-card:nth-child(1) { animation-delay: 0.05s; }
+    .module-card:nth-child(2) { animation-delay: 0.12s; }
+    .module-card:nth-child(3) { animation-delay: 0.19s; }
+    .module-card:nth-child(4) { animation-delay: 0.26s; }
+    .module-card:nth-child(5) { animation-delay: 0.33s; }
+    .module-card:nth-child(6) { animation-delay: 0.40s; }
+    button { transition: transform 0.15s ease, filter 0.15s ease, background-color 0.2s ease; }
+    button:hover { filter: brightness(1.04); }
+    button:active { transform: scale(0.97); }
+    .header-grad .animate-float { animation: floaty 3s ease-in-out infinite; }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body class="antialiased selection:bg-indigo-600 selection:text-white">
+
+  <div id="toastContainer" class="fixed top-4 right-4 z-[9999] flex flex-col gap-2 max-w-sm w-[calc(100%-2rem)] pointer-events-none"></div>
+  <div id="appRoot" class="min-h-screen flex flex-col"></div>
+  <div id="modalRoot"></div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      // =========================================================================
+      // 1. KONFIGURASI PENYIMPANAN & PIN ADMIN EDIT MATERI
+      // =========================================================================
+      const MODULES_STORAGE_KEY = 'smp_pgri_sumberagung_modules_v2';
+      const PROGRESS_STORAGE_KEY = 'smp_pgri_sumberagung_progress_v2';
+      const ADMIN_PIN = '1234'; // PIN untuk membuka halaman Kelola Materi Admin/Guru
+
+      // =========================================================================
+      // 2. DATA AWAL MODUL MICROLEARNING LENGKAP (VIDEO, INFOGRAFIS, KASUS, KUIS, REFLEKSI)
+      // =========================================================================
+      const DEFAULT_MODULES = [
+        {
+          id: 'ml-mtk-1',
+          mapel: 'Matematika',
+          kelas: 'VIII',
+          durasi: '5 Menit',
+          tema: 'pastel-peach',
+          iconBg: 'bg-orange-500',
+          icon: 'calculator',
+          judul: 'Sistem Persamaan Linear Dua Variabel (SPLDV)',
+          ringkasan: 'Belajar SPLDV melalui video singkat, infografis langkah penyelesaian, studi kasus belanja, dan refleksi.',
+          video: {
+            judul: 'Video Pengantar: Memahami Konsep SPLDV dalam 2 Menit',
+            url: 'https://www.youtube.com/embed/52tpYl2tTqk',
+            durasiVideo: '02:15',
+            catatanVideo: 'Perhatikan bagaimana dua barang yang berbeda dimisalkan menjadi variabel x dan y untuk mencari harga satuan masing-masing.'
+          },
+          quiz: [
+            {
+              pertanyaan: 'Jika harga 2 buku (x) dan 1 pulpen (y) adalah Rp7.000, model persamaannya adalah...',
+              opsi: ['x + 2y = 7.000', '2x + y = 7.000', '2x - y = 7.000', 'xy = 7.000'],
+              jawaban: 1,
+              pembahasan: '2 buku = 2x dan 1 pulpen = y, sehingga total harganya ditulis 2x + y = 7.000.'
+            },
+            {
+              pertanyaan: 'Berdasarkan contoh kasus koperasi sekolah di atas, harga 1 buku tulis adalah...',
+              opsi: ['Rp1.000', 'Rp2.000', 'Rp3.000', 'Rp4.000'],
+              jawaban: 2,
+              pembahasan: 'Dari 3x = 9.000 diperoleh x = Rp3.000 untuk harga 1 buku tulis.'
+            }
+          ],
+          refleksiPertanyaan: 'Tuliskan satu contoh situasi jual-beli di sekitar rumah atau kantin sekolah yang bisa kamu selesaikan dengan konsep SPLDV!'
+        },
+        {
+          id: 'ml-ipa-1',
+          mapel: 'IPA',
+          kelas: 'VIII',
+          durasi: '4 Menit',
+          tema: 'pastel-mint',
+          iconBg: 'bg-emerald-600',
+          icon: 'microscope',
+          judul: 'Sistem Pencernaan & Enzim Pencernaan Manusia',
+          ringkasan: 'Pahami perjalanan makanan dari mulut hingga usus halus lewat video, infografis enzim, dan studi kasus.',
+          video: {
+            judul: 'Video Pengantar: Perjalanan Makanan di Tubuh Manusia',
+            url: 'https://www.youtube.com/embed/Og5xAdC8EUI',
+            durasiVideo: '02:40',
+            catatanVideo: 'Amati perbedaan pencernaan mekanik oleh gigi/otot lambung dan pencernaan kimiawi yang dibantu oleh enzim.'
+          },
+          quiz: [
+            {
+              pertanyaan: 'Enzim pada air liur yang membuat nasi terasa manis saat dikunyah lama adalah...',
+              opsi: ['Pepsin', 'Lipase', 'Ptialin (Amilase)', 'Renin'],
+              jawaban: 2,
+              pembahasan: 'Enzim ptialin mengubah amilum pada nasi menjadi maltosa (gula).'
+            }
+          ],
+          refleksiPertanyaan: 'Kebiasaan makan apa yang perlu kamu perbaiki agar organ pencernaanmu tetap sehat setiap hari?'
+        },
+        {
+          id: 'ml-bind-1',
+          mapel: 'Bahasa Indonesia',
+          kelas: 'VIII',
+          durasi: '4 Menit',
+          tema: 'pastel-purple',
+          iconBg: 'bg-indigo-600',
+          icon: 'book-open',
+          judul: 'Teks Eksplanasi Fenomena Alam & Sosial',
+          ringkasan: 'Menguasai struktur teks eksplanasi dengan video edukasi, infografis struktur, dan analisis teks hujan.',
+          video: {
+            judul: 'Video Pengantar: Bagaimana Hujan Terjadi? (Contoh Eksplanasi)',
+            url: 'https://www.youtube.com/embed/zBnD2fbwr1A',
+            durasiVideo: '02:10',
+            catatanVideo: 'Perhatikan urutan sebab-akibat terjadinya penguapan air laut hingga turunnya titik hujan ke bumi.'
+          },
+          quiz: [
+            {
+              pertanyaan: 'Konjungsi yang paling sering digunakan pada bagian rangkaian kejadian teks eksplanasi adalah...',
+              opsi: ['Tetapi, melainkan', 'Karena, sehingga, akibatnya', 'Dan, atau, serta', 'Walaupun, meskipun'],
+              jawaban: 1,
+              pembahasan: 'Teks eksplanasi menjelaskan proses sebab-akibat sehingga banyak memakai konjungsi kausalitas seperti karena dan sehingga.'
+            }
+          ],
+          refleksiPertanyaan: 'Fenomena alam atau sosial apa di Kabupaten Bojonegoro yang ingin kamu tulis menjadi sebuah teks eksplanasi?'
+        }
+      ];
+
+      // =========================================================================
+      // 3. LOAD & SAVE DATA KE LOCALSTORAGE
+      // =========================================================================
+      function loadModules() {
+        try {
+          const raw = localStorage.getItem(MODULES_STORAGE_KEY);
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+          }
+        } catch {}
+        return DEFAULT_MODULES;
+      }
+
+      function saveModules(list) {
+        try {
+          localStorage.setItem(MODULES_STORAGE_KEY, JSON.stringify(list));
+        } catch {}
+      }
+
+      function loadProgress() {
+        try {
+          const raw = localStorage.getItem(PROGRESS_STORAGE_KEY);
+          if (raw) return JSON.parse(raw);
+        } catch {}
+        return { completedIds: [], scores: {}, reflections: {} };
+      }
+
+      function saveProgress() {
+        try {
+          localStorage.setItem(PROGRESS_STORAGE_KEY, JSON.stringify(STATE.progress));
+        } catch {}
+      }
+
+      const STATE = {
+        modules: loadModules(),
+        progress: loadProgress(),
+        view: 'catalog', // 'catalog' | 'player' | 'admin'
+        selectedMapel: 'Semua',
+        searchQuery: '',
+        activeModuleId: null,
+        // Tahapan belajar siswa: 'video' -> 'infografis' -> 'kasus' -> 'quiz' -> 'refleksi' -> 'selesai'
+        learnStep: 'video',
+        quizIndex: 0,
+        selectedOption: null,
+        showQuizFeedback: false,
+        quizCorrect: 0,
+        // Admin state
+        isAdminUnlocked: false,
+        editingModuleId: null
+      };
+
+      // =========================================================================
+      // 4. HELPER UI
+      // =========================================================================
+      function showToast(title, msg = '', type = 'success') {
+        const box = document.getElementById('toastContainer');
+        if (!box) return;
+        const styles = {
+          success: 'bg-emerald-600 text-white border-emerald-400',
+          info: 'bg-indigo-600 text-white border-indigo-400',
+          warning: 'bg-amber-500 text-white border-amber-300',
+          error: 'bg-rose-600 text-white border-rose-400'
+        };
+        const el = document.createElement('div');
+        el.className = `pointer-events-auto p-3.5 rounded-2xl shadow-xl border ${styles[type] || styles.info} animate-fade-up`;
+        el.innerHTML = `
+          <p class="font-bold text-sm">${escapeHtml(title)}</p>
+          ${msg ? `<p class="text-xs opacity-90 mt-0.5">${escapeHtml(msg)}</p>` : ''}
+        `;
+        box.appendChild(el);
+        setTimeout(() => el.remove(), 3600);
+      }
+
+      function escapeHtml(str) {
+        if (str === null || str === undefined) return '';
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#039;');
+      }
+
+      function normalizeYoutubeEmbed(url) {
+        if (!url) return '';
+        const trimmed = url.trim();
+        if (trimmed.includes('youtube.com/embed/')) return trimmed;
+        const watchMatch = trimmed.match(/[?&]v=([^&]+)/);
+        if (watchMatch) return `https://www.youtube.com/embed/${watchMatch[1]}`;
+        const shortMatch = trimmed.match(/youtu\.be\/([^?&]+)/);
+        if (shortMatch) return `https://www.youtube.com/embed/${shortMatch[1]}`;
+        return trimmed;
+      }
+
+      // =========================================================================
+      // 5. HALAMAN KATALOG MICROLEARNING SISWA (TANPA LOGIN)
+      // =========================================================================
+      function renderCatalogView() {
+        const mapels = ['Semua', ...new Set(STATE.modules.map(m => m.mapel))];
+        const q = STATE.searchQuery.toLowerCase();
+
+        const filtered = STATE.modules.filter(m => {
+          const okMapel = STATE.selectedMapel === 'Semua' || m.mapel === STATE.selectedMapel;
+          const okQuery = !q || m.judul.toLowerCase().includes(q) || m.mapel.toLowerCase().includes(q) || m.ringkasan.toLowerCase().includes(q);
+          return okMapel && okQuery;
+        });
+
+        const total = STATE.modules.length;
+        const done = STATE.progress.completedIds.filter(id => STATE.modules.some(m => m.id === id)).length;
+        const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+
+        return `
+          <header class="header-grad text-white rounded-b-[30px] shadow-lg">
+            <div class="max-w-5xl mx-auto px-4 sm:px-6 pt-5 pb-7">
+              <div class="flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 border border-white/25 text-[11px] font-bold">
+                    <span class="w-2 h-2 rounded-full bg-lime-400"></span>
+                    SMP PGRI SUMBERAGUNG • MICROLEARNING
+                  </span>
+                  <h1 class="text-xl sm:text-2xl font-extrabold tracking-tight mt-2">
+                    Portal Belajar Microlearning Siswa
+                  </h1>
+                  <p class="text-xs sm:text-sm text-indigo-100 mt-0.5">
+                    Video Pengantar • Infografis • Contoh Kasus • Kuis • Refleksi Pembelajaran
+                  </p>
+                </div>
+
+                <!-- Tombol Akses Panel Admin Edit Materi -->
+                <div class="flex items-center gap-2.5">
+                  <button onclick="window.MicroApp.openAdminGate()"
+                    class="px-3.5 py-2.5 rounded-2xl bg-white/15 hover:bg-white/25 border border-white/30 text-white text-xs font-bold flex items-center gap-1.5 transition">
+                    <i data-lucide="settings" class="w-4 h-4"></i>
+                    <span>Kelola Materi (Admin)</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Bar Pencarian & Progres -->
+              <div class="mt-5 grid grid-cols-1 md:grid-cols-3 gap-3 items-center">
+                <div class="md:col-span-2 relative">
+                  <span class="absolute left-4 top-1/2 -translate-y-1/2 text-indigo-500 pointer-events-none">
+                    <i data-lucide="search" class="w-5 h-5"></i>
+                  </span>
+                  <input
+                    type="text"
+                    value="${escapeHtml(STATE.searchQuery)}"
+                    oninput="window.MicroApp.setSearch(this.value)"
+                    placeholder="Cari topik pembelajaran (cth: SPLDV, Pencernaan, Eksplanasi)..."
+                    class="w-full bg-white text-slate-800 placeholder-slate-400 rounded-2xl py-3 pl-12 pr-4 text-sm font-medium shadow-md focus:outline-none"
+                  />
+                </div>
+
+                <div class="bg-white/15 backdrop-blur-md border border-white/25 rounded-2xl px-4 py-2.5">
+                  <div class="flex items-center justify-between text-xs font-bold">
+                    <span>Progres Belajar</span>
+                    <span>${done}/${total} Modul (${pct}%)</span>
+                  </div>
+                  <div class="w-full h-2 bg-white/20 rounded-full overflow-hidden mt-1.5">
+                    <div class="h-full bg-lime-400 rounded-full transition-all duration-300" style="width: ${pct}%"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </header>
+
+          <main class="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-6 space-y-5">
+            <!-- Filter Mata Pelajaran -->
+            <div class="flex items-center justify-between gap-2 flex-wrap">
+              <div class="flex gap-2 overflow-x-auto pb-1">
+                ${mapels.map(mp => `
+                  <button onclick="window.MicroApp.setMapel('${escapeHtml(mp)}')"
+                    class="px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap border transition ${STATE.selectedMapel === mp ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'}">
+                    ${escapeHtml(mp)}
+                  </button>
+                `).join('')}
+              </div>
+              ${done > 0 ? `
+                <button onclick="window.MicroApp.resetStudentProgress()" class="text-xs font-semibold text-slate-400 hover:text-rose-600">
+                  Reset Progres Siswa
+                </button>
+              ` : ''}
+            </div>
+
+            <!-- Daftar Kartu Modul -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              ${filtered.map(m => {
+                const isDone = STATE.progress.completedIds.includes(m.id);
+                const score = STATE.progress.scores[m.id];
+                return `
+                  <article onclick="window.MicroApp.startModule('${m.id}')"
+                    class="module-card ${m.tema || 'pastel-blue'} rounded-3xl p-5 flex flex-col justify-between cursor-pointer">
+                    <div>
+                      <div class="flex items-center justify-between gap-2 mb-3.5">
+                        <div class="w-11 h-11 rounded-2xl ${m.iconBg || 'bg-indigo-600'} text-white flex items-center justify-center shadow-sm">
+                          <i data-lucide="${m.icon || 'book-open'}" class="w-5 h-5"></i>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                          <span class="px-2.5 py-1 rounded-full bg-white/80 text-slate-700 text-[11px] font-bold">
+                            ⏱ ${escapeHtml(m.durasi)}
+                          </span>
+                          ${isDone ? `<span class="px-2.5 py-1 rounded-full bg-emerald-600 text-white text-[11px] font-extrabold">✓ Selesai</span>` : ''}
+                        </div>
+                      </div>
+
+                      <span class="text-[11px] font-extrabold uppercase tracking-wider text-indigo-700">
+                        ${escapeHtml(m.mapel)} • Kelas ${escapeHtml(m.kelas)}
+                      </span>
+                      <h2 class="font-extrabold text-base text-slate-800 mt-1 leading-snug">
+                        ${escapeHtml(m.judul)}
+                      </h2>
+                      <p class="text-xs text-slate-600 mt-2 leading-relaxed">
+                        ${escapeHtml(m.ringkasan)}
+                      </p>
+
+                      <!-- Badge 4 Aktivitas Belajar -->
+                      <div class="flex flex-wrap gap-1.5 mt-3">
+                        <span class="px-2 py-0.5 rounded-md bg-white/80 text-[10px] font-bold text-slate-600">🎬 Video</span>
+                        <span class="px-2 py-0.5 rounded-md bg-white/80 text-[10px] font-bold text-slate-600">✍️ Refleksi</span>
+                      </div>
+                    </div>
+
+                    <div class="mt-4 pt-3 border-t border-black/5 flex items-center justify-between text-xs">
+                      <span class="font-semibold text-slate-500">
+                        ${score !== undefined ? `Skor Kuis: ${score}%` : '4 Tahap Belajar'}
+                      </span>
+                      <span class="font-extrabold text-indigo-700 inline-flex items-center gap-1">
+                        Mulai <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                      </span>
+                    </div>
+                  </article>
+                `;
+              }).join('')}
+            </div>
+          </main>
+
+          <footer class="py-5 text-center text-xs text-slate-400">
+            Microlearning SMP PGRI Sumberagung • Created by <b class="text-slate-600">Danang Wahyudi</b>
+          </footer>
+        `;
+      }
+
+      // =========================================================================
+      // 6. PEMUTAR ALUR MICROLEARNING (VIDEO -> INFOGRAFIS -> KASUS -> KUIS -> REFLEKSI)
+      // =========================================================================
+      const LEARN_STEPS = [
+        { id: 'video', label: '1. Video Pengantar', icon: 'play-circle' },
+        { id: 'infografis', label: '2. Infografis', icon: 'layout-list' },
+        { id: 'kasus', label: '3. Contoh Kasus', icon: 'lightbulb' },
+        { id: 'quiz', label: '4. Kuis Cepat', icon: 'help-circle' },
+        { id: 'refleksi', label: '5. Refleksi', icon: 'pen-tool' }
+      ];
+
+      function renderPlayerView() {
+        const mod = STATE.modules.find(m => m.id === STATE.activeModuleId);
+        if (!mod) return renderCatalogView();
+
+        const currentStepIdx = LEARN_STEPS.findIndex(s => s.id === STATE.learnStep);
+        const pct = STATE.learnStep === 'selesai'
+          ? 100
+          : Math.round(((currentStepIdx + 1) / LEARN_STEPS.length) * 100);
+
+        return `
+          <div class="min-h-screen flex flex-col bg-[#f4f6fb]">
+            <!-- Top Navigation Bar -->
+            <div class="bg-white border-b border-slate-200 sticky top-0 z-20">
+              <div class="max-w-3xl mx-auto px-4 py-3.5">
+                <div class="flex items-center justify-between gap-3">
+                  <button onclick="window.MicroApp.backToCatalog()" class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                  </button>
+                  <div class="flex-1 min-w-0">
+                    <p class="text-[11px] font-bold text-indigo-600 truncate">${escapeHtml(mod.mapel)} • ${escapeHtml(mod.judul)}</p>
+                    <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden mt-1">
+                      <div class="h-full bg-indigo-600 rounded-full transition-all duration-300" style="width: ${pct}%"></div>
+                    </div>
+                  </div>
+                  <span class="text-xs font-extrabold text-indigo-700">${pct}%</span>
+                </div>
+
+                <!-- Stepper Tab Navigasi Tahap Belajar -->
+                ${STATE.learnStep !== 'selesai' ? `
+                  <div class="flex gap-1.5 overflow-x-auto pt-3 pb-0.5">
+                    ${LEARN_STEPS.map((st, idx) => {
+                      const active = STATE.learnStep === st.id;
+                      const passed = idx < currentStepIdx;
+                      return `
+                        <button onclick="window.MicroApp.jumpStep('${st.id}')"
+                          class="px-3 py-1.5 rounded-xl text-[11px] font-bold whitespace-nowrap flex items-center gap-1.5 border transition ${active ? 'bg-indigo-600 text-white border-indigo-600' : passed ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-slate-50 text-slate-500 border-slate-200'}">
+                          <i data-lucide="${st.icon}" class="w-3.5 h-3.5"></i>
+                          <span>${st.label}</span>
+                        </button>
+                      `;
+                    }).join('')}
+                  </div>
+                ` : ''}
+              </div>
+            </div>
+
+            <!-- Konten Per Tahap -->
+            <main class="flex-1 max-w-3xl w-full mx-auto px-4 py-6">
+              ${STATE.learnStep === 'video' ? renderStepVideo(mod) : ''}
+              ${STATE.learnStep === 'quiz' ? renderStepQuiz(mod) : ''}
+              ${STATE.learnStep === 'refleksi' ? renderStepRefleksi(mod) : ''}
+              ${STATE.learnStep === 'selesai' ? renderStepSelesai(mod) : ''}
+            </main>
+          </div>
+        `;
+      }
+
+      // TAHAP 1: MENONTON VIDEO PENGANTAR
+      function renderStepVideo(mod) {
+        const embedUrl = normalizeYoutubeEmbed(mod.video?.url || '');
+        return `
+          <div class="bg-white rounded-3xl p-5 sm:p-7 shadow-xs border border-slate-100 space-y-5 animate-fade-up">
+            <div class="flex items-center justify-between gap-2">
+              <span class="px-3 py-1 rounded-full bg-rose-50 text-rose-700 text-xs font-extrabold inline-flex items-center gap-1.5">
+                <i data-lucide="play-circle" class="w-4 h-4"></i> Tahap 1 • Menonton Video Pengantar
+              </span>
+              <span class="text-xs font-bold text-slate-400">Durasi: ${escapeHtml(mod.video?.durasiVideo || '2 Menit')}</span>
+            </div>
+
+            <h2 class="text-lg sm:text-xl font-extrabold text-slate-800">${escapeHtml(mod.video?.judul || mod.judul)}</h2>
+
+            ${embedUrl ? `
+              <div class="aspect-video w-full rounded-2xl overflow-hidden bg-slate-900 border border-slate-200 shadow-inner">
+                <iframe
+                  src="${escapeHtml(embedUrl)}"
+                  title="${escapeHtml(mod.video?.judul || 'Video Pengantar')}"
+                  class="w-full h-full"
+                  frameborder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen>
+                </iframe>
+              </div>
+            ` : `
+              <div class="p-6 rounded-2xl bg-slate-100 text-center text-xs text-slate-500">
+                Video belum ditambahkan pada modul ini.
+              </div>
+            `}
+
+            <div class="p-4 rounded-2xl bg-indigo-50/70 border border-indigo-100 text-xs sm:text-sm text-slate-700 leading-relaxed">
+              <p class="font-extrabold text-indigo-900 mb-1">📌 Fokus Menyimak Video:</p>
+              <p>${escapeHtml(mod.video?.catatanVideo || mod.ringkasan)}</p>
+            </div>
+
+            <button onclick="window.MicroApp.jumpStep('infografis')"
+              class="w-full py-3.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs sm:text-sm shadow-md">
+              Selesai Menonton → Lanjut Membaca Infografis
+            </button>
+          </div>
+        `;
+      }
+
+      // TAHAP 4: KUIS CEPAT
+      function renderStepQuiz(mod) {
+        const qList = mod.quiz || [];
+        if (qList.length === 0) {
+          return renderStepRefleksi(mod);
+        }
+        const q = qList[STATE.quizIndex];
+        const isLast = STATE.quizIndex === qList.length - 1;
+
+        return `
+          <div class="bg-white rounded-3xl p-5 sm:p-7 shadow-xs border border-slate-100 space-y-5 animate-fade-up">
+            <span class="px-3 py-1 rounded-full bg-purple-50 text-purple-700 text-xs font-extrabold">
+              Tahap 4 • Kuis Pemahaman (${STATE.quizIndex + 1}/${qList.length})
+            </span>
+
+            <h2 class="text-base sm:text-lg font-extrabold text-slate-800 leading-snug">
+              ${escapeHtml(q.pertanyaan)}
+            </h2>
+
+            <div class="space-y-2.5">
+              ${q.opsi.map((opt, idx) => {
+                let cls = 'bg-white border-slate-200 text-slate-700 hover:border-indigo-400';
+                if (STATE.showQuizFeedback) {
+                  if (idx === q.jawaban) cls = 'bg-emerald-50 border-emerald-500 text-emerald-900 font-bold';
+                  else if (idx === STATE.selectedOption) cls = 'bg-rose-50 border-rose-500 text-rose-900';
+                } else if (STATE.selectedOption === idx) {
+                  cls = 'bg-indigo-50 border-indigo-600 text-indigo-900 font-bold';
+                }
+                return `
+                  <button type="button" ${STATE.showQuizFeedback ? 'disabled' : ''} onclick="window.MicroApp.pickOption(${idx})"
+                    class="w-full text-left p-4 rounded-2xl border-2 text-xs sm:text-sm transition flex items-center gap-3 ${cls}">
+                    <span class="w-7 h-7 rounded-full bg-slate-100 text-slate-700 font-extrabold text-xs flex items-center justify-center shrink-0">
+                      ${String.fromCharCode(65 + idx)}
+                    </span>
+                    <span>${escapeHtml(opt)}</span>
+                  </button>
+                `;
+              }).join('')}
+            </div>
+
+            ${STATE.showQuizFeedback ? `
+              <div class="p-4 rounded-2xl ${STATE.selectedOption === q.jawaban ? 'bg-emerald-50 border border-emerald-200 text-emerald-900' : 'bg-amber-50 border border-amber-200 text-amber-900'} text-xs leading-relaxed">
+                <p class="font-extrabold mb-1">${STATE.selectedOption === q.jawaban ? '✓ Tepat Sekali!' : 'ℹ Pembahasan:'}</p>
+                <p>${escapeHtml(q.pembahasan)}</p>
+              </div>
+              <button onclick="window.MicroApp.nextQuizItem()"
+                class="w-full py-3.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs sm:text-sm shadow-md">
+                ${isLast ? 'Lanjut ke Refleksi Pembelajaran →' : 'Pertanyaan Berikutnya →'}
+              </button>
+            ` : `
+              <button onclick="window.MicroApp.submitQuizItem()" ${STATE.selectedOption === null ? 'disabled' : ''}
+                class="w-full py-3.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs sm:text-sm disabled:opacity-40">
+                Periksa Jawaban
+              </button>
+            `}
+          </div>
+        `;
+      }
+
+      // TAHAP 5: REFLEKSI PEMBELAJARAN
+      function renderStepRefleksi(mod) {
+        const savedRef = STATE.progress.reflections[mod.id] || '';
+        return `
+          <div class="bg-white rounded-3xl p-5 sm:p-7 shadow-xs border border-slate-100 space-y-5 animate-fade-up">
+            <span class="px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-extrabold inline-flex items-center gap-1.5">
+              <i data-lucide="pen-tool" class="w-4 h-4"></i> Tahap 5 • Refleksi Pembelajaran
+            </span>
+
+            <h2 class="text-lg sm:text-xl font-extrabold text-slate-800">Refleksi Diri Setelah Belajar</h2>
+
+            <div class="p-4 rounded-2xl bg-indigo-50 border border-indigo-100 text-xs sm:text-sm text-indigo-950 font-semibold leading-relaxed">
+              ${escapeHtml(mod.refleksiPertanyaan || 'Apa hal terpenting yang kamu pahami dari materi hari ini dan bagaimana penerapannya?')}
+            </div>
+
+            <form onsubmit="window.MicroApp.finishModuleWithReflection(event)" class="space-y-4">
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1.5">Nama Siswa (Opsional)</label>
+                <input id="refNamaSiswa" type="text" value="${escapeHtml(savedRef.nama || '')}" placeholder="Contoh: Ahmad Rizky (VIII-A)" class="w-full rounded-xl border border-slate-200 p-3 text-xs sm:text-sm" />
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1.5">Catatan Refleksi Pembelajaran *</label>
+                <textarea id="refJawabanSiswa" rows="4" placeholder="Tuliskan pemahamanmu, bagian yang paling menarik, atau contoh penerapan materi ini..." class="w-full rounded-xl border border-slate-200 p-3 text-xs sm:text-sm focus:outline-none focus:border-indigo-500" required>${escapeHtml(savedRef.teks || '')}</textarea>
+              </div>
+
+              <button type="submit" class="w-full py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs sm:text-sm shadow-md">
+                Simpan Refleksi & Selesaikan Modul ✓
+              </button>
+            </form>
+          </div>
+        `;
+      }
+
+      // TAHAP SELESAI
+      function renderStepSelesai(mod) {
+        const totalQ = (mod.quiz || []).length;
+        const score = totalQ > 0 ? Math.round((STATE.quizCorrect / totalQ) * 100) : 100;
+        const ref = STATE.progress.reflections[mod.id];
+
+        return `
+          <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-xs border border-slate-100 text-center space-y-5 animate-fade-up">
+            <div class="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto text-3xl">
+              🎉
+            </div>
+            <div>
+              <span class="px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-extrabold">Seluruh Tahap Selesai</span>
+              <h2 class="text-xl font-extrabold text-slate-800 mt-2">${escapeHtml(mod.judul)}</h2>
+              <p class="text-xs text-slate-500 mt-1">Video Pengantar • Infografis • Contoh Kasus • Kuis • Refleksi</p>
+            </div>
+
+            <div class="inline-block px-7 py-3.5 rounded-2xl bg-indigo-50 border border-indigo-100">
+              <span class="text-[11px] font-bold text-indigo-600 uppercase block">Skor Pemahaman</span>
+              <span class="text-3xl font-extrabold text-indigo-700">${score}%</span>
+            </div>
+
+            ${ref ? `
+              <div class="text-left p-4 rounded-2xl bg-slate-50 border border-slate-200 text-xs space-y-1">
+                <p class="font-extrabold text-slate-700">Refleksi Tersimpan ${ref.nama ? `(${escapeHtml(ref.nama)})` : ''}:</p>
+                <p class="text-slate-600 italic">"${escapeHtml(ref.teks)}"</p>
+              </div>
+            ` : ''}
+
+            <div class="flex flex-col sm:flex-row gap-3 pt-2">
+              <button onclick="window.MicroApp.startModule('${mod.id}')" class="flex-1 py-3 rounded-xl border border-slate-200 text-slate-700 font-bold text-xs">
+                Ulangi Materi
+              </button>
+              <button onclick="window.MicroApp.backToCatalog()" class="flex-1 py-3 rounded-xl bg-indigo-600 text-white font-extrabold text-xs shadow-md">
+                Kembali ke Daftar Modul
+              </button>
+            </div>
+          </div>
+        `;
+      }
+
+      // =========================================================================
+      // 7. HALAMAN KHUSUS ADMIN / GURU UNTUK MENGEDIT & MENAMBAH MATERI
+      // =========================================================================
+      function renderAdminView() {
+        const editing = STATE.editingModuleId
+          ? STATE.modules.find(m => m.id === STATE.editingModuleId)
+          : null;
+
+        const q1 = editing?.quiz?.[0] || { pertanyaan: '', opsi: ['', '', '', ''], jawaban: 0, pembahasan: '' };
+
+        return `
+          <div class="min-h-screen bg-[#f4f6fb] pb-16">
+            <header class="header-grad text-white py-5 px-4 sm:px-6 shadow-md">
+              <div class="max-w-5xl mx-auto flex flex-wrap items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                  <button onclick="window.MicroApp.backToCatalog()" class="p-2 rounded-xl bg-white/15 hover:bg-white/25">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                  </button>
+                  <div>
+                    <h1 class="text-lg sm:text-xl font-extrabold">Panel Admin — Kelola Materi Microlearning</h1>
+                    <p class="text-xs text-indigo-100">Tambah, edit, atau hapus video pengantar, infografis, contoh kasus, kuis, dan refleksi</p>
+                  </div>
+                </div>
+                <button onclick="window.MicroApp.restoreDefaultModules()" class="px-3.5 py-2 rounded-xl bg-white/15 hover:bg-white/25 text-xs font-bold">
+                  Pulihkan Materi Bawaan
+                </button>
+              </div>
+            </header>
+
+            <main class="max-w-5xl mx-auto px-4 sm:px-6 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+              <!-- KOLOM KIRI: DAFTAR MODUL YANG ADA -->
+              <div class="lg:col-span-5 space-y-3">
+                <div class="flex items-center justify-between">
+                  <h2 class="font-extrabold text-sm text-slate-800">Daftar Materi (${STATE.modules.length})</h2>
+                  <button onclick="window.MicroApp.newModuleForm()" class="px-3 py-1.5 rounded-xl bg-indigo-600 text-white text-xs font-bold">
+                    + Modul Baru
+                  </button>
+                </div>
+
+                <div class="space-y-2.5">
+                  ${STATE.modules.map(m => `
+                    <div class="bg-white rounded-2xl p-4 border ${STATE.editingModuleId === m.id ? 'border-indigo-600 ring-2 ring-indigo-100' : 'border-slate-100'} flex items-start justify-between gap-2">
+                      <div class="min-w-0">
+                        <span class="text-[10px] font-extrabold uppercase text-indigo-600">${escapeHtml(m.mapel)} • Kelas ${escapeHtml(m.kelas)}</span>
+                        <h3 class="font-bold text-xs sm:text-sm text-slate-800 truncate mt-0.5">${escapeHtml(m.judul)}</h3>
+                        <p class="text-[11px] text-slate-400 mt-0.5">Durasi: ${escapeHtml(m.durasi)}</p>
+                      </div>
+                      <div class="flex gap-1.5 shrink-0">
+                        <button onclick="window.MicroApp.editModuleForm('${m.id}')" class="p-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-700" title="Edit Materi">
+                          <i data-lucide="edit-3" class="w-4 h-4"></i>
+                        </button>
+                        <button onclick="window.MicroApp.deleteModule('${m.id}')" class="p-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600" title="Hapus Materi">
+                          <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
+                      </div>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+
+              <!-- KOLOM KANAN: FORM TAMBAH / EDIT MATERI LENGKAP -->
+              <div class="lg:col-span-7">
+                <form onsubmit="window.MicroApp.saveModuleForm(event)" class="bg-white rounded-3xl p-5 sm:p-6 border border-slate-100 shadow-xs space-y-4">
+                  <h2 class="font-extrabold text-base text-slate-800 border-b border-slate-100 pb-3">
+                    ${editing ? `Edit Materi: ${escapeHtml(editing.judul)}` : 'Tambah Materi Microlearning Baru'}
+                  </h2>
+
+                  <!-- Informasi Dasar -->
+                  <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div>
+                      <label class="block text-xs font-bold text-slate-700 mb-1">Mata Pelajaran *</label>
+                      <input id="admMapel" type="text" value="${escapeHtml(editing?.mapel || 'Matematika')}" class="w-full rounded-xl border border-slate-200 p-2.5 text-xs" required />
+                    </div>
+                    <div>
+                      <label class="block text-xs font-bold text-slate-700 mb-1">Kelas *</label>
+                      <input id="admKelas" type="text" value="${escapeHtml(editing?.kelas || 'VIII')}" class="w-full rounded-xl border border-slate-200 p-2.5 text-xs" required />
+                    </div>
+                    <div>
+                      <label class="block text-xs font-bold text-slate-700 mb-1">Estimasi Durasi *</label>
+                      <input id="admDurasi" type="text" value="${escapeHtml(editing?.durasi || '4 Menit')}" class="w-full rounded-xl border border-slate-200 p-2.5 text-xs" required />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Judul Topik Microlearning *</label>
+                    <input id="admJudul" type="text" value="${escapeHtml(editing?.judul || '')}" placeholder="Contoh: Teorema Pythagoras Segitiga Siku-Siku" class="w-full rounded-xl border border-slate-200 p-2.5 text-xs" required />
+                  </div>
+
+                  <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Ringkasan Singkat *</label>
+                    <textarea id="admRingkasan" rows="2" class="w-full rounded-xl border border-slate-200 p-2.5 text-xs" required>${escapeHtml(editing?.ringkasan || '')}</textarea>
+                  </div>
+
+                  <!-- 1. VIDEO PENGANTAR -->
+                  <div class="p-3.5 rounded-2xl bg-rose-50/50 border border-rose-100 space-y-2.5">
+                    <p class="text-xs font-extrabold text-rose-800">1. Video Pengantar</p>
+                    <input id="admVidJudul" type="text" value="${escapeHtml(editing?.video?.judul || '')}" placeholder="Judul Video Pengantar" class="w-full rounded-xl border border-slate-200 p-2.5 text-xs bg-white" required />
+                    <input id="admVidUrl" type="url" value="${escapeHtml(editing?.video?.url || '')}" placeholder="Link YouTube (cth: https://www.youtube.com/watch?v=...)" class="w-full rounded-xl border border-slate-200 p-2.5 text-xs bg-white" required />
+                    <input id="admVidCatatan" type="text" value="${escapeHtml(editing?.video?.catatanVideo || '')}" placeholder="Instruksi menyimak video untuk siswa" class="w-full rounded-xl border border-slate-200 p-2.5 text-xs bg-white" />
+                  </div>
+
+                  <!-- 4. KUIS SINGKAT -->
+                  <div class="p-3.5 rounded-2xl bg-purple-50/50 border border-purple-100 space-y-2.5">
+                    <p class="text-xs font-extrabold text-purple-800">4. Kuis Pemahaman</p>
+                    <input id="admQuizTanya" type="text" value="${escapeHtml(q1.pertanyaan)}" placeholder="Pertanyaan Kuis" class="w-full rounded-xl border border-slate-200 p-2.5 text-xs bg-white" required />
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      <input id="admOpsiA" type="text" value="${escapeHtml(q1.opsi[0] || '')}" placeholder="Opsi A" class="rounded-xl border border-slate-200 p-2 text-xs bg-white" required />
+                      <input id="admOpsiB" type="text" value="${escapeHtml(q1.opsi[1] || '')}" placeholder="Opsi B" class="rounded-xl border border-slate-200 p-2 text-xs bg-white" required />
+                      <input id="admOpsiC" type="text" value="${escapeHtml(q1.opsi[2] || '')}" placeholder="Opsi C" class="rounded-xl border border-slate-200 p-2 text-xs bg-white" required />
+                      <input id="admOpsiD" type="text" value="${escapeHtml(q1.opsi[3] || '')}" placeholder="Opsi D" class="rounded-xl border border-slate-200 p-2 text-xs bg-white" required />
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                      <select id="admJawabanBenar" class="rounded-xl border border-slate-200 p-2 text-xs bg-white">
+                        <option value="0" ${q1.jawaban === 0 ? 'selected' : ''}>Jawaban Benar: A</option>
+                        <option value="1" ${q1.jawaban === 1 ? 'selected' : ''}>Jawaban Benar: B</option>
+                        <option value="2" ${q1.jawaban === 2 ? 'selected' : ''}>Jawaban Benar: C</option>
+                        <option value="3" ${q1.jawaban === 3 ? 'selected' : ''}>Jawaban Benar: D</option>
+                      </select>
+                      <input id="admPembahasan" type="text" value="${escapeHtml(q1.pembahasan)}" placeholder="Penjelasan jawaban benar" class="sm:col-span-2 rounded-xl border border-slate-200 p-2 text-xs bg-white" required />
+                    </div>
+                  </div>
+
+                  <!-- 5. REFLEKSI PEMBELAJARAN -->
+                  <div class="p-3.5 rounded-2xl bg-emerald-50/50 border border-emerald-100 space-y-2">
+                    <p class="text-xs font-extrabold text-emerald-800">5. Pertanyaan Refleksi Pembelajaran</p>
+                    <input id="admRefleksi" type="text" value="${escapeHtml(editing?.refleksiPertanyaan || '')}" placeholder="Pertanyaan refleksi untuk dijawab siswa di akhir modul..." class="w-full rounded-xl border border-slate-200 p-2.5 text-xs bg-white" required />
+                  </div>
+
+                  <button type="submit" class="w-full py-3.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs sm:text-sm shadow-md">
+                    ${editing ? 'Simpan Perubahan Materi' : 'Publikasikan Materi Baru'}
+                  </button>
+                </form>
+              </div>
+            </main>
+          </div>
+        `;
+      }
+
+      // Modal PIN Admin agar siswa tidak mengedit materi secara tidak sengaja
+      function openAdminPinModal() {
+        if (STATE.isAdminUnlocked) {
+          STATE.view = 'admin';
+          renderApp();
+          return;
+        }
+        document.getElementById('modalRoot').innerHTML = `
+          <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
+            <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl animate-fade-up">
+              <div class="flex items-center justify-between mb-3">
+                <h3 class="font-extrabold text-base text-slate-800">Akses Admin Edit Materi</h3>
+                <button onclick="window.MicroApp.closeModal()" class="text-slate-400 hover:text-slate-600 font-bold">✕</button>
+              </div>
+              <p class="text-xs text-slate-500 mb-4">Masukkan PIN Admin / Guru untuk mengelola modul microlearning.</p>
+              <form onsubmit="window.MicroApp.verifyAdminPin(event)" class="space-y-3">
+                <input id="adminPinInput" type="password" inputmode="numeric" placeholder="Masukkan PIN Admin" class="w-full rounded-xl border border-slate-200 p-3 text-center text-base font-extrabold tracking-widest" required autofocus />
+                <button type="submit" class="w-full py-3 rounded-xl bg-indigo-600 text-white font-bold text-xs">Buka Panel Admin</button>
+              </form>
+            </div>
+          </div>
+        `;
+      }
+
+      function renderApp() {
+        const root = document.getElementById('appRoot');
+        if (!root) return;
+        if (STATE.view === 'player') {
+          root.innerHTML = renderPlayerView();
+        } else if (STATE.view === 'admin') {
+          root.innerHTML = renderAdminView();
+        } else {
+          root.innerHTML = renderCatalogView();
+        }
+        if (window.lucide) lucide.createIcons();
+      }
+
+      // =========================================================================
+      // 8. AKSI GLOBAL
+      // =========================================================================
+      window.MicroApp = {
+        setMapel(mp) { STATE.selectedMapel = mp; renderApp(); },
+        setSearch(q) { STATE.searchQuery = q; renderApp(); },
+        closeModal() { document.getElementById('modalRoot').innerHTML = ''; },
+
+        startModule(id) {
+          STATE.activeModuleId = id;
+          STATE.view = 'player';
+          STATE.learnStep = 'video';
+          STATE.quizIndex = 0;
+          STATE.selectedOption = null;
+          STATE.showQuizFeedback = false;
+          STATE.quizCorrect = 0;
+          renderApp();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        },
+
+        backToCatalog() {
+          STATE.view = 'catalog';
+          STATE.activeModuleId = null;
+          renderApp();
+        },
+
+        jumpStep(stepId) {
+          STATE.learnStep = stepId;
+          if (stepId === 'quiz') {
+            STATE.quizIndex = 0;
+            STATE.selectedOption = null;
+            STATE.showQuizFeedback = false;
+            STATE.quizCorrect = 0;
+          }
+          renderApp();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        },
+
+        startQuizStep() {
+          this.jumpStep('quiz');
+        },
+
+        pickOption(idx) {
+          STATE.selectedOption = idx;
+          renderApp();
+        },
+
+        submitQuizItem() {
+          const mod = STATE.modules.find(m => m.id === STATE.activeModuleId);
+          if (!mod || STATE.selectedOption === null) return;
+          if (STATE.selectedOption === mod.quiz[STATE.quizIndex].jawaban) {
+            STATE.quizCorrect++;
+          }
+          STATE.showQuizFeedback = true;
+          renderApp();
+        },
+
+        nextQuizItem() {
+          const mod = STATE.modules.find(m => m.id === STATE.activeModuleId);
+          if (!mod) return;
+          if (STATE.quizIndex < mod.quiz.length - 1) {
+            STATE.quizIndex++;
+            STATE.selectedOption = null;
+            STATE.showQuizFeedback = false;
+            renderApp();
+          } else {
+            STATE.learnStep = 'refleksi';
+            renderApp();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }
+        },
+
+        finishModuleWithReflection(e) {
+          e.preventDefault();
+          const mod = STATE.modules.find(m => m.id === STATE.activeModuleId);
+          if (!mod) return;
+
+          const nama = document.getElementById('refNamaSiswa')?.value.trim() || '';
+          const teks = document.getElementById('refJawabanSiswa')?.value.trim() || '';
+
+          const totalQ = (mod.quiz || []).length;
+          const score = totalQ > 0 ? Math.round((STATE.quizCorrect / totalQ) * 100) : 100;
+
+          if (!STATE.progress.completedIds.includes(mod.id)) {
+            STATE.progress.completedIds.push(mod.id);
+          }
+          STATE.progress.scores[mod.id] = Math.max(score, STATE.progress.scores[mod.id] || 0);
+          STATE.progress.reflections[mod.id] = { nama, teks, updatedAt: new Date().toISOString() };
+          saveProgress();
+
+          STATE.learnStep = 'selesai';
+          showToast('Modul Selesai!', 'Refleksi dan skor belajar berhasil disimpan.');
+          renderApp();
+        },
+
+        resetStudentProgress() {
+          STATE.progress = { completedIds: [], scores: {}, reflections: {} };
+          saveProgress();
+          showToast('Progres Direset', 'Status belajar dikembalikan ke awal.', 'info');
+          renderApp();
+        },
+
+        // Admin Actions
+        openAdminGate: openAdminPinModal,
+
+        verifyAdminPin(e) {
+          e.preventDefault();
+          const pin = document.getElementById('adminPinInput')?.value.trim();
+          if (pin === ADMIN_PIN) {
+            STATE.isAdminUnlocked = true;
+            this.closeModal();
+            STATE.view = 'admin';
+            renderApp();
+          } else {
+            showToast('PIN Salah', 'Periksa kembali PIN Admin.', 'error');
+          }
+        },
+
+        newModuleForm() {
+          STATE.editingModuleId = null;
+          renderApp();
+        },
+
+        editModuleForm(id) {
+          STATE.editingModuleId = id;
+          renderApp();
+        },
+
+        deleteModule(id) {
+          STATE.modules = STATE.modules.filter(m => m.id !== id);
+          if (STATE.editingModuleId === id) STATE.editingModuleId = null;
+          saveModules(STATE.modules);
+          showToast('Materi Dihapus', '', 'info');
+          renderApp();
+        },
+
+        saveModuleForm(e) {
+          e.preventDefault();
+          const themes = ['pastel-peach', 'pastel-mint', 'pastel-purple', 'pastel-blue', 'pastel-yellow'];
+          const icons = ['calculator', 'microscope', 'book-open', 'cpu', 'globe'];
+          const idxColor = STATE.modules.length % themes.length;
+
+          const payload = {
+            id: STATE.editingModuleId || ('ml-' + Date.now()),
+            mapel: document.getElementById('admMapel').value.trim(),
+            kelas: document.getElementById('admKelas').value.trim(),
+            durasi: document.getElementById('admDurasi').value.trim(),
+            tema: STATE.editingModuleId
+              ? (STATE.modules.find(m => m.id === STATE.editingModuleId)?.tema || themes[idxColor])
+              : themes[idxColor],
+            iconBg: 'bg-indigo-600',
+            icon: icons[idxColor],
+            judul: document.getElementById('admJudul').value.trim(),
+            ringkasan: document.getElementById('admRingkasan').value.trim(),
+            video: {
+              judul: document.getElementById('admVidJudul').value.trim(),
+              url: document.getElementById('admVidUrl').value.trim(),
+              durasiVideo: '02:30',
+              catatanVideo: document.getElementById('admVidCatatan').value.trim()
+            },
+            quiz: [
+              {
+                pertanyaan: document.getElementById('admQuizTanya').value.trim(),
+                opsi: [
+                  document.getElementById('admOpsiA').value.trim(),
+                  document.getElementById('admOpsiB').value.trim(),
+                  document.getElementById('admOpsiC').value.trim(),
+                  document.getElementById('admOpsiD').value.trim()
+                ],
+                jawaban: Number(document.getElementById('admJawabanBenar').value),
+                pembahasan: document.getElementById('admPembahasan').value.trim()
+              }
+            ],
+            refleksiPertanyaan: document.getElementById('admRefleksi').value.trim()
+          };
+
+          if (STATE.editingModuleId) {
+            const idx = STATE.modules.findIndex(m => m.id === STATE.editingModuleId);
+            if (idx !== -1) STATE.modules[idx] = payload;
+            showToast('Materi Diperbarui', 'Perubahan langsung tampil untuk siswa.');
+          } else {
+            STATE.modules.unshift(payload);
+            showToast('Materi Ditambahkan', 'Modul baru berhasil dipublikasikan.');
+          }
+
+          saveModules(STATE.modules);
+          STATE.editingModuleId = null;
+          renderApp();
+        },
+
+        restoreDefaultModules() {
+          STATE.modules = [...DEFAULT_MODULES];
+          STATE.editingModuleId = null;
+          saveModules(STATE.modules);
+          showToast('Materi Dipulihkan', 'Kembali ke daftar materi awal.', 'info');
+          renderApp();
+        }
+      };
+
+      renderApp();
+    })();
+  </script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch((err) => console.error('SW gagal:', err));
+      });
+    }
+  </script>
+</body>
+</html>
