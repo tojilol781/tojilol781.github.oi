@@ -845,12 +845,40 @@
       // =========================================================================
       // 7. HALAMAN KHUSUS ADMIN / GURU UNTUK MENGEDIT & MENAMBAH MATERI
       // =========================================================================
+      function renderAdminQuizBlocks(editing) {
+        const list = editing?.quiz || [];
+        let html = '<div class="p-3.5 rounded-2xl bg-purple-50/50 border border-purple-100 space-y-3"><p class="text-xs font-extrabold text-purple-800">4. Kuis Pemahaman (10 soal, berurutan 1-10)</p>';
+        for (let i = 0; i < 10; i++) {
+          const q = list[i] || { pertanyaan: '', opsi: [], jawaban: 0, pembahasan: '' };
+          const opsi = q.opsi || [];
+          html += `
+            <div class="space-y-2 ${i > 0 ? 'pt-3 border-t border-purple-100' : ''}">
+              <p class="text-[11px] font-extrabold text-purple-700">Soal ${i + 1}</p>
+              <input id="admQ${i}Tanya" type="text" value="${escapeHtml(q.pertanyaan || '')}" placeholder="Pertanyaan soal ${i + 1}" class="w-full rounded-xl border border-slate-200 p-2.5 text-xs bg-white" required />
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <input id="admQ${i}OpsiA" type="text" value="${escapeHtml(opsi[0] || '')}" placeholder="Opsi A" class="rounded-xl border border-slate-200 p-2 text-xs bg-white" required />
+                <input id="admQ${i}OpsiB" type="text" value="${escapeHtml(opsi[1] || '')}" placeholder="Opsi B" class="rounded-xl border border-slate-200 p-2 text-xs bg-white" required />
+                <input id="admQ${i}OpsiC" type="text" value="${escapeHtml(opsi[2] || '')}" placeholder="Opsi C" class="rounded-xl border border-slate-200 p-2 text-xs bg-white" required />
+                <input id="admQ${i}OpsiD" type="text" value="${escapeHtml(opsi[3] || '')}" placeholder="Opsi D" class="rounded-xl border border-slate-200 p-2 text-xs bg-white" required />
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                <select id="admQ${i}Jawaban" class="rounded-xl border border-slate-200 p-2 text-xs bg-white">
+                  <option value="0" ${q.jawaban === 0 ? 'selected' : ''}>Jawaban Benar: A</option>
+                  <option value="1" ${q.jawaban === 1 ? 'selected' : ''}>Jawaban Benar: B</option>
+                  <option value="2" ${q.jawaban === 2 ? 'selected' : ''}>Jawaban Benar: C</option>
+                  <option value="3" ${q.jawaban === 3 ? 'selected' : ''}>Jawaban Benar: D</option>
+                </select>
+                <input id="admQ${i}Pembahasan" type="text" value="${escapeHtml(q.pembahasan || '')}" placeholder="Penjelasan jawaban benar" class="sm:col-span-2 rounded-xl border border-slate-200 p-2 text-xs bg-white" required />
+              </div>
+            </div>`;
+        }
+        return html + '</div>';
+      }
+
       function renderAdminView() {
         const editing = STATE.editingModuleId
           ? STATE.modules.find(m => m.id === STATE.editingModuleId)
           : null;
-
-        const q1 = editing?.quiz?.[0] || { pertanyaan: '', opsi: ['', '', '', ''], jawaban: 0, pembahasan: '' };
 
         return `
           <div class="min-h-screen bg-[#f4f6fb] pb-16">
@@ -971,26 +999,8 @@
                     <input id="admVidCatatan" type="text" value="${escapeHtml(editing?.video?.catatanVideo || '')}" placeholder="Instruksi menyimak video untuk siswa" class="w-full rounded-xl border border-slate-200 p-2.5 text-xs bg-white" />
                   </div>
 
-                  <!-- 4. KUIS SINGKAT -->
-                  <div class="p-3.5 rounded-2xl bg-purple-50/50 border border-purple-100 space-y-2.5">
-                    <p class="text-xs font-extrabold text-purple-800">4. Kuis Pemahaman</p>
-                    <input id="admQuizTanya" type="text" value="${escapeHtml(q1.pertanyaan)}" placeholder="Pertanyaan Kuis" class="w-full rounded-xl border border-slate-200 p-2.5 text-xs bg-white" required />
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                      <input id="admOpsiA" type="text" value="${escapeHtml(q1.opsi[0] || '')}" placeholder="Opsi A" class="rounded-xl border border-slate-200 p-2 text-xs bg-white" required />
-                      <input id="admOpsiB" type="text" value="${escapeHtml(q1.opsi[1] || '')}" placeholder="Opsi B" class="rounded-xl border border-slate-200 p-2 text-xs bg-white" required />
-                      <input id="admOpsiC" type="text" value="${escapeHtml(q1.opsi[2] || '')}" placeholder="Opsi C" class="rounded-xl border border-slate-200 p-2 text-xs bg-white" required />
-                      <input id="admOpsiD" type="text" value="${escapeHtml(q1.opsi[3] || '')}" placeholder="Opsi D" class="rounded-xl border border-slate-200 p-2 text-xs bg-white" required />
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                      <select id="admJawabanBenar" class="rounded-xl border border-slate-200 p-2 text-xs bg-white">
-                        <option value="0" ${q1.jawaban === 0 ? 'selected' : ''}>Jawaban Benar: A</option>
-                        <option value="1" ${q1.jawaban === 1 ? 'selected' : ''}>Jawaban Benar: B</option>
-                        <option value="2" ${q1.jawaban === 2 ? 'selected' : ''}>Jawaban Benar: C</option>
-                        <option value="3" ${q1.jawaban === 3 ? 'selected' : ''}>Jawaban Benar: D</option>
-                      </select>
-                      <input id="admPembahasan" type="text" value="${escapeHtml(q1.pembahasan)}" placeholder="Penjelasan jawaban benar" class="sm:col-span-2 rounded-xl border border-slate-200 p-2 text-xs bg-white" required />
-                    </div>
-                  </div>
+                  <!-- 4. KUIS 10 SOAL -->
+                  ${renderAdminQuizBlocks(editing)}
 
                   <!-- 5. REFLEKSI PEMBELAJARAN -->
                   <div class="p-3.5 rounded-2xl bg-emerald-50/50 border border-emerald-100 space-y-2">
@@ -1209,19 +1219,12 @@
               durasiVideo: '02:30',
               catatanVideo: document.getElementById('admVidCatatan').value.trim()
             },
-            quiz: [
-              {
-                pertanyaan: document.getElementById('admQuizTanya').value.trim(),
-                opsi: [
-                  document.getElementById('admOpsiA').value.trim(),
-                  document.getElementById('admOpsiB').value.trim(),
-                  document.getElementById('admOpsiC').value.trim(),
-                  document.getElementById('admOpsiD').value.trim()
-                ],
-                jawaban: Number(document.getElementById('admJawabanBenar').value),
-                pembahasan: document.getElementById('admPembahasan').value.trim()
-              }
-            ],
+            quiz: Array.from({ length: 10 }, (_, i) => ({
+              pertanyaan: document.getElementById(`admQ${i}Tanya`).value.trim(),
+              opsi: ['A', 'B', 'C', 'D'].map(k => document.getElementById(`admQ${i}Opsi${k}`).value.trim()),
+              jawaban: Number(document.getElementById(`admQ${i}Jawaban`).value),
+              pembahasan: document.getElementById(`admQ${i}Pembahasan`).value.trim()
+            })),
             refleksiPertanyaan: document.getElementById('admRefleksi').value.trim()
           };
 
