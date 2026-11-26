@@ -398,6 +398,7 @@
         try {
           localStorage.setItem(MODULES_STORAGE_KEY, JSON.stringify(list));
         } catch {}
+        pushMateriRemote(list);
       }
 
       function loadProgress() {
@@ -419,6 +420,7 @@
         progress: loadProgress(),
       nilaiRemote: [],
       nilaiStatus: 'idle',
+      adminPin: '',
         view: 'catalog', // 'catalog' | 'player' | 'admin'
         selectedMapel: 'Semua',
         searchQuery: '',
@@ -865,6 +867,60 @@
       // =========================================================================
       // 7. HALAMAN KHUSUS ADMIN / GURU UNTUK MENGEDIT & MENAMBAH MATERI
       // =========================================================================
+      const RESET_SEEN_KEY = 'smp_pgri_sumberagung_reset_seen';
+
+      async function pushMateriRemote(list) {
+        if (!STATE.adminPin) return;
+        try {
+          const r = await fetch('/api/admin/materi', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'x-admin-pin': STATE.adminPin },
+            body: JSON.stringify({ modules: list })
+          });
+          const j = await r.json().catch(() => ({}));
+          if (!r.ok || !j.ok) throw new Error(j.error || 'HTTP ' + r.status);
+        } catch (err) {
+          showToast('Materi belum terkirim', 'Server menolak atau tidak bisa dihubungi: ' + err.message, 'error');
+        }
+      }
+
+      // Ambil materi dan versi reset terbaru dari server (dipanggil saat buka halaman)
+      async function syncRemoteData() {
+        const sb = supabaseConf();
+        if (!sb) return;
+        try {
+          const r = await fetch(sb.url + '/rest/v1/pengaturan_app?select=key,value', {
+            headers: { apikey: sb.key, Authorization: 'Bearer ' + sb.key }
+          });
+          if (!r.ok) return;
+          const rows = await r.json();
+          const get = (k) => (rows.find((x) => x.key === k) || {}).value;
+          let changed = false;
+
+          const materi = get('materi');
+          if (materi && Array.isArray(materi.modules) && materi.modules.length > 0) {
+            STATE.modules = materi.modules;
+            try { localStorage.setItem(MODULES_STORAGE_KEY, JSON.stringify(materi.modules)); } catch {}
+            changed = true;
+          }
+
+          const reset = get('reset');
+          if (reset && reset.version !== undefined) {
+            const seen = localStorage.getItem(RESET_SEEN_KEY);
+            if (seen === null) {
+              localStorage.setItem(RESET_SEEN_KEY, String(reset.version));
+            } else if (seen !== String(reset.version)) {
+              STATE.progress = { completedIds: [], scores: {}, reflections: {} };
+              saveProgress();
+              localStorage.setItem(RESET_SEEN_KEY, String(reset.version));
+              changed = true;
+              showToast('Progres Direset', 'Admin mereset progres belajar.', 'info');
+            }
+          }
+          if (changed) renderApp();
+        } catch {}
+      }
+
       function supabaseConf() {
         return (window.SUPABASE_URL && window.SUPABASE_ANON_KEY)
           ? { url: window.SUPABASE_URL, key: window.SUPABASE_ANON_KEY }
@@ -1219,10 +1275,24 @@
           renderApp();
         },
 
-        resetStudentProgress() {
+        async resetStudentProgress() {
+          if (!confirm('Reset progres SEMUA siswa di semua perangkat? Tidak bisa dibatalkan.')) return;
           STATE.progress = { completedIds: [], scores: {}, reflections: {} };
           saveProgress();
-          showToast('Progres Direset', 'Status belajar dikembalikan ke awal.', 'info');
+          if (STATE.adminPin) {
+            try {
+              const r = await fetch('/api/admin/reset', { method: 'POST', headers: { 'x-admin-pin': STATE.adminPin } });
+              const j = await r.json().catch(() => ({}));
+              if (!r.ok || !j.ok) throw new Error(j.error || 'HTTP ' + r.status);
+              localStorage.setItem(RESET_SEEN_KEY, String(j.version));
+              STATE.nilaiStatus = 'idle';
+              showToast('Progres Direset', 'Progres semua perangkat siswa sudah direset.', 'info');
+            } catch (err) {
+              showToast('Reset ke server gagal', err.message, 'error');
+            }
+          } else {
+            showToast('Progres Direset', 'Status belajar di browser ini dikembalikan ke awal.', 'info');
+          }
           renderApp();
         },
 
@@ -1234,6 +1304,7 @@
           const pin = document.getElementById('adminPinInput')?.value.trim();
           if (pin === ADMIN_PIN) {
             STATE.isAdminUnlocked = true;
+            STATE.adminPin = pin;
             this.closeModal();
             STATE.view = 'admin';
             renderApp();
@@ -1322,6 +1393,7 @@
       };
 
       renderApp();
+      syncRemoteData();
     })();
   </script>
   <script>
