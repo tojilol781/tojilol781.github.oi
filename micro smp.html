@@ -847,7 +847,7 @@
       // =========================================================================
       function renderAdminQuizBlocks(editing) {
         const list = editing?.quiz || [];
-        let html = '<div class="p-3.5 rounded-2xl bg-purple-50/50 border border-purple-100 space-y-3"><p class="text-xs font-extrabold text-purple-800">4. Kuis Pemahaman (10 soal, berurutan 1-10)</p>';
+        let html = '<div class="p-3.5 rounded-2xl bg-purple-50/50 border border-purple-100 space-y-3"><p class="text-xs font-extrabold text-purple-800">2. Kuis Pemahaman (10 soal, berurutan 1-10)</p>';
         for (let i = 0; i < 10; i++) {
           const q = list[i] || { pertanyaan: '', opsi: [], jawaban: 0, pembahasan: '' };
           const opsi = q.opsi || [];
@@ -1004,7 +1004,7 @@
 
                   <!-- 5. REFLEKSI PEMBELAJARAN -->
                   <div class="p-3.5 rounded-2xl bg-emerald-50/50 border border-emerald-100 space-y-2">
-                    <p class="text-xs font-extrabold text-emerald-800">5. Pertanyaan Refleksi Pembelajaran</p>
+                    <p class="text-xs font-extrabold text-emerald-800">3. Pertanyaan Refleksi Pembelajaran</p>
                     <input id="admRefleksi" type="text" value="${escapeHtml(editing?.refleksiPertanyaan || '')}" placeholder="Pertanyaan refleksi untuk dijawab siswa di akhir modul..." class="w-full rounded-xl border border-slate-200 p-2.5 text-xs bg-white" required />
                   </div>
 
