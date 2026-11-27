@@ -645,8 +645,13 @@
                 <!-- Ilustrasi siswa SMP melambai -->
                 <div class="smp-scene" aria-hidden="true">
                   <svg viewBox="0 0 200 170" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                      <radialGradient id="anmEye" cx="50%" cy="35%" r="65%"><stop offset="0" stop-color="#a78bfa"/><stop offset="1" stop-color="#312e81"/></radialGradient>
+                      <linearGradient id="anmHair" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3730a3"/><stop offset="1" stop-color="#1e1b4b"/></linearGradient>
+                      <linearGradient id="anmShirt" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#dbeafe"/></linearGradient>
+                    </defs>
                     <circle cx="100" cy="92" r="80" fill="#ffffff" fill-opacity=".14"/>
-                    <circle cx="100" cy="92" r="58" fill="#fde047" fill-opacity=".12"/>
+                    <circle cx="100" cy="58" r="38" fill="#fde047" fill-opacity=".16"/>
                     <g class="smp-float">
                       <rect x="6" y="4" width="88" height="24" rx="10" fill="#ffffff"/>
                       <path d="M30 27 L24 38 L42 27 Z" fill="#ffffff"/>
@@ -659,20 +664,36 @@
                       <rect x="161" y="80" width="20" height="14" rx="2" fill="#fbcfe8"/>
                       <line x1="171" y1="80" x2="171" y2="94" stroke="#ec4899" stroke-width="1.5"/>
                     </g>
-                    <path d="M72 106 Q60 120 64 136 L78 136 Q78 120 84 108 Z" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
-                    <circle cx="71" cy="138" r="6" fill="#f1c27d"/>
-                    <path d="M72 152 L72 102 Q72 84 100 84 Q128 84 128 102 L128 152 Z" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
-                    <path d="M86 84 L100 102 L114 84 Z" fill="#bfdbfe"/>
-                    <rect x="112" y="108" width="12" height="11" rx="2" fill="#1d4ed8"/>
-                    <text x="118" y="116" font-size="5" fill="#ffffff" text-anchor="middle" font-weight="700" font-family="Arial, sans-serif">SMP</text>
-                    <rect x="94" y="72" width="12" height="14" fill="#f1c27d"/>
-                    <circle cx="100" cy="56" r="22" fill="#f1c27d"/>
-                    <path d="M77 54 Q74 28 100 28 Q126 28 123 54 Q117 40 100 40 Q84 40 77 54 Z" fill="#1f2937"/>
-                    <circle cx="92" cy="58" r="2.4" fill="#1f2937"/>
-                    <circle cx="108" cy="58" r="2.4" fill="#1f2937"/>
-                    <path d="M93 68 Q100 74 107 68" fill="none" stroke="#9a3412" stroke-width="2" stroke-linecap="round"/>
-                    <circle cx="86" cy="67" r="3.5" fill="#fb7185" fill-opacity=".5"/>
-                    <circle cx="114" cy="67" r="3.5" fill="#fb7185" fill-opacity=".5"/>
+                    <path d="M70 110 Q58 124 62 138 L76 138 Q76 124 82 112 Z" fill="url(#anmShirt)" stroke="#c7d2fe" stroke-width="1.2"/>
+                    <circle cx="69" cy="140" r="5.5" fill="#ffe0c2"/>
+                    <path d="M70 152 L70 106 Q70 88 100 86 Q130 88 130 106 L130 152 Z" fill="url(#anmShirt)" stroke="#c7d2fe" stroke-width="1.2"/>
+                    <path d="M86 86 L100 108 L114 86 L118 88 L100 116 L82 88 Z" fill="#1d4ed8"/>
+                    <path d="M97 108 L103 108 L105 124 L100 130 L95 124 Z" fill="#1e3a8a"/>
+                    <rect x="97" y="104" width="6" height="5" rx="1" fill="#1e40af"/>
+                    <rect x="116" y="110" width="10" height="9" rx="2" fill="#1d4ed8"/>
+                    <text x="121" y="117" font-size="4.5" fill="#ffffff" text-anchor="middle" font-weight="700" font-family="Arial, sans-serif">SMP</text>
+                    <path d="M92 74 L108 74 L108 88 Q100 94 92 88 Z" fill="#f7c9a2"/>
+                    <path d="M70 62 Q66 22 100 20 Q134 22 130 62 L134 94 Q122 86 118 82 L82 82 Q78 86 66 94 Z" fill="url(#anmHair)"/>
+                    <ellipse cx="100" cy="58" rx="24" ry="26" fill="#ffe0c2"/>
+                    <path d="M76 52 Q76 30 100 29 Q124 30 124 52 Q118 42 108 44 Q102 34 94 42 Q84 42 76 52 Z" fill="url(#anmHair)"/>
+                    <path d="M88 33 Q100 27 112 32" fill="none" stroke="#818cf8" stroke-width="2.2" stroke-linecap="round" opacity=".7"/>
+                    <path d="M98 22 Q95 12 103 11 Q101 17 103 22" fill="url(#anmHair)"/>
+                    <ellipse cx="90" cy="61" rx="6" ry="7.5" fill="#ffffff" stroke="#1e1b4b" stroke-width="1"/>
+                    <ellipse cx="90" cy="61" rx="4.6" ry="6.2" fill="url(#anmEye)"/>
+                    <circle cx="90" cy="61" r="2.2" fill="#0f0a2a"/>
+                    <circle cx="92" cy="58" r="1.8" fill="#ffffff"/>
+                    <circle cx="88.5" cy="63.5" r="0.9" fill="#ffffff"/>
+                    <ellipse cx="110" cy="61" rx="6" ry="7.5" fill="#ffffff" stroke="#1e1b4b" stroke-width="1"/>
+                    <ellipse cx="110" cy="61" rx="4.6" ry="6.2" fill="url(#anmEye)"/>
+                    <circle cx="110" cy="61" r="2.2" fill="#0f0a2a"/>
+                    <circle cx="112" cy="58" r="1.8" fill="#ffffff"/>
+                    <circle cx="108.5" cy="63.5" r="0.9" fill="#ffffff"/>
+                    <path d="M83.5 53.5 Q90 48 96.5 53.5 M103.5 53.5 Q110 48 116.5 53.5" fill="none" stroke="#1e1b4b" stroke-width="1.6" stroke-linecap="round"/>
+                    <path d="M84 47 Q90 44 95 46 M105 46 Q110 44 116 47" fill="none" stroke="#312e81" stroke-width="1.6" stroke-linecap="round"/>
+                    <path d="M100 66 q1.5 1.5 0 2.5" fill="none" stroke="#d9a07a" stroke-width="1"/>
+                    <path d="M93 71 Q100 79 107 71 Q100 74 93 71 Z" fill="#be123c"/>
+                    <ellipse cx="84" cy="70" rx="4" ry="2.4" fill="#fb7185" opacity=".55"/>
+                    <ellipse cx="116" cy="70" rx="4" ry="2.4" fill="#fb7185" opacity=".55"/>
                     <rect x="14" y="136" width="172" height="12" rx="5" fill="#a16207"/>
                     <rect x="22" y="148" width="156" height="22" rx="3" fill="#854d0e"/>
                     <rect x="24" y="126" width="36" height="10" rx="2" fill="#6366f1"/>
@@ -682,11 +703,12 @@
                     <line x1="162" y1="118" x2="158" y2="102" stroke="#f59e0b" stroke-width="3" stroke-linecap="round"/>
                     <line x1="169" y1="118" x2="175" y2="103" stroke="#ef4444" stroke-width="3" stroke-linecap="round"/>
                     <g class="smp-wave">
-                      <line x1="124" y1="100" x2="150" y2="50" stroke="#cbd5e1" stroke-width="16" stroke-linecap="round"/>
-                      <line x1="124" y1="100" x2="150" y2="50" stroke="#ffffff" stroke-width="13" stroke-linecap="round"/>
-                      <circle cx="152" cy="42" r="9" fill="#f1c27d"/>
-                      <path d="M146 36 L146 28 M152 34 L152 26 M158 36 L158 29" stroke="#f1c27d" stroke-width="4" stroke-linecap="round"/>
+                      <line x1="124" y1="100" x2="150" y2="50" stroke="#c7d2fe" stroke-width="17" stroke-linecap="round"/>
+                      <line x1="124" y1="100" x2="150" y2="50" stroke="url(#anmShirt)" stroke-width="14" stroke-linecap="round"/>
+                      <circle cx="153" cy="44" r="8" fill="#ffe0c2"/>
+                      <path d="M147 38 L146 30 M152 36 L152 28 M158 38 L159 31" stroke="#ffe0c2" stroke-width="3.6" stroke-linecap="round"/>
                     </g>
+                    <path class="smp-star" style="animation-delay:1.2s" d="M178 92 Q179 99 186 100 Q179 101 178 108 Q177 101 170 100 Q177 99 178 92 Z" fill="#ffffff"/>
                     <g class="smp-lines" stroke="#fde047" stroke-width="2.5" fill="none" stroke-linecap="round">
                       <path d="M166 34 Q171 42 166 50"/>
                       <path d="M172 28 Q180 42 172 56"/>
